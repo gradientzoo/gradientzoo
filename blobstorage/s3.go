@@ -4,6 +4,7 @@ import (
 	"bytes"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
@@ -20,9 +21,9 @@ func NewS3BlobStorage(bucket, region string) *S3BlobStorage {
 }
 
 func (s *S3BlobStorage) Save(data []byte, filename, contentType string) error {
-	svc := s3.New(&aws.Config{Region: s.region})
+	svc := s3.New(session.New(&aws.Config{Region: &s.region}))
 	_, err := svc.PutObject(&s3.PutObjectInput{
-		ContentLength: aws.Long(int64(len(data))),
+		ContentLength: aws.Int64(int64(len(data))),
 		ContentType:   aws.String(contentType),
 		Bucket:        aws.String(s.bucket),
 		Key:           aws.String(filename),

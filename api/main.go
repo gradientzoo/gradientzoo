@@ -48,8 +48,6 @@ func handle(handler Handler) httprouter.Handle {
 			User:      user,
 			Api:       api,
 			Blob:      blob,
-			Publisher: publisher,
-			Actish:    actish,
 		}
 		handler(c, w, req)
 	}
@@ -113,11 +111,11 @@ func Main() {
 	// Create API Collection
 	api = models.NewApiCollection(db)
 
-	// Migrate any models that need to be migrated
-	if err := api.Migrate(); err != nil {
-		log.WithFields(log.Fields{"err": err}).Error("Could not migrate")
-		return
-	}
+	// TODO: Migrate any models that need to be migrated
+	//if err := api.Migrate(); err != nil {
+	//	log.WithFields(log.Fields{"err": err}).Error("Could not migrate")
+	//	return
+	//}
 
 	// Initialize blob storage
 	blob = blobstorage.NewS3BlobStorage(

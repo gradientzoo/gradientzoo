@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )

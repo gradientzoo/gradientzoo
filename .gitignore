@@ -1,0 +1,4 @@
+bin/gradientzoo
+pkg
+gin-bin
+*.DS_Store

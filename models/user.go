@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/guregu/null.v2/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"

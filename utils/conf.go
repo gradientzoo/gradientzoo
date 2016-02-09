@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -47,12 +48,20 @@ var Conf Config = Config{
 	Localdev: os.Getenv("LOCALDEV") != "",
 	Port:     EnvDef("PORT", "8000"),
 
-	PostgresqlHost:     HostDef("POSTGRESQL", 5432, "localhost"),
+	/*
+		PostgresqlHost:     HostDef("POSTGRESQL", 5432, "localhost"),
+		PostgresqlPort:     EnvDefInt("POSTGRESQL_DB_PORT", 5432),
+		PostgresqlDbName:   EnvDef("POSTGRESQL_DB_NAME", "gradientzoo"),
+		PostgresqlUser:     EnvDef("POSTGRESQL_DB_USER", "gradientzoo"),
+		PostgresqlPassword: EnvDef("POSTGRESQL_DB_PASSWORD", "gradientzoo"),
+		PostgresqlSslMode:  EnvDef("POSTGRESQL_DB_SSLMODE", "disable"),
+	*/
+	PostgresqlHost:     HostDef("POSTGRESQL", 5432, "ec2-54-204-6-113.compute-1.amazonaws.com"),
 	PostgresqlPort:     EnvDefInt("POSTGRESQL_DB_PORT", 5432),
-	PostgresqlDbName:   EnvDef("POSTGRESQL_DB_NAME", "gradientzoo"),
-	PostgresqlUser:     EnvDef("POSTGRESQL_DB_USER", "gradientzoo"),
-	PostgresqlPassword: EnvDef("POSTGRESQL_DB_PASSWORD", "gradientzoo"),
-	PostgresqlSslMode:  EnvDef("POSTGRESQL_DB_SSLMODE", "disable"),
+	PostgresqlDbName:   EnvDef("POSTGRESQL_DB_NAME", "d9idmh83ri9br2"),
+	PostgresqlUser:     EnvDef("POSTGRESQL_DB_USER", "avjsbzrnjkjfir"),
+	PostgresqlPassword: EnvDef("POSTGRESQL_DB_PASSWORD", "bdNaXH2NChX3xqcW9qtG96JvB-"),
+	PostgresqlSslMode:  EnvDef("POSTGRESQL_DB_SSLMODE", "require"),
 
 	PostgresqlTestHost:     HostDef("POSTGRESQLTST", 5432, "localhost"),
 	PostgresqlTestPort:     EnvDefInt("POSTGRESQL_TEST_DB_PORT", 5432),
@@ -78,6 +87,22 @@ func EnvEnsure(name string) string {
 		log.Fatalln("Must provide a " + name + " environment variable")
 	}
 	return ret
+}
+
+func EnvInt(name string) int {
+	i, err := strconv.Atoi(os.Getenv(name))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return i
+}
+
+func EnvDefInt(name string, def int) int {
+	i, err := strconv.Atoi(EnvDef(name, fmt.Sprintf("%d", def)))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return i
 }
 
 func Host(name string, port int) string {
