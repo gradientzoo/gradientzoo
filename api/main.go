@@ -12,6 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/meatballhat/negroni-logrus"
 	"github.com/phyber/negroni-gzip/gzip"
+	"github.com/rs/cors"
 	"gopkg.in/unrolled/render.v1"
 )
 
@@ -25,7 +26,7 @@ func handle(handler Handler) httprouter.Handle {
 	return func(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		var authToken *models.AuthToken
 		var user *models.User
-		if authTokenId := req.Header.Get("X-Id-Token"); authTokenId != "" {
+		if authTokenId := req.Header.Get("X-Auth-Token-Id"); authTokenId != "" {
 			var err error
 			if authToken, err = api.AuthToken.ById(authTokenId); err != nil {
 				log.WithFields(log.Fields{
@@ -81,15 +82,38 @@ func JsonErr(msg string) map[string]string {
 	return map[string]string{"error": msg}
 }
 
+func Authed(h Handler) Handler {
+	return Handler(func(c *Context, w http.ResponseWriter, req *http.Request) {
+		if c.AuthToken == nil {
+			c.Render.JSON(w, http.StatusUnauthorized,
+				JsonErr("Must be authenticated to access this resource"))
+		} else {
+			h(c, w, req)
+		}
+	})
+}
+
 func makeHandler() http.Handler {
 	router := httprouter.New()
 
 	GET(router, "/", HandleIndex)
+	POST(router, "/auth", HandleAuth)
+	GET(router, "/auth/user", HandleAuthUser)
+	POST(router, "/auth/logout", HandleLogout)
 	//POST(router, "/image", HandleImageUpload)
 	//POST(router, "/compare", HandleImageCompare)
 	//GET(router, "/search/id/:id", HandleImageSearch)
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:     []string{"http://localhost:8000", "http://localhost:3000"},
+		AllowedHeaders:     []string{"X-Auth-Token-Id", "Content-Type", "Content-Length", "Accept", "Authorization"},
+		OptionsPassthrough: false,
+		AllowCredentials:   true,
+		Debug:              false,
+	})
+
 	n := negroni.New(negroni.NewLogger())
+	n.Use(c)
 	n.Use(gzip.Gzip(gzip.BestCompression))
 	n.Use(negronilogrus.NewMiddleware())
 	n.UseHandler(router)

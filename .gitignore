@@ -2,3 +2,8 @@ bin/gradientzoo
 pkg
 gin-bin
 *.DS_Store
+node_modules
+webpack-stats.json
+npm-debug.log
+dist
+env
