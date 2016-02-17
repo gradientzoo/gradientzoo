@@ -5,6 +5,7 @@ import keys from 'lodash/keys'
 import values from 'lodash/values'
 import paginate from './paginate'
 import { authTokenId, authUserId, login, register } from './auth'
+import { createModel } from './model'
 import { routeReducer } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
@@ -12,6 +13,7 @@ import { combineReducers } from 'redux'
 const initialEntitiesState = {
   authTokens: {},
   users: {},
+  models: {}
 }
 function entities(state = initialEntitiesState, action) {
   if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
@@ -54,6 +56,7 @@ const rootReducer = combineReducers({
   authUserId,
   login,
   register,
+  createModel,
   //pagination,
   routing: routeReducer
 })

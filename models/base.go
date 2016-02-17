@@ -15,32 +15,35 @@ type Scannable interface {
 	Scan(dest ...interface{}) error
 }
 
-type Model interface {
+type BackendModel interface {
 	Truncate() error
 }
 
 type ApiCollection struct {
 	User      UserApi
 	AuthToken AuthTokenApi
+	Model     ModelApi
 }
 
 func NewApiCollection(db *runner.DB) *ApiCollection {
 	api := &ApiCollection{}
 	api.User = NewUserDb(db, api)
 	api.AuthToken = NewAuthTokenDb(db, api)
+	api.Model = NewModelDb(db, api)
 	return api
 }
 
-func (api *ApiCollection) Models() []Model {
-	return []Model{
-		Model(api.User),
-		Model(api.AuthToken),
+func (api *ApiCollection) BackendModels() []BackendModel {
+	return []BackendModel{
+		BackendModel(api.User),
+		BackendModel(api.AuthToken),
+		BackendModel(api.Model),
 	}
 }
 
 func (api *ApiCollection) Truncate() error {
-	for _, model := range api.Models() {
-		if err := model.Truncate(); err != nil {
+	for _, backendModel := range api.BackendModels() {
+		if err := backendModel.Truncate(); err != nil {
 			return err
 		}
 	}

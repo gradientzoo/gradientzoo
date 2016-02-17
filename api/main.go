@@ -101,6 +101,7 @@ func makeHandler() http.Handler {
 	POST(router, "/auth/login", HandleLogin)
 	POST(router, "/auth/register", HandleRegister)
 	POST(router, "/auth/logout", HandleLogout)
+	POST(router, "/model/create", HandleCreateModel)
 	//POST(router, "/image", HandleImageUpload)
 	//POST(router, "/compare", HandleImageCompare)
 	//GET(router, "/search/id/:id", HandleImageSearch)

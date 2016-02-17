@@ -71,6 +71,8 @@ const authUserSchema = new Schema('authUser')
 const authTokenSchema = new Schema('authTokens')
 const authResponseSchema = new Schema('authResponse')
 const statusSchema = new Schema('status')
+const modelSchema = new Schema('models')
+const modelResponseSchema = new Schema('modelResponse')
 
 // Nesting definitions
 authUserSchema.define({authUser: userSchema})
@@ -78,12 +80,14 @@ authResponseSchema.define({
   authUser: userSchema,
   authToken: authTokenSchema
 })
+modelResponseSchema.define({model: modelSchema})
 
 // Schemas for Github API responses.
 export const Schemas = {
   AUTH_USER: authUserSchema,
   AUTH_RESPONSE: authResponseSchema,
-  STATUS: statusSchema
+  STATUS: statusSchema,
+  MODEL_RESPONSE: modelResponseSchema
 }
 
 // Action key that carries API call info interpreted by this Redux middleware.
@@ -136,7 +140,7 @@ export default store => next => action => {
     })),
     error => next(actionWith({
       type: failureType,
-      error: error.error || 'Something bad happened'
+      error: error.error || 'Error communicating with server'
     }))
   )
 }

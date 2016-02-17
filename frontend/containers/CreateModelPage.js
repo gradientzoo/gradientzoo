@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
+import { createModel } from '../actions/model'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
@@ -15,19 +16,24 @@ class CreateModelPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      slug: '',
       name: '',
       description: '',
       visibility: 'public'
     }
-    bindAll(this, 'handleSubmit', 'handleNameChange', 'handleDescriptionChange',
-      'handleVisibilityChange');
+    bindAll(this, 'handleSubmit', 'handleSlugChange', 'handleNameChange',
+      'handleDescriptionChange', 'handleVisibilityChange');
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isNull(nextProps.authTokenId)) {
+    if (!this.props.created && nextProps.created) {
       // If we've logged in, send the user to their dashboard
       this.props.push('/')
     }
+  }
+
+  handleSlugChange(ev) {
+    this.setState({slug: ev.target.value})
   }
 
   handleNameChange(ev) {
@@ -45,11 +51,17 @@ class CreateModelPage extends Component {
   handleSubmit(ev) {
     ev.preventDefault();
 
+    if (this.state.description >= 200) {
+      return
+    }
+
+    const { slug, name, description, visibility } = this.state
+    this.props.createModel(slug, name, description, visibility)
   }
 
   render() {
     const errClass = this.props.error ? ' has-error' : ''
-    const { visibility } = this.state
+    const { visibility, description } = this.state
     return (
       <DocumentTitle title='Create Model - Gradientzoo'>
       <div className="container" style={styles.page}>
@@ -64,24 +76,34 @@ class CreateModelPage extends Component {
 
         <form onSubmit={this.handleSubmit} className="clearfix">
           <div className={'form-group' + errClass}>
+            <label htmlFor="slug">Model slug</label>
+            <input className="form-control"
+                   type="text"
+                   name="slug"
+                   disabled={this.props.creating}
+                   placeholder="Model slug"
+                   onChange={this.handleSlugChange} />
+          </div>
+
+          <div className={'form-group' + errClass}>
             <label htmlFor="name">Model name</label>
             <input className="form-control"
                    type="text"
                    name="name"
-                   disabled={this.props.submitting}
+                   disabled={this.props.creating}
                    placeholder="Model name"
                    onChange={this.handleNameChange} />
           </div>
 
-          <div className={'form-group' + errClass}>
-            <label htmlFor="description">Description</label>
+          <div className={'form-group' + errClass + (description.length > 200 ? ' has-error' : '')}>
+            <label htmlFor="description">Short description{description ? ' (' + (200 - description.length) + ' left)' : ''}</label>
             <textarea className="form-control"
                       style={styles.descriptionTextarea}
                       type="text"
                       name="description"
-                      disabled={this.props.submitting}
+                      disabled={this.props.creating}
                       ref="description"
-                      placeholder="Description"
+                      placeholder="Short description (optional)"
                       onChange={this.handleDescriptionChange} />
           </div>
 
@@ -109,9 +131,9 @@ class CreateModelPage extends Component {
             </div>
           </div>
 
-          {this.props.submitting ?
-            <span className="btn btn-default">Submitting...</span> :
-            <button type="submit" className="btn btn-default pull-right">Submit</button>}
+          {this.props.creating ?
+            <span className="btn btn-default pull-right">Creating...</span> :
+            <button type="submit" className="btn btn-default pull-right">Create</button>}
         </form>
 
         <Footer />
@@ -123,19 +145,23 @@ class CreateModelPage extends Component {
 
 CreateModelPage.propTypes = {
   authTokenId: PropTypes.string,
-  submitting: PropTypes.bool,
+  creating: PropTypes.bool,
+  created: PropTypes.bool,
   error: PropTypes.string,
-  push: PropTypes.func.isRequired
+  push: PropTypes.func.isRequired,
+  createModel: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
   return {
     authTokenId: state.authTokenId,
-    submitting: state.submitting,
-    error: state.loginError
+    creating: state.createModel.creating,
+    created: state.createModel.created,
+    error: state.createModel.createError
   }
 }
 
 export default Radium(connect(mapStateToProps, {
-  push
+  createModel,
+  push,
 })(CreateModelPage))

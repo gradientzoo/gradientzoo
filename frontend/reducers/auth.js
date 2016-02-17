@@ -56,7 +56,6 @@ export function register(state = {registering: false, registerError: null}, acti
     return {registering: false, registerError: null}
   }
   if (action.type === AuthActionTypes.AUTH_REGISTER_FAILURE) {
-    console.log(action.response)
     return {registering: false, registerError: action.error}
   }
   return state

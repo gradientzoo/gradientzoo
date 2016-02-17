@@ -83,7 +83,7 @@ class LoginPage extends Component {
           </div>
 
           {this.props.loggingIn ?
-            <span className="btn btn-default">Logging in...</span> :
+            <span className="btn btn-default pull-right">Logging in...</span> :
             <button type="submit" className="btn btn-default pull-right">Login</button>}
         </form>
 

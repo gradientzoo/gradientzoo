@@ -101,7 +101,7 @@ class RegisterPage extends Component {
           </div>
 
           {this.props.registering ?
-            <span className="btn btn-default">Signing up...</span> :
+            <span className="btn btn-default pull-right">Signing up...</span> :
             <button type="submit" className="btn btn-default pull-right">Sign Up</button>}
         </form>
 
