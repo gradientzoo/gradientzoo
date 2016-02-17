@@ -97,8 +97,9 @@ func makeHandler() http.Handler {
 	router := httprouter.New()
 
 	GET(router, "/", HandleIndex)
-	POST(router, "/auth", HandleAuth)
 	GET(router, "/auth/user", HandleAuthUser)
+	POST(router, "/auth/login", HandleLogin)
+	POST(router, "/auth/register", HandleRegister)
 	POST(router, "/auth/logout", HandleLogout)
 	//POST(router, "/image", HandleImageUpload)
 	//POST(router, "/compare", HandleImageCompare)

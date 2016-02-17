@@ -9,10 +9,12 @@ CREATE EXTENSION "uuid-ossp";
 CREATE TABLE auth_user (
     id UUID PRIMARY KEY DEFAULT UUID_GENERATE_V1(),
     email TEXT NOT NULL,
+    username VARCHAR(20) NOT NULL,
     password_hash TEXT NOT NULL,
     stripe_customer_id TEXT NOT NULL,
     created_time TIMESTAMPTZ NOT NULL,
-    UNIQUE(email)
+    UNIQUE(email),
+    UNIQUE(username)
 );
 
 CREATE TABLE auth_token (

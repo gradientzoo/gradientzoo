@@ -22,16 +22,31 @@ export function loadAuthUser() {
   }
 }
 
-export const ATTEMPT_AUTH_REQUEST = 'ATTEMPT_AUTH_REQUEST'
-export const ATTEMPT_AUTH_SUCCESS = 'ATTEMPT_AUTH_SUCCESS'
-export const ATTEMPT_AUTH_FAILURE = 'ATTEMPT_AUTH_FAILURE'
+export const AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST'
+export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS'
+export const AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE'
 
-export function attemptAuth(email, password) {
+export function login(emailOrUsername, password) {
   return {
     [CALL_API]: {
-      types: [ ATTEMPT_AUTH_REQUEST, ATTEMPT_AUTH_SUCCESS, ATTEMPT_AUTH_FAILURE ],
-      endpoint: `auth`,
-      payload: {email, password},
+      types: [ AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE ],
+      endpoint: `auth/login`,
+      payload: {emailOrUsername, password},
+      schema: Schemas.AUTH_RESPONSE
+    }
+  }
+}
+
+export const AUTH_REGISTER_REQUEST = 'AUTH_REGISTER_REQUEST'
+export const AUTH_REGISTER_SUCCESS = 'AUTH_REGISTER_SUCCESS'
+export const AUTH_REGISTER_FAILURE = 'AUTH_REGISTER_FAILURE'
+
+export function register(email, username, password) {
+  return {
+    [CALL_API]: {
+      types: [ AUTH_REGISTER_REQUEST, AUTH_REGISTER_SUCCESS, AUTH_REGISTER_FAILURE ],
+      endpoint: `auth/register`,
+      payload: {email, username, password},
       schema: Schemas.AUTH_RESPONSE
     }
   }

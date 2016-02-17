@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
-import { attemptAuth } from '../actions/auth'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
@@ -46,15 +45,10 @@ class CreateModelPage extends Component {
   handleSubmit(ev) {
     ev.preventDefault();
 
-    const { name, description } = this.state
-    this.props.attemptAuth(name, description)
-
-    ReactDOM.findDOMNode(this.refs.description).value = '';
-    this.setState({description: ''});
   }
 
   render() {
-    const errClass = this.props.error ? ' has-error' : '';
+    const errClass = this.props.error ? ' has-error' : ''
     const { visibility } = this.state
     return (
       <DocumentTitle title='Create Model - Gradientzoo'>
@@ -131,7 +125,6 @@ CreateModelPage.propTypes = {
   authTokenId: PropTypes.string,
   submitting: PropTypes.bool,
   error: PropTypes.string,
-  attemptAuth: PropTypes.func.isRequired,
   push: PropTypes.func.isRequired
 }
 
@@ -144,6 +137,5 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  attemptAuth,
   push
 })(CreateModelPage))

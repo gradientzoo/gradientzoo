@@ -20,20 +20,35 @@ class NavHeader extends Component {
   }
 
   render() {
-    const { activeTab, isLoggedIn } = this.props
+    const { activeTab, isLoggedIn, authUser } = this.props
     const homeActiveClass = activeTab === 'home' ? 'active' : ''
     const createModelActiveClass = activeTab === 'create-model' ? 'active' : ''
-    const authActiveClass = activeTab === 'auth' ? 'active' : ''
+    const profileActiveClass = activeTab === 'profile' ? 'active' : ''
+    const loginActiveClass = activeTab === 'login' ? 'active' : ''
+    const registerActiveClass = activeTab === 'register' ? 'active' : ''
     return (
       <div className="header clearfix" style={styles.header}>
         <nav>
           <ul className="nav nav-pills pull-right">
-            <li htmlRole="presentation" className={homeActiveClass}><Link to="/">Home</Link></li>
-            <li htmlRole="presentation" className={createModelActiveClass}><Link to="/create-model">Create Model</Link></li>
-            <li htmlRole="presentation" className={authActiveClass}>
+            <li className={homeActiveClass} htmlRole="presentation">
+              <Link to="/">Home</Link>
+            </li>
+            {isLoggedIn ?
+              <li className={createModelActiveClass} htmlRole="presentation">
+                <Link to="/create-model">Create Model</Link>
+              </li> : null}
+            {authUser ?
+              <li className={profileActiveClass} htmlRole="presentation">
+                <Link to={'/' + authUser.username}>{authUser.username}</Link>
+              </li> : null}
+            <li className={loginActiveClass} htmlRole="presentation">
+              {isLoggedIn ? null :
+                <Link to="/login">Login</Link>}
+            </li>
+            <li className={registerActiveClass} htmlRole="presentation">
               {isLoggedIn ?
                 <a href="#" onClick={this.handleLogout}>Logout</a> :
-                <Link to="/auth">Login</Link>}
+                <Link to="/register">Sign Up</Link>}
             </li>
           </ul>
         </nav>
@@ -46,13 +61,15 @@ class NavHeader extends Component {
 NavHeader.PropTypes = {
   activeTab: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
+  authUser: PropTypes.object,
   logout: PropTypes.func.isRequired,
   push: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
   return {
-    isLoggedIn: isString(state.authUserId) && state.authUserId.length > 0
+    isLoggedIn: isString(state.authUserId) && state.authUserId.length > 0,
+    authUser: state.authUserId ? state.entities.users[state.authUserId] : null
   }
 }
 

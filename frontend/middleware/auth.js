@@ -46,7 +46,8 @@ export const load = store => next => action => {
 }
 
 export const save = store => next => action => {
-  if (action.type === AuthActionTypes.ATTEMPT_AUTH_SUCCESS) {
+  if (action.type === AuthActionTypes.AUTH_REGISTER_SUCCESS ||
+      action.type === AuthActionTypes.AUTH_LOGIN_SUCCESS) {
     localStore.setItem(STORAGE_AUTH_TOKEN_KEY, values(action.response.entities.authTokens)[0].id)
     localStore.setItem(STORAGE_AUTH_USER_KEY, values(action.response.entities.authTokens)[0].userId)
   }

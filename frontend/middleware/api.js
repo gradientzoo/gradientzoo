@@ -1,5 +1,5 @@
 import { Schema, arrayOf, normalize } from 'normalizr'
-import { camelizeKeys } from 'humps'
+import { camelizeKeys, decamelizeKeys } from 'humps'
 import isString from 'lodash/isString'
 import 'isomorphic-fetch'
 
@@ -37,7 +37,7 @@ function callApi(endpoint, schema, payload, authTokenId) {
   const fetched = payload ?
     fetch(fullUrl, {
       method: 'post',
-      body: JSON.stringify(payload),
+      body: JSON.stringify(decamelizeKeys(payload)),
       headers: headers}) :
     fetch(fullUrl, {headers: headers})
 
@@ -136,7 +136,7 @@ export default store => next => action => {
     })),
     error => next(actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
+      error: error.error || 'Something bad happened'
     }))
   )
 }

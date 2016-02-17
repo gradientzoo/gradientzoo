@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
-import { attemptAuth } from '../actions/auth'
+import { register } from '../actions/auth'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
@@ -12,14 +12,16 @@ import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 
-class AuthPage extends Component {
+class RegisterPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
       email: '',
+      username: '',
       password: ''
     }
-    bindAll(this, 'handleSubmit', 'handleEmailChange', 'handlePasswordChange');
+    bindAll(this, 'handleSubmit', 'handleEmailChange', 'handleUsernameChange',
+      'handlePasswordChange');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,34 +32,40 @@ class AuthPage extends Component {
   }
 
   handleEmailChange(ev) {
-    this.setState({email: ev.target.value});
+    this.setState({email: ev.target.value})
+  }
+
+  handleUsernameChange(ev) {
+    this.setState({username: ev.target.value})
   }
 
   handlePasswordChange(ev) {
-    this.setState({password: ev.target.value});
+    this.setState({password: ev.target.value})
   }
 
   handleSubmit(ev) {
     ev.preventDefault();
 
-    const { email, password } = this.state
-    this.props.attemptAuth(email, password)
+    const { email, username, password } = this.state
+    this.props.register(email, username, password)
 
-    ReactDOM.findDOMNode(this.refs.password).value = '';
-    this.setState({password: ''});
+    ReactDOM.findDOMNode(this.refs.password).value = ''
+    this.setState({password: ''})
   }
 
   render() {
-    const errClass = this.props.loginError ? ' has-error' : '';
+    const errClass = this.props.registerError ? ' has-error' : ''
     return (
-      <DocumentTitle title='Login or Register - Gradientzoo'>
+      <DocumentTitle title='Sign Up - Gradientzoo'>
       <div className="container" style={styles.page}>
 
-        <NavHeader activeTab='auth' />
+        <NavHeader activeTab='register' />
 
-        {this.props.loginError ?
+        <h2>Sign Up</h2>
+
+        {this.props.registerError ?
           <div className="alert alert-danger" role="alert">
-            <strong>Error</strong> {this.props.loginError}
+            <strong>Error</strong> {this.props.registerError}
           </div> : null}
 
         <form onSubmit={this.handleSubmit} className="clearfix">
@@ -66,23 +74,35 @@ class AuthPage extends Component {
             <input className="form-control"
                    type="email"
                    name="email"
-                   disabled={this.props.loggingIn}
+                   disabled={this.props.registering}
                    placeholder="Email address"
                    onChange={this.handleEmailChange} />
           </div>
+
+          <div className={'form-group' + errClass}>
+            <label htmlFor="username">Username</label>
+            <input className="form-control"
+                   type="text"
+                   name="username"
+                   disabled={this.props.registering}
+                   placeholder="Username"
+                   onChange={this.handleUsernameChange} />
+          </div>
+
           <div className={'form-group' + errClass}>
             <label htmlFor="password">Password</label>
             <input className="form-control"
                    type="password"
                    name="password"
-                   disabled={this.props.loggingIn}
+                   disabled={this.props.registering}
                    ref="password"
                    placeholder="Password"
                    onChange={this.handlePasswordChange} />
           </div>
-          {this.props.loggingIn ?
-            <span className="btn btn-default">Submitting...</span> :
-            <button type="submit" className="btn btn-default pull-right">Enter Gradientzoo</button>}
+
+          {this.props.registering ?
+            <span className="btn btn-default">Signing up...</span> :
+            <button type="submit" className="btn btn-default pull-right">Sign Up</button>}
         </form>
 
         <Footer />
@@ -92,23 +112,23 @@ class AuthPage extends Component {
   }
 }
 
-AuthPage.propTypes = {
+RegisterPage.propTypes = {
   authTokenId: PropTypes.string,
-  loggingIn: PropTypes.bool,
-  loginError: PropTypes.string,
-  attemptAuth: PropTypes.func.isRequired,
+  registering: PropTypes.bool,
+  registerError: PropTypes.string,
+  register: PropTypes.func.isRequired,
   push: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
   return {
     authTokenId: state.authTokenId,
-    loggingIn: state.loggingIn,
-    loginError: state.loginError
+    registering: state.register.registering,
+    registerError: state.register.registerError
   }
 }
 
 export default Radium(connect(mapStateToProps, {
-  attemptAuth,
+  register,
   push
-})(AuthPage))
+})(RegisterPage))

@@ -29,6 +29,7 @@ type UserApi interface {
 
 	// TODO: Potentially this should be a separate interface
 	ByEmail(email string) (*User, error)
+	ByUsername(username string) (*User, error)
 }
 
 func NewUserDb(db *runner.DB, api *ApiCollection) *UserDb {
@@ -40,7 +41,8 @@ func NewUserDb(db *runner.DB, api *ApiCollection) *UserDb {
 
 type User struct {
 	Id               string    `db:"id" json:"id" msgpack:"id"`
-	Email            string    `db:"email" json:"email" msgpack:"email"`
+	Email            string    `db:"email" json:"-" msgpack:"-"`
+	Username         string    `db:"username" json:"username" msgpack:"username"`
 	PasswordHash     string    `db:"password_hash" json:"-" msgpack:"-"`
 	StripeCustomerId string    `db:"stripe_customer_id" json:"-" msgpack:"-"`
 	CreatedTime      time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
@@ -49,10 +51,11 @@ type User struct {
 	HasStripeCustomerId zero.Bool `json:"has_stripe_customer_id,omitempty" msgpack:"has_stripe_customer_id,omitempty"`
 }
 
-func NewUser(email, password string) *User {
+func NewUser(email, username, password string) *User {
 	user := &User{
 		Id:          uuid.NewUUID().String(),
 		Email:       email,
+		Username:    username,
 		CreatedTime: time.Now().UTC(),
 	}
 	user.SetPassword(password)
@@ -113,6 +116,7 @@ func (db *UserDb) Save(user *User) error {
 	cols := []string{
 		"id",
 		"email",
+		"username",
 		"password_hash",
 		"stripe_customer_id",
 		"created_time",
@@ -120,6 +124,7 @@ func (db *UserDb) Save(user *User) error {
 	vals := []interface{}{
 		user.Id,
 		user.Email,
+		user.Username,
 		user.PasswordHash,
 		user.StripeCustomerId,
 		user.CreatedTime,
@@ -153,6 +158,19 @@ func (db *UserDb) ByEmail(email string) (*User, error) {
 		Select("*").
 		From(USER_TABLE).
 		Where("UPPER(email) = UPPER($1)", email).
+		QueryStruct(&user)
+	if err == sql.ErrNoRows {
+		return nil, err
+	}
+	return &user, err
+}
+
+func (db *UserDb) ByUsername(username string) (*User, error) {
+	var user User
+	err := db.DB.
+		Select("*").
+		From(USER_TABLE).
+		Where("UPPER(username) = UPPER($1)", username).
 		QueryStruct(&user)
 	if err == sql.ErrNoRows {
 		return nil, err

@@ -4,22 +4,24 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/ericflo/gradientzoo/models"
 )
 
-type AuthForm struct {
+type RegisterForm struct {
 	Email    string `json:"email"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-func HandleAuth(c *Context, w http.ResponseWriter, req *http.Request) {
+func HandleRegister(c *Context, w http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 
 	// Parse the JSON POST body
 	decoder := json.NewDecoder(req.Body)
-	var form AuthForm
+	var form RegisterForm
 	if err := decoder.Decode(&form); err != nil {
 		msg := "Could not decode auth form"
 		log.WithField("err", err).Error(msg)
@@ -27,10 +29,23 @@ func HandleAuth(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// TODO: Form validation / sanity / pre-auth check
+	// TODO: Moar form validation / sanity / pre-auth check
+	if len(form.Email) < 4 || !strings.Contains(form.Email, "@") {
+		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Invalid e-mail address"))
+		return
+	}
+	if len(form.Username) < 3 {
+		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Username must be at least 3 characters long"))
+		return
+	}
+	if len(form.Password) < 5 {
+		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Password must be at least 5 characters long"))
+		return
+	}
 
 	clog := log.WithFields(log.Fields{
 		"email":          form.Email,
+		"username":       form.Username,
 		"empty_password": form.Password == "",
 	})
 
@@ -39,45 +54,31 @@ func HandleAuth(c *Context, w http.ResponseWriter, req *http.Request) {
 	if err != nil && err != sql.ErrNoRows {
 		clog.WithField("err", err).Error("Could not look up user by email")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not log you in, please try again soon"))
+			JsonErr("Could not sign you up, please try again soon"))
+		return
+	}
+	if err == nil && user != nil {
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("A user with that e-mail address already exists"))
 		return
 	}
 
-	// If we do find a user
-	if err != sql.ErrNoRows {
-		clog = clog.WithField("user_id", user.Id)
-		// Check their password
-		if user.CheckPassword(form.Password) == nil {
-			// If it's correct, create a new auth token for this user
-			authToken := models.NewAuthToken(user.Id)
-			if err = c.Api.AuthToken.Save(authToken); err != nil {
-				clog.WithField("err", err).Error("Could not save user")
-				c.Render.JSON(w, http.StatusBadGateway,
-					JsonErr("Could not log you in, please try again soon"))
-				return
-			}
-			// Hydrate the user object
-			if err = c.Api.User.Hydrate([]*models.User{user}); err != nil {
-				clog.WithField("err", err).Error("Could not hydrate")
-				c.Render.JSON(w, http.StatusBadGateway,
-					JsonErr("Could not log you in, please try again soon"))
-				return
-			}
-			// Return the user object and the new auth token
-			c.Render.JSON(w, http.StatusOK, map[string]interface{}{
-				"auth_user":  user,
-				"auth_token": authToken,
-			})
-		} else {
-			// If the password is incorrect, return an error saying so
-			c.Render.JSON(w, http.StatusUnauthorized,
-				JsonErr("Your password was incorrect"))
-		}
+	// Now check by username
+	user, err = c.Api.User.ByUsername(form.Username)
+	if err != nil && err != sql.ErrNoRows {
+		clog.WithField("err", err).Error("Could not look up user by username")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not sign you up, please try again soon"))
+		return
+	}
+	if err == nil && user != nil {
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("A user with that username already exists"))
 		return
 	}
 
-	// If we didn't find a user, let's create one
-	user = models.NewUser(form.Email, form.Password)
+	// Let's create a new user
+	user = models.NewUser(form.Email, form.Username, form.Password)
 	if err = c.Api.User.Save(user); err != nil {
 		clog.WithField("err", err).Error("Could not save user")
 		c.Render.JSON(w, http.StatusBadGateway,
@@ -95,7 +96,7 @@ func HandleAuth(c *Context, w http.ResponseWriter, req *http.Request) {
 
 	clog = clog.WithField("user_id", user.Id)
 
-	// Now create a new auth token for this new user
+	// Now create a new auth token for the new user
 	authToken := models.NewAuthToken(user.Id)
 	if err = c.Api.AuthToken.Save(authToken); err != nil {
 		clog.WithField("err", err).Error("Could not save user")
@@ -104,7 +105,7 @@ func HandleAuth(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Return these new user and auth token objects
+	// Return the new user and auth token objects
 	c.Render.JSON(w, http.StatusOK, map[string]interface{}{
 		"auth_user":  user,
 		"auth_token": authToken,

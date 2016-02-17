@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
 import paginate from './paginate'
+import { authTokenId, authUserId, login, register } from './auth'
 import { routeReducer } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
@@ -23,38 +24,7 @@ function entities(state = initialEntitiesState, action) {
   return state
 }
 
-// Updates the state to store the current auth token id
-export const AUTH_LOADING = Symbol('authLoading')
-function authTokenId(state = AUTH_LOADING, action) {
-  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
-    return null
-  }
-  if (action.type === AuthActionTypes.AUTH_RESTORE_SUCCESS) {
-    return action.authTokenId
-  }
-  if (action.response &&
-      action.response.entities &&
-      action.response.entities.authTokens) {
-    return values(action.response.entities.authTokens)[0].id
-  }
-  return state
-}
 
-// Updates the state to store the current auth user id
-function authUserId(state = AUTH_LOADING, action) {
-  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
-    return null
-  }
-  if (action.type === AuthActionTypes.AUTH_RESTORE_SUCCESS) {
-    return action.authUserId
-  }
-  if (action.response &&
-      action.response.entities &&
-      action.response.entities.authTokens) {
-    return values(action.response.entities.authTokens)[0].userId
-  }
-  return state
-}
 
 // Updates the pagination data for different actions.
 /*
@@ -82,6 +52,8 @@ const rootReducer = combineReducers({
   entities,
   authTokenId,
   authUserId,
+  login,
+  register,
   //pagination,
   routing: routeReducer
 })
