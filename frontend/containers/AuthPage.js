@@ -8,12 +8,17 @@ import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
 import NavHeader from './NavHeader'
+import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 
 class AuthPage extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      email: '',
+      password: ''
+    }
     bindAll(this, 'handleSubmit', 'handleEmailChange', 'handlePasswordChange');
   }
 
@@ -55,7 +60,7 @@ class AuthPage extends Component {
             <strong>Error</strong> {this.props.loginError}
           </div> : null}
 
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} className="clearfix">
           <div className={'form-group' + errClass}>
             <label htmlFor="email">Email address</label>
             <input className="form-control"
@@ -77,18 +82,14 @@ class AuthPage extends Component {
           </div>
           {this.props.loggingIn ?
             <span className="btn btn-default">Submitting...</span> :
-            <button type="submit" className="btn btn-default">Submit</button>}
+            <button type="submit" className="btn btn-default pull-right">Enter Gradientzoo</button>}
         </form>
 
+        <Footer />
       </div>
       </DocumentTitle>
     )
   }
-}
-
-AuthPage.state = {
-  email: '',
-  password: ''
 }
 
 AuthPage.propTypes = {

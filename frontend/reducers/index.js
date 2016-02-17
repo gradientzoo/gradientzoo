@@ -13,7 +13,7 @@ const initialEntitiesState = {
   users: {},
 }
 function entities(state = initialEntitiesState, action) {
-  if (action.type === AuthActionTypes.LOGOUT_SUCCESS) {
+  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
     return initialEntitiesState
   }
   if (action.response && action.response.entities) {
@@ -26,7 +26,7 @@ function entities(state = initialEntitiesState, action) {
 // Updates the state to store the current auth token id
 export const AUTH_LOADING = Symbol('authLoading')
 function authTokenId(state = AUTH_LOADING, action) {
-  if (action.type === AuthActionTypes.LOGOUT_SUCCESS) {
+  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
     return null
   }
   if (action.type === AuthActionTypes.AUTH_RESTORE_SUCCESS) {
@@ -42,7 +42,7 @@ function authTokenId(state = AUTH_LOADING, action) {
 
 // Updates the state to store the current auth user id
 function authUserId(state = AUTH_LOADING, action) {
-  if (action.type === AuthActionTypes.LOGOUT_SUCCESS) {
+  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
     return null
   }
   if (action.type === AuthActionTypes.AUTH_RESTORE_SUCCESS) {

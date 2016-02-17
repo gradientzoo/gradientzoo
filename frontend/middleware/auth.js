@@ -50,7 +50,7 @@ export const save = store => next => action => {
     localStore.setItem(STORAGE_AUTH_TOKEN_KEY, values(action.response.entities.authTokens)[0].id)
     localStore.setItem(STORAGE_AUTH_USER_KEY, values(action.response.entities.authTokens)[0].userId)
   }
-  if (action.type === AuthActionTypes.LOGOUT_SUCCESS) {
+  if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
     localStore.clear()
   }
   return next(action)

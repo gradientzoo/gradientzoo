@@ -18,5 +18,8 @@ export default {
     paddingTop: 19,
     color: '#777',
     borderTop: '1px solid #e5e5e5'
+  },
+  descriptionTextarea: {
+    height: 80
   }
 }

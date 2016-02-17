@@ -7,6 +7,11 @@ import (
 )
 
 func HandleLogout(c *Context, w http.ResponseWriter, req *http.Request) {
+	if c.AuthToken == nil {
+		c.Render.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
+		return
+	}
+
 	if err := c.Api.AuthToken.Delete(c.AuthToken.Id); err != nil {
 		log.WithFields(log.Fields{
 			"err":           err,

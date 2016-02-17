@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { push } from 'react-router-redux'
 import { loadAuthUser, logout } from '../actions/auth'
 import isString from 'lodash/isString'
 import bindAll from 'lodash/bindAll'
@@ -15,17 +16,20 @@ class NavHeader extends Component {
   handleLogout(ev) {
     ev.preventDefault()
     this.props.logout()
+    this.props.push('/')
   }
 
   render() {
     const { activeTab, isLoggedIn } = this.props
     const homeActiveClass = activeTab === 'home' ? 'active' : ''
+    const createModelActiveClass = activeTab === 'create-model' ? 'active' : ''
     const authActiveClass = activeTab === 'auth' ? 'active' : ''
     return (
       <div className="header clearfix" style={styles.header}>
         <nav>
           <ul className="nav nav-pills pull-right">
             <li htmlRole="presentation" className={homeActiveClass}><Link to="/">Home</Link></li>
+            <li htmlRole="presentation" className={createModelActiveClass}><Link to="/create-model">Create Model</Link></li>
             <li htmlRole="presentation" className={authActiveClass}>
               {isLoggedIn ?
                 <a href="#" onClick={this.handleLogout}>Logout</a> :
@@ -33,7 +37,7 @@ class NavHeader extends Component {
             </li>
           </ul>
         </nav>
-        <h3 class="text-muted" style={styles.masthead}>Gradientzoo</h3>
+        <h3 className="text-muted" style={styles.masthead}>Gradientzoo</h3>
       </div>
     )
   }
@@ -42,7 +46,8 @@ class NavHeader extends Component {
 NavHeader.PropTypes = {
   activeTab: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  push: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -52,5 +57,6 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  logout
+  logout,
+  push
 })(NavHeader))

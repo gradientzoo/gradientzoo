@@ -3,6 +3,7 @@ import { Route } from 'react-router'
 import App from './containers/App'
 import IndexPage from './containers/IndexPage'
 import AuthPage from './containers/AuthPage'
+import CreateModelPage from './containers/CreateModelPage'
 
 /*
 <Route path="/:login/:name"
@@ -17,5 +18,7 @@ export default (
            component={AuthPage} />
     <Route path="/"
            component={IndexPage} />
+    <Route path="/create-model"
+           component={CreateModelPage} />
   </Route>
 )
