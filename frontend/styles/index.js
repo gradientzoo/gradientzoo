@@ -59,6 +59,14 @@ export default {
     fontSize: '22px',
     textAlign: 'center'
   },
+  modelListHeader: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#999',
+    borderBottom: '1px solid #eee',
+    marginLeft: 40,
+    marginRight: 40
+  },
 
   modelDescription: {
     color: '#999',

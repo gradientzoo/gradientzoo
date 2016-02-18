@@ -33,6 +33,13 @@ class ModelList extends Component {
     }
     return (
       <div style={styles.modelList}>
+        {this.props.models.length > 0 ?
+          <div style={styles.modelRow}>
+            <span style={[styles.modelListHeader, {visibility: 'hidden'}]}></span>
+            <span style={styles.modelListHeader}>Model Name</span>
+            <span style={styles.modelListHeader}>Time Created</span>
+            <span style={styles.modelListHeader}>Visibility</span>
+          </div> : null}
         {map(this.props.models, this.renderRow)}
       </div>
     )
