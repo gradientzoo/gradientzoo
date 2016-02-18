@@ -6,25 +6,34 @@ import filter from 'lodash/filter'
 import head from 'lodash/head'
 import DocumentTitle from 'react-document-title'
 import { loadUserByUsername } from '../actions/auth'
-import { loadModelByUsernameAndSlug } from '../actions/model'
+import { loadModelByUsernameAndSlug, updateModelReadme } from '../actions/model'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
+import ReadmeEditor from '../components/ReadmeEditor'
 import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
+import ReactMarkdown from 'react-markdown'
 
 class ModelPage extends Component {
-  /*
   constructor(props) {
     super(props)
-    bindAll(this, 'handleSubmit')
+    this.state = {readmeLater: false}
+    bindAll(this, 'handleReadmeChange', 'handleReadmeLater')
   }
-  */
 
   componentWillMount() {
     const { routeParams: { username, slug }} = this.props
     this.props.loadModelByUsernameAndSlug(username, slug)
     this.props.loadUserByUsername(username)
+  }
+
+  handleReadmeChange(readme) {
+    this.props.updateModelReadme(this.props.model.id, readme)
+  }
+
+  handleReadmeLater() {
+    this.setState({readmeLater: true})
   }
 
   render() {
@@ -41,8 +50,18 @@ class ModelPage extends Component {
           {slug}{' '}
           {model ? <span style={styles.modelDescription}>{model.name}</span>: null}
         </h2>
-        {model ? <span>{model.createdTime}</span> : null}
+        {/*model && ? <span>{model.createdTime}</span> : null*/}
         {model ? <p>{model.description}</p> : null}
+
+        {model && !model.readme && !this.state.readmeLater ?
+          <div className="alert alert-info" role="alert">
+            <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
+          </div>: null}
+        { model && !model.readme && !this.state.readmeLater ?
+          <ReadmeEditor onChange={this.handleReadmeChange}
+                        onLaterClick={this.handleReadmeLater} /> : null}
+        { model && model.readme ?
+          <ReactMarkdown source={model.readme} /> : null}
 
         <Footer />
       </div>
@@ -61,7 +80,8 @@ ModelPage.propTypes = {
   modelFetchError: PropTypes.string,
   routeParams: PropTypes.object,
   loadUserByUsername: PropTypes.func.isRequired,
-  loadModelByUsernameAndSlug: PropTypes.func.isRequired
+  loadModelByUsernameAndSlug: PropTypes.func.isRequired,
+  updateModelReadme: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -83,5 +103,6 @@ function mapStateToProps(state, props) {
 
 export default Radium(connect(mapStateToProps, {
   loadUserByUsername,
-  loadModelByUsernameAndSlug
+  loadModelByUsernameAndSlug,
+  updateModelReadme
 })(ModelPage))

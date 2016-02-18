@@ -64,5 +64,16 @@ export default {
     color: '#999',
     fontSize: '20px',
     marginLeft: '20px'
+  },
+
+  readmeTemplateLabel: {
+    textAlign: 'left'
+  },
+  readmeEditorTextarea: {
+    minHeight: 120
+  },
+  readmeEditorHeading: {
+    paddingBottom: '0.5em',
+    borderBottom: '1px solid #ddd'
   }
 }

@@ -43,3 +43,17 @@ export function loadModelByUsernameAndSlug(username, slug) {
   }
 }
 
+export const MODEL_UPDATE_README_REQUEST = 'MODEL_UPDATE_README_REQUEST'
+export const MODEL_UPDATE_README_SUCCESS = 'MODEL_UPDATE_README_SUCCESS'
+export const MODEL_UPDATE_README_FAILURE = 'MODEL_UPDATE_README_FAILURE'
+
+export function updateModelReadme(modelId, readme) {
+  return {
+    [CALL_API]: {
+      types: [ MODEL_UPDATE_README_REQUEST, MODEL_UPDATE_README_SUCCESS, MODEL_UPDATE_README_FAILURE ],
+      endpoint: `model/id/${modelId}/readme`,
+      payload: { readme },
+      schema: Schemas.MODEL_RESPONSE
+    }
+  }
+}
