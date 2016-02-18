@@ -5,6 +5,8 @@ import IndexPage from './containers/IndexPage'
 import LoginPage from './containers/LoginPage'
 import RegisterPage from './containers/RegisterPage'
 import CreateModelPage from './containers/CreateModelPage'
+import ProfilePage from './containers/ProfilePage'
+import ModelPage from './containers/ModelPage'
 
 /*
 <Route path="/:login/:name"
@@ -23,5 +25,9 @@ export default (
            component={IndexPage} />
     <Route path="/create-model"
            component={CreateModelPage} />
+    <Route path="/:username"
+           component={ProfilePage} />
+    <Route path="/:username/:slug"
+           component={ModelPage} />
   </Route>
 )

@@ -4,7 +4,7 @@ import pick from 'lodash/pick'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
 import paginate from './paginate'
-import { authTokenId, authUserId, login, register } from './auth'
+import { authTokenId, authUserId } from './auth'
 import { createModel } from './model'
 import { routeReducer } from 'react-router-redux'
 import { combineReducers } from 'redux'
@@ -26,7 +26,26 @@ function entities(state = initialEntitiesState, action) {
   return state
 }
 
+function createFetchStateFunc(fetchName, errorName, actionTypePrefix) {
+  return function(state = {[fetchName]: false, [errorName]: null}, action) {
+    if (action.type === AuthActionTypes[actionTypePrefix + '_REQUEST']) {
+      return {[fetchName]: true, [errorName]: null}
+    }
+    if (action.type === AuthActionTypes[actionTypePrefix + '_SUCCESS']) {
+      return {[fetchName]: false, [errorName]: null}
+    }
+    if (action.type === AuthActionTypes[actionTypePrefix + '_FAILURE']) {
+      return {[fetchName]: false, [errorName]: action.error}
+    }
+    return state
+  }
+}
 
+const login = createFetchStateFunc('loggingIn', 'loginError', 'AUTH_LOGIN')
+const register = createFetchStateFunc('registering', 'registerError', 'AUTH_REGISTER')
+const userByUsername = createFetchStateFunc('fetching', 'fetchError', 'USER_BY_USERNAME')
+const modelsByUsername = createFetchStateFunc('fetching', 'fetchError', 'MODELS_BY_USERNAME')
+const modelByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', 'MODEL_BY_USERNAME_AND_SLUG')
 
 // Updates the pagination data for different actions.
 /*
@@ -56,6 +75,9 @@ const rootReducer = combineReducers({
   authUserId,
   login,
   register,
+  userByUsername,
+  modelsByUsername,
+  modelByUsernameAndSlug,
   createModel,
   //pagination,
   routing: routeReducer

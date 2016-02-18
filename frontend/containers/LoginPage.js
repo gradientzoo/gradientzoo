@@ -48,7 +48,7 @@ class LoginPage extends Component {
   render() {
     const errClass = this.props.loginError ? ' has-error' : ''
     return (
-      <DocumentTitle title='Login - Gradientzoo'>
+      <DocumentTitle title="Login - Gradientzoo">
       <div className="container" style={styles.page}>
 
         <NavHeader activeTab='login' />

@@ -20,7 +20,13 @@ class IndexPage extends Component {
         <div className="jumbotron">
           <h1>Version and share your trained neural network models</h1>
           <p className="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><Link className="btn btn-lg btn-success" to="/register" htmlRole="button">Sign up today</Link></p>
+          <p>
+          <Link className="btn btn-lg btn-success"
+                to="/register"
+                htmlRole="button">
+            Sign up today
+          </Link>
+          </p>
         </div>
 
         <div className="row marketing">

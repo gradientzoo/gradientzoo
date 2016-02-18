@@ -56,7 +56,7 @@ class RegisterPage extends Component {
   render() {
     const errClass = this.props.registerError ? ' has-error' : ''
     return (
-      <DocumentTitle title='Sign Up - Gradientzoo'>
+      <DocumentTitle title="Sign Up - Gradientzoo">
       <div className="container" style={styles.page}>
 
         <NavHeader activeTab='register' />

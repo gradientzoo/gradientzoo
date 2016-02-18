@@ -3,6 +3,7 @@ import { camelizeKeys, decamelizeKeys } from 'humps'
 import isString from 'lodash/isString'
 import 'isomorphic-fetch'
 
+/*
 // Extracts the next page URL from Github API response.
 function getNextPageUrl(response) {
   const link = response.headers.get('link')
@@ -17,6 +18,7 @@ function getNextPageUrl(response) {
 
   return nextLink.split(';')[0].slice(1, -1)
 }
+*/
 
 const API_ROOT = 'http://localhost:8000/'
 
@@ -70,9 +72,11 @@ const userSchema = new Schema('users')
 const authUserSchema = new Schema('authUser')
 const authTokenSchema = new Schema('authTokens')
 const authResponseSchema = new Schema('authResponse')
+const userResponseSchema = new Schema('userResponse')
 const statusSchema = new Schema('status')
 const modelSchema = new Schema('models')
 const modelResponseSchema = new Schema('modelResponse')
+const modelsResponseSchema = new Schema('modelsResponse')
 
 // Nesting definitions
 authUserSchema.define({authUser: userSchema})
@@ -81,13 +85,17 @@ authResponseSchema.define({
   authToken: authTokenSchema
 })
 modelResponseSchema.define({model: modelSchema})
+userResponseSchema.define({user: userSchema})
+modelsResponseSchema.define({models: arrayOf(modelSchema)})
 
 // Schemas for Github API responses.
 export const Schemas = {
   AUTH_USER: authUserSchema,
   AUTH_RESPONSE: authResponseSchema,
+  USER_RESPONSE: userResponseSchema,
   STATUS: statusSchema,
-  MODEL_RESPONSE: modelResponseSchema
+  MODEL_RESPONSE: modelResponseSchema,
+  MODELS_RESPONSE: modelsResponseSchema
 }
 
 // Action key that carries API call info interpreted by this Redux middleware.

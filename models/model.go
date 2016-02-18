@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/pborman/uuid"
+	"gopkg.in/guregu/null.v2/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
 
@@ -45,6 +46,9 @@ type Model struct {
 	Visibility  string    `db:"visibility" json:"visibility" msgpack:"visibility"`
 	Readme      string    `db:"readme" json:"-" msgpack:"-"`
 	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
+
+	// Hydrated fields
+	HydratedReadme zero.String `json:"readme,omitempty" msgpack:"readme,omitempty"`
 }
 
 func NewModel(userId, slug, name, description, visibility string) *Model {
@@ -125,6 +129,9 @@ func (db *ModelDb) Save(model *Model) error {
 }
 
 func (db *ModelDb) Hydrate(models []*Model) error {
+	for _, model := range models {
+		model.HydratedReadme = zero.StringFrom(model.Readme)
+	}
 	return nil
 }
 

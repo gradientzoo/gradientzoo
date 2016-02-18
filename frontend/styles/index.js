@@ -3,6 +3,7 @@ export default {
     paddingTop: 20,
     paddingBottom: 20
   },
+
   header: {
     paddingBottom: 20,
     borderBottom: '1px solid #e5e5e5',
@@ -13,13 +14,55 @@ export default {
     marginBottom: 0,
     lineHeight: '40px'
   },
+
   footer: {
     marginTop: 20,
     paddingTop: 19,
     color: '#777',
     borderTop: '1px solid #e5e5e5'
   },
+
   descriptionTextarea: {
     height: 80
+  },
+
+  modelList: {
+
+  },
+  modelListFetching: {
+    fontWeight: 'bold'
+  },
+
+  modelRow: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '20px',
+    marginBottom: '20px'
+  },
+  modelSlug: {
+    flex: 1,
+    fontSize: '22px'
+  },
+  modelName: {
+    flex: 1,
+    fontSize: '22px',
+    textAlign: 'center'
+  },
+  modelCreatedTime: {
+    flex: 1,
+    fontSize: '14px',
+    textAlign: 'center',
+    color: '#999'
+  },
+  modelVisibility: {
+    flex: 1,
+    fontSize: '22px',
+    textAlign: 'center'
+  },
+
+  modelDescription: {
+    color: '#999',
+    fontSize: '20px',
+    marginLeft: '20px'
   }
 }

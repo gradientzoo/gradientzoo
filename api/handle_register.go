@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"regexp"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
@@ -15,6 +16,8 @@ type RegisterForm struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+var SlugReg = regexp.MustCompile("^[a-zA-Z0-9_]*$")
 
 func HandleRegister(c *Context, w http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
@@ -29,17 +32,23 @@ func HandleRegister(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// TODO: Moar form validation / sanity / pre-auth check
 	if len(form.Email) < 4 || !strings.Contains(form.Email, "@") {
 		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Invalid e-mail address"))
 		return
 	}
+	if !SlugReg.MatchString(form.Username) {
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("Username can contain only letters, numbers, and underscore"))
+		return
+	}
 	if len(form.Username) < 3 {
-		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Username must be at least 3 characters long"))
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("Username must be at least 3 characters long"))
 		return
 	}
 	if len(form.Password) < 5 {
-		c.Render.JSON(w, http.StatusBadRequest, JsonErr("Password must be at least 5 characters long"))
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("Password must be at least 5 characters long"))
 		return
 	}
 

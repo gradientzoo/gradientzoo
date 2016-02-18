@@ -25,7 +25,7 @@ class NavHeader extends Component {
     const createModelActiveClass = activeTab === 'create-model' ? 'active' : ''
     const profileActiveClass = activeTab === 'profile' ? 'active' : ''
     const loginActiveClass = activeTab === 'login' ? 'active' : ''
-    const registerActiveClass = activeTab === 'register' ? 'active' : ''
+    const registerActiveClass = activeTab === 'register' && !isLoggedIn ? 'active' : ''
     return (
       <div className="header clearfix" style={styles.header}>
         <nav>
@@ -52,7 +52,7 @@ class NavHeader extends Component {
             </li>
           </ul>
         </nav>
-        <h3 className="text-muted" style={styles.masthead}>Gradientzoo</h3>
+        <h3 className="text-muted" style={styles.masthead}><Link to="/">Gradientzoo</Link></h3>
       </div>
     )
   }

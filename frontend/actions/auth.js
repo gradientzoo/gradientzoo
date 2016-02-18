@@ -22,6 +22,20 @@ export function loadAuthUser() {
   }
 }
 
+export const USER_BY_USERNAME_REQUEST = 'USER_BY_USERNAME_REQUEST'
+export const USER_BY_USERNAME_SUCCESS = 'USER_BY_USERNAME_SUCCESS'
+export const USER_BY_USERNAME_FAILURE = 'USER_BY_USERNAME_FAILURE'
+
+export function loadUserByUsername(username) {
+  return {
+    [CALL_API]: {
+      types: [ USER_BY_USERNAME_REQUEST, USER_BY_USERNAME_SUCCESS, USER_BY_USERNAME_FAILURE ],
+      endpoint: `user/username/${username}`,
+      schema: Schemas.USER_RESPONSE
+    }
+  }
+}
+
 export const AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST'
 export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS'
 export const AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE'
