@@ -22,7 +22,7 @@ Public domain
 
 ### Training
 
-Trained on randomly affine transformed crops of the ABCD-100 dataset for 2 weeks on 4 TITAN-XYZ video cards.
+Trained on random crops of the ABCD-100 dataset for 2 weeks on 4 TITAN-XYZ video cards.
 
 ### Performance
 
