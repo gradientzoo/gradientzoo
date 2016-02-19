@@ -27,7 +27,7 @@ class ModelList extends Component {
     if (this.props.fetching) {
       return (
         <div style={[styles.modelList, styles.modelListFetching]}>
-          <p>Fetching models...</p>
+          <h3>Fetching models...</h3>
         </div>
       )
     }

@@ -28,7 +28,9 @@ class CreateModelPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.props.created && nextProps.created) {
       // If we've logged in, send the user to their dashboard
-      this.props.push('/')
+      const { authUser: { username } } = this.props
+      const { slug } = this.state
+      this.props.push(`/${username}/${slug}`)
     }
   }
 
@@ -155,6 +157,7 @@ CreateModelPage.propTypes = {
 function mapStateToProps(state, props) {
   return {
     authTokenId: state.authTokenId,
+    authUser: state.authUserId ? state.entities.users[state.authUserId] : null,
     creating: state.createModel.creating,
     created: state.createModel.created,
     error: state.createModel.createError

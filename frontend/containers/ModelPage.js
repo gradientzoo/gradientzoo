@@ -39,6 +39,7 @@ class ModelPage extends Component {
   render() {
     const { routeParams: { username, slug }, user} = this.props
     const { model, modelFetching, modelFetchError } = this.props
+    const modelLoaded = !modelFetching && model
     return (
       <DocumentTitle title={username + '/' + slug + ' - Gradientzoo'}>
       <div className="container" style={styles.page}>
@@ -53,15 +54,24 @@ class ModelPage extends Component {
         {/*model && ? <span>{model.createdTime}</span> : null*/}
         {model ? <p>{model.description}</p> : null}
 
-        {model && !model.readme && !this.state.readmeLater ?
+        {/* If the model is loaded, but doesn't have a readme, and the user hasn't
+            clicked the 'later' button, then show the readme creation dialog. */}
+        { modelLoaded && !model.readme && !this.state.readmeLater ?
           <div className="alert alert-info" role="alert">
             <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
           </div>: null}
-        { model && !model.readme && !this.state.readmeLater ?
+        { modelLoaded && !model.readme && !this.state.readmeLater ?
           <ReadmeEditor onChange={this.handleReadmeChange}
                         onLaterClick={this.handleReadmeLater} /> : null}
-        { model && model.readme ?
-          <ReactMarkdown source={model.readme} /> : null}
+
+        {/* If the model is loaded and does have a readme, show it */}
+        { modelLoaded && model.readme ?
+          <div>
+            <h3>Readme</h3>
+            <div className="jumbotron">
+              <ReactMarkdown source={model.readme} />
+            </div>
+          </div> : null}
 
         <Footer />
       </div>
