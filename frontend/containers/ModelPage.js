@@ -123,7 +123,7 @@ class ModelPage extends Component {
         { modelLoaded && model.readme && !editReadme ?
           <div>
             <h3>Readme <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a></h3>
-            <div className="jumbotron">
+            <div className="well">
               <Markdown source={model.readme} options={remarkableConfig} />
             </div>
           </div> : null}
