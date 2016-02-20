@@ -23,6 +23,7 @@ type ApiCollection struct {
 	User      UserApi
 	AuthToken AuthTokenApi
 	Model     ModelApi
+	File      FileApi
 }
 
 func NewApiCollection(db *runner.DB) *ApiCollection {
@@ -30,6 +31,7 @@ func NewApiCollection(db *runner.DB) *ApiCollection {
 	api.User = NewUserDb(db, api)
 	api.AuthToken = NewAuthTokenDb(db, api)
 	api.Model = NewModelDb(db, api)
+	api.File = NewFileDb(db, api)
 	return api
 }
 
@@ -38,6 +40,7 @@ func (api *ApiCollection) BackendModels() []BackendModel {
 		BackendModel(api.User),
 		BackendModel(api.AuthToken),
 		BackendModel(api.Model),
+		BackendModel(api.File),
 	}
 }
 

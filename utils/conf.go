@@ -26,8 +26,10 @@ type Config struct {
 	PostgresqlTestPassword string
 	PostgresqlTestSslMode  string
 
-	AWSBucket string
-	AWSRegion string
+	AWSBucket          string
+	AWSRegion          string
+	AWSAccessKeyId     string // Unused, just used to remind you to set the env
+	AWSSecretAccessKey string // vars AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 }
 
 func (c Config) Valid() bool {
@@ -69,8 +71,10 @@ var Conf Config = Config{
 	PostgresqlTestUser:     EnvDef("POSTGRESQL_TEST_DB_USER", "test"),
 	PostgresqlTestPassword: EnvDef("POSTGRESQL_TEST_DB_PASSWORD", "test"),
 
-	AWSBucket: EnvDef("AWS_BUCKET", "gradientzoo"),
-	AWSRegion: EnvDef("AWS_REGION", "us-west-2"),
+	AWSBucket:          EnvDef("AWS_BUCKET", "gradientzoo-1"),
+	AWSRegion:          EnvDef("AWS_REGION", "us-west-2"),
+	AWSAccessKeyId:     EnvDef("AWS_ACCESS_KEY_ID", ""),
+	AWSSecretAccessKey: EnvDef("AWS_SECRET_ACCESS_KEY", ""),
 }
 
 func EnvDef(name, def string) string {

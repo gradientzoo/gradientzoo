@@ -37,7 +37,7 @@ class ModelPage extends Component {
   }
 
   render() {
-    const { routeParams: { username, slug }, user} = this.props
+    const { routeParams: { username, slug }, user, authTokenId} = this.props
     const { model, modelFetching, modelFetchError } = this.props
     const modelLoaded = !modelFetching && model
     return (
@@ -53,6 +53,19 @@ class ModelPage extends Component {
         </h2>
         {/*model && ? <span>{model.createdTime}</span> : null*/}
         {model ? <p>{model.description}</p> : null}
+        {model && user && model.userId === user.id ?
+          <div>
+            <h3>Keras Integration</h3>
+            <pre>
+              from keras_gradientzoo import KerasGradientzoo{'\n'}
+              zoo = KerasGradientzoo('{username}/{slug}', auth_token_id='{authTokenId}'){'\n\n'}
+              # Load weights from this Gradientzoo model{'\n'}
+              zoo.load_weights(your_keras_model){'\n\n'}
+              # Save trained weights to this Gradientzoo model{'\n'}
+              callback = zoo.make_save_callback(your_keras_model){'\n'}
+              your_keras_model.fit(X_train, t_train, nb_epoch=3, batch_size=16, callbacks=[callback])
+            </pre>
+          </div>: null}
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'later' button, then show the readme creation dialog. */}
@@ -81,6 +94,7 @@ class ModelPage extends Component {
 }
 
 ModelPage.propTypes = {
+  authTokenId: PropTypes.string,
   authUser: PropTypes.object,
   user: PropTypes.object,
   userFetching: PropTypes.bool,
@@ -101,6 +115,7 @@ function mapStateToProps(state, props) {
   const user = head(filter(state.entities.users, (u) => u.username === username)) || null
   const model = user ? head(filter(state.entities.models, (m) => m.userId === user.id && m.slug === slug)) : null
   return {
+    authTokenId: state.authTokenId,
     userFetching: state.userByUsername.fetching,
     userFetchError: state.userByUsername.fetchError,
     modelFetching: state.modelByUsernameAndSlug.fetching,
