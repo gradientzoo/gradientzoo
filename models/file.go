@@ -27,9 +27,11 @@ type FileApi interface {
 
 	// TODO: Potentially this should be a separate interface
 	ByModelIdLatest(modelId string) ([]*File, error)
-	ByModelIdFilenameLatest(modelId, filename string) ([]*File, error)
+	ByModelIdFilenameLatest(modelId, filename string) (*File, error)
 	ByModelIdFilename(modelId, filename string) ([]*File, error)
+	DeletePending(modelId, filename string) error
 	CommitPending(modelId, filename, fileId string) error
+	ToDelete(modelId, filename string, n int) ([]*File, error)
 }
 
 func NewFileDb(db *runner.DB, api *ApiCollection) *FileDb {
@@ -69,7 +71,7 @@ func (f *File) BlobFilename() string {
 		f.UserId,
 		f.ModelId,
 		f.Id,
-		f.CreatedTime.UnixNano(),
+		f.CreatedTime.Unix(),
 		f.Filename,
 	)
 }
@@ -162,17 +164,17 @@ func (db *FileDb) ByModelIdLatest(modelId string) ([]*File, error) {
 	return files, err
 }
 
-func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) ([]*File, error) {
-	var files []*File
+func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) (*File, error) {
+	var file File
 	err := db.DB.
 		Select("*").
 		From(FILE_TABLE).
 		Where("model_id = $1 AND filename = $2 AND status = $3", modelId, filename, "latest").
-		QueryStructs(&files)
-	if files == nil {
-		files = []*File{}
+		QueryStruct(&file)
+	if err == sql.ErrNoRows {
+		return nil, err
 	}
-	return files, err
+	return &file, err
 }
 
 func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
@@ -188,11 +190,35 @@ func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
 	return files, err
 }
 
+func (db *FileDb) DeletePending(modelId, filename string) error {
+	_, err := db.DB.
+		DeleteFrom(FILE_TABLE).
+		Where("model_id = $1 AND filename = $2 AND status = 'pending'", modelId, filename).
+		Exec()
+	return err
+}
+
 func (db *FileDb) CommitPending(modelId, filename, fileId string) error {
-	_, err := db.DB.Exec(
-		`UPDATE file
+	_, err := db.DB.Exec(`
+		UPDATE file
     SET status = (CASE WHEN id = $1 THEN 'latest' ELSE 'old' END)
     WHERE model_id = $2 AND
           filename = $3`, fileId, modelId, filename)
 	return err
+}
+
+func (db *FileDb) ToDelete(modelId, filename string, n int) ([]*File, error) {
+	var files []*File
+	err := db.DB.
+		Select("*").
+		From(FILE_TABLE).
+		Where("model_id = $1 AND filename = $2", modelId, filename).
+		OrderBy("created_time DESC").
+		Limit(10000).
+		Offset(uint64(n)).
+		QueryStructs(&files)
+	if files == nil {
+		files = []*File{}
+	}
+	return files, err
 }

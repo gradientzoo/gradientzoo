@@ -13,7 +13,8 @@ type CreateModelForm struct {
 	Slug        string `json:"slug"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Visbility   string `json:"visibility"`
+	Visibility  string `json:"visibility"`
+	Keep        int    `jsno:"keep"`
 }
 
 func HandleCreateModel(c *Context, w http.ResponseWriter, req *http.Request) {
@@ -36,7 +37,7 @@ func HandleCreateModel(c *Context, w http.ResponseWriter, req *http.Request) {
 	clog = clog.WithFields(log.Fields{
 		"slug":       form.Slug,
 		"name":       form.Name,
-		"visibility": form.Visbility,
+		"visibility": form.Visibility,
 	})
 
 	// Validation
@@ -72,17 +73,46 @@ func HandleCreateModel(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if form.Visbility != "public" && form.Visbility != "private" {
+	if form.Visibility != "public" && form.Visibility != "private" {
 		c.Render.JSON(w, http.StatusBadRequest,
 			JsonErr("Visibility must be one of 'public', 'private'"))
 		return
 	}
 
+	if form.Keep != 10 {
+		c.Render.JSON(w, http.StatusBadRequest,
+			JsonErr("Sorry, during our alpha testing period you can keep only "+
+				"ten historical model files"))
+		return
+	}
+
 	clog = clog.WithField("passed_validation", true)
 
-	// Let's create a new user
+	// Check to see if they already have a private repo
+	ms, err := c.Api.Model.ByUserId(c.User.Id)
+	if err != nil && err != sql.ErrNoRows {
+		clog.WithField("err", err).Error("Could not look up models by user id")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not create your model, please try again soon"))
+		return
+	}
+	privateCount := 0
+	for _, m := range ms {
+		if m.Visibility == "private" {
+			privateCount += 1
+		}
+	}
+	// If so, disallow creation of a new one
+	if form.Visibility == "private" && privateCount > 0 {
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Sorry, during our alpha testing period you can have only "+
+				"one private model"))
+		return
+	}
+
+	// Now we can create the new model
 	model = models.NewModel(c.User.Id, form.Slug, form.Name, form.Description,
-		form.Visbility)
+		form.Visibility, form.Keep)
 	if err = c.Api.Model.Save(model); err != nil {
 		clog.WithField("err", err).Error("Could not save model")
 		c.Render.JSON(w, http.StatusBadGateway,

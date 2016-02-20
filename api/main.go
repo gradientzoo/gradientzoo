@@ -107,6 +107,7 @@ func makeHandler() http.Handler {
 	GET(router, "/model/username/:username/slug/:slug", HandleModelByUsernameAndSlug)
 	POST(router, "/model/id/:id/readme", Authed(HandleUpdateModelReadme))
 	POST(router, "/file/:username/:slug/:kind/:filename", Authed(HandleFileUpload))
+	GET(router, "/file/:username/:slug/:kind/:filename", HandleFile)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:     []string{"http://localhost:8000", "http://localhost:3000"},

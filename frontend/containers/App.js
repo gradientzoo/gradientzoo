@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { restore, loadAuthUser } from '../actions/auth'
-import { AUTH_LOADING } from '../reducers'
+import { AUTH_LOADING } from '../reducers/auth'
 import DocumentTitle from 'react-document-title'
 
 class App extends Component {

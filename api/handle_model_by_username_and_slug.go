@@ -41,6 +41,11 @@ func HandleModelByUsernameAndSlug(c *Context, w http.ResponseWriter, req *http.R
 			JsonErr("Could not get that model, please try again soon"))
 		return
 	}
+	if m.Visibility == "private" && (c.User == nil || m.UserId != c.User.Id) {
+		c.Render.JSON(w, http.StatusUnauthorized,
+			JsonErr("You don't have permission to access this file"))
+		return
+	}
 
 	clog = clog.WithField("model_id", m.Id)
 

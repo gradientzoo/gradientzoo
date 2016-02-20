@@ -16,9 +16,6 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	filename := c.Params.ByName("filename")
 	clientName := req.Header.Get("X-Gradientzoo-Client-Name")
 
-	// Looks like this is unnecessary?
-	//defer req.Body.Close()
-
 	clog := log.WithFields(log.Fields{
 		"user_id":         c.User.Id,
 		"file_username":   username,
@@ -28,7 +25,7 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 		"client_name":     clientName,
 	})
 
-	// First let's look up this user by their username
+	// First let's look up the user by their username
 	user, err := c.Api.User.ByUsername(username)
 	if err != nil && err != sql.ErrNoRows {
 		clog.WithField("err", err).Error("Could not look up user by username")
@@ -45,11 +42,12 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 
 	clog = clog.WithField("file_user_id", user.Id)
 
+	// Now we get the model
 	m, err := c.Api.Model.ByUserIdSlug(user.Id, slug)
 	if err != nil && err != sql.ErrNoRows {
 		clog.WithField("err", err).Error("Could not look up model by username & slug")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not get that model, please try again soon"))
+			JsonErr("Could not save your file, please try again soon"))
 		return
 	}
 	if err == sql.ErrNoRows || user == nil {
@@ -65,12 +63,20 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 
 	clog = clog.WithField("file_model_id", m.Id)
 
+	// Delete any pending files
+	if err = c.Api.File.DeletePending(m.Id, filename); err != nil {
+		clog.WithField("err", err).Error("Could not delete pending files")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not save your file, please try again soon"))
+		return
+	}
+
 	// Now let's create the new file object
 	f := models.NewFile(c.User.Id, m.Id, filename, kind, clientName)
 	if err = c.Api.File.Save(f); err != nil {
 		clog.WithField("err", err).Error("Could not save file to database")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not save file, please try again soon"))
+			JsonErr("Could not save your file, please try again soon"))
 		return
 	}
 
@@ -98,15 +104,37 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	if err = c.Blob.Save(data, f.BlobFilename(), "application/octet-stream"); err != nil {
 		clog.WithField("err", err).Error("Could not store the image")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not store the image"))
+			JsonErr("Could not save your file, please try again soon"))
 		return
 	}
 
+	// Now we commit this new pending file
 	if err = c.Api.File.CommitPending(m.Id, filename, f.Id); err != nil {
 		clog.WithField("err", err).Error("Could not commit pending")
 		c.Render.JSON(w, http.StatusBadGateway,
 			JsonErr("Could not finalize file upload, please try again soon"))
 		return
+	}
+
+	files, err := c.Api.File.ToDelete(m.Id, filename, 10)
+	if err != nil && err != sql.ErrNoRows {
+		clog.WithField("err", err).Error("Could not delete old files")
+	}
+
+	for _, f := range files {
+		fn := f.BlobFilename()
+		if err = c.Blob.Delete(fn); err != nil {
+			clog.WithFields(log.Fields{
+				"err": err,
+				"delete_blob_filename": fn,
+			}).Error("Could not delete old file from blob storage")
+		}
+		if err = c.Api.File.Delete(f.Id); err != nil {
+			clog.WithFields(log.Fields{
+				"err":            err,
+				"delete_file_id": f.Id,
+			}).Error("Could not delete old file object")
+		}
 	}
 
 	// Return the new user and auth token objects

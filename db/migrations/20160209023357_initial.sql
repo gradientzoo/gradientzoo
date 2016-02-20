@@ -31,6 +31,7 @@ CREATE TABLE model (
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     visibility VARCHAR(20) NOT NULL DEFAULT 'public',
+    keep INTEGER NOT NULL,
     readme TEXT NOT NULL,
     created_time TIMESTAMPTZ NOT NULL,
     FOREIGN KEY (user_id) REFERENCES auth_user(id),

@@ -19,7 +19,8 @@ class CreateModelPage extends Component {
       slug: '',
       name: '',
       description: '',
-      visibility: 'public'
+      visibility: 'public',
+      keep: '10'
     }
     bindAll(this, 'handleSubmit', 'handleSlugChange', 'handleNameChange',
       'handleDescriptionChange', 'handleVisibilityChange');
@@ -57,13 +58,17 @@ class CreateModelPage extends Component {
       return
     }
 
-    const { slug, name, description, visibility } = this.state
-    this.props.createModel(slug, name, description, visibility)
+    const { slug, name, description, visibility, keep } = this.state
+    this.props.createModel(slug, name, description, visibility, keep)
+  }
+
+  handleKeepChange(ev) {
+    alert('Coming soon')
   }
 
   render() {
     const errClass = this.props.error ? ' has-error' : ''
-    const { visibility, description } = this.state
+    const { visibility, description, keep } = this.state
     return (
       <DocumentTitle title='Create Model - Gradientzoo'>
       <div className="container" style={styles.page}>
@@ -131,6 +136,42 @@ class CreateModelPage extends Component {
               Private
             </label>
             </div>
+          </div>
+
+          <div className={'form-group' + errClass}>
+            <label htmlFor="keep">How many historical versions to keep:</label>
+            <label className="radio-inline" style={{paddingLeft: 40}}>
+              <input type="radio"
+                     name="keep"
+                     value="10"
+                     checked={keep === '10'}
+                     onChange={this.handleKeepChange} />
+              10
+            </label>
+            <label className="radio-inline">
+              <input type="radio"
+                     name="keep"
+                     value="100"
+                     checked={keep === '100'}
+                     onChange={this.handleKeepChange} />
+              100
+            </label>
+            <label className="radio-inline">
+              <input type="radio"
+                     name="keep"
+                     value="1000"
+                     checked={keep === '1000'}
+                     onChange={this.handleKeepChange} />
+              1000
+            </label>
+            <label className="radio-inline">
+              <input type="radio"
+                     name="keep"
+                     value="Unlimited"
+                     checked={keep === 'Unlimited'}
+                     onChange={this.handleKeepChange} />
+              Unlimited
+            </label>
           </div>
 
           {this.props.creating ?

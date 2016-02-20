@@ -44,6 +44,7 @@ type Model struct {
 	Name        string    `db:"name" json:"name" msgpack:"name"`
 	Description string    `db:"description" json:"description" msgpack:"description"`
 	Visibility  string    `db:"visibility" json:"visibility" msgpack:"visibility"`
+	Keep        int       `db:"keep" json:"keep" msgpack:"keep"`
 	Readme      string    `db:"readme" json:"-" msgpack:"-"`
 	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
 
@@ -51,7 +52,7 @@ type Model struct {
 	HydratedReadme zero.String `json:"readme,omitempty" msgpack:"readme,omitempty"`
 }
 
-func NewModel(userId, slug, name, description, visibility string) *Model {
+func NewModel(userId, slug, name, description, visibility string, keep int) *Model {
 	model := &Model{
 		Id:          uuid.NewUUID().String(),
 		UserId:      userId,
@@ -59,6 +60,7 @@ func NewModel(userId, slug, name, description, visibility string) *Model {
 		Name:        name,
 		Description: description,
 		Visibility:  visibility,
+		Keep:        keep,
 		CreatedTime: time.Now().UTC(),
 	}
 	return model
@@ -106,6 +108,7 @@ func (db *ModelDb) Save(model *Model) error {
 		"name",
 		"description",
 		"visibility",
+		"keep",
 		"readme",
 		"created_time",
 	}
@@ -116,6 +119,7 @@ func (db *ModelDb) Save(model *Model) error {
 		model.Name,
 		model.Description,
 		model.Visibility,
+		model.Keep,
 		model.Readme,
 		model.CreatedTime,
 	}

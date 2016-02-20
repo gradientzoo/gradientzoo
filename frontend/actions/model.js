@@ -4,12 +4,13 @@ export const CREATE_REQUEST = 'CREATE_REQUEST'
 export const CREATE_SUCCESS = 'CREATE_SUCCESS'
 export const CREATE_FAILURE = 'CREATE_FAILURE'
 
-export function createModel(slug, name, description, visibility) {
+export function createModel(slug, name, description, visibility, keep) {
+  keep = parseInt(keep, 10)
   return {
     [CALL_API]: {
       types: [ CREATE_REQUEST, CREATE_SUCCESS, CREATE_FAILURE ],
       endpoint: `model/create`,
-      payload: {slug, name, description, visibility},
+      payload: {slug, name, description, visibility, keep},
       schema: Schemas.MODEL_RESPONSE
     }
   }

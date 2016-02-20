@@ -41,5 +41,16 @@ func HandleModelsByUsername(c *Context, w http.ResponseWriter, req *http.Request
 		return
 	}
 
-	c.Render.JSON(w, http.StatusOK, map[string][]*models.Model{"models": ms})
+	// Filter out any models the user isn't allowed to see
+	filteredModels := make([]*models.Model, 0, len(ms))
+	for _, m := range ms {
+		if m.Visibility == "private" && (c.User == nil || m.UserId != c.User.Id) {
+			continue
+		}
+		filteredModels = append(filteredModels, m)
+	}
+
+	c.Render.JSON(w, http.StatusOK, map[string][]*models.Model{
+		"models": filteredModels,
+	})
 }

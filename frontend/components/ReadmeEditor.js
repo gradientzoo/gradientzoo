@@ -3,7 +3,24 @@ import Radium from 'radium'
 import styles from '../styles'
 import bindAll from 'lodash/bindAll'
 import TextareaAutosize from 'react-textarea-autosize'
-import ReactMarkdown from 'react-markdown'
+import Markdown from 'react-remarkable'
+import hljs from 'highlight.js'
+
+const remarkableConfig = {
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (err) {}
+    }
+
+    try {
+      return hljs.highlightAuto(str).value;
+    } catch (err) {}
+
+    return '' // use external default escaping
+  }
+}
 
 const DEFAULT_TEMPLATE = `
 ## Background
@@ -34,13 +51,13 @@ It achieves 99.5% top-5 error on ABCDEF-2012-val, 97.4% top-5 error on ABCDEF-20
 
 ### Model Code
 
-\`\`\`
+\`\`\`python
 model = Sequential()
-model.add(ZeroPadding2D((1,1),input_shape=(3,224,224)))
+model.add(ZeroPadding2D((1, 1), input_shape=(3, 224, 224)))
 model.add(Convolution2D(64, 3, 3, activation='relu'))
 model.add(ZeroPadding2D((1,1)))
 model.add(Convolution2D(64, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2))
+model.add(MaxPooling2D((2, 2), strides=(2, 2))
 \`\`\`
 `.trim()
 
@@ -141,7 +158,7 @@ class ReadmeEditor extends Component {
                                 onChange={this.handleReadmeChange} />
             </div>
             <div className="col-sm-6">
-              <ReactMarkdown source={this.state.readme} />
+              <Markdown source={this.state.readme} options={remarkableConfig} />
             </div>
           </div>
 
