@@ -47,7 +47,7 @@ func HandleUpdateModelReadme(c *Context, w http.ResponseWriter, req *http.Reques
 			JsonErr("Could not update model readme, please try again soon"))
 		return
 	}
-	if m == nil {
+	if m == nil || err == sql.ErrNoRows {
 		c.Render.JSON(w, http.StatusNotFound,
 			JsonErr("No model with that id was found"))
 		return

@@ -26,9 +26,10 @@ type FileApi interface {
 	Truncate() error
 
 	// TODO: Potentially this should be a separate interface
-	ByModelIdLatest(modelId string) ([]*File, error)
 	ByModelIdFilenameLatest(modelId, filename string) (*File, error)
 	ByModelIdFilename(modelId, filename string) ([]*File, error)
+	ByModelIdLatest(modelId string) ([]*File, error)
+	ByModelId(modelId string) ([]*File, error)
 	DeletePending(modelId, filename string) error
 	CommitPending(modelId, filename, fileId string) error
 	ToDelete(modelId, filename string, n int) ([]*File, error)
@@ -151,19 +152,6 @@ func (db *FileDb) Truncate() error {
 
 // -
 
-func (db *FileDb) ByModelIdLatest(modelId string) ([]*File, error) {
-	var files []*File
-	err := db.DB.
-		Select("*").
-		From(FILE_TABLE).
-		Where("model_id = $1 AND status = $2", modelId, "latest").
-		QueryStructs(&files)
-	if files == nil {
-		files = []*File{}
-	}
-	return files, err
-}
-
 func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) (*File, error) {
 	var file File
 	err := db.DB.
@@ -183,6 +171,32 @@ func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
 		Select("*").
 		From(FILE_TABLE).
 		Where("model_id = $1 AND filename = $2 AND (status = $3 OR status = $4)", modelId, filename, "latest", "old").
+		QueryStructs(&files)
+	if files == nil {
+		files = []*File{}
+	}
+	return files, err
+}
+
+func (db *FileDb) ByModelIdLatest(modelId string) ([]*File, error) {
+	var files []*File
+	err := db.DB.
+		Select("*").
+		From(FILE_TABLE).
+		Where("model_id = $1 AND status = $2", modelId, "latest").
+		QueryStructs(&files)
+	if files == nil {
+		files = []*File{}
+	}
+	return files, err
+}
+
+func (db *FileDb) ByModelId(modelId string) ([]*File, error) {
+	var files []*File
+	err := db.DB.
+		Select("*").
+		From(FILE_TABLE).
+		Where("model_id = $1", modelId).
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}

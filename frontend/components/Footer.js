@@ -6,7 +6,7 @@ class Footer extends Component {
   render() {
     return (
       <footer className="footer" style={styles.footer}>
-        <p>&copy; 2016 Gradientzoo Contributors</p>
+        <p>&copy; 2016 Eric Florenzano</p>
       </footer>
     )
   }

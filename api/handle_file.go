@@ -71,6 +71,11 @@ func HandleFile(c *Context, w http.ResponseWriter, req *http.Request) {
 			JsonErr("Could not get your file, please try again soon"))
 		return
 	}
+	if err == sql.ErrNoRows || f == nil {
+		c.Render.JSON(w, http.StatusNotFound,
+			JsonErr("There is no file by that name"))
+		return
+	}
 
 	clog = clog.WithField("file_id", f.Id)
 

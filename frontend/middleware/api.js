@@ -77,6 +77,9 @@ const statusSchema = new Schema('status')
 const modelSchema = new Schema('models')
 const modelResponseSchema = new Schema('modelResponse')
 const modelsResponseSchema = new Schema('modelsResponse')
+const fileSchema = new Schema('files')
+const fileResponseSchema = new Schema('fileResponse')
+const filesResponseSchema = new Schema('filesResponse')
 
 // Nesting definitions
 authUserSchema.define({authUser: userSchema})
@@ -84,9 +87,11 @@ authResponseSchema.define({
   authUser: userSchema,
   authToken: authTokenSchema
 })
-modelResponseSchema.define({model: modelSchema})
 userResponseSchema.define({user: userSchema})
+modelResponseSchema.define({model: modelSchema})
 modelsResponseSchema.define({models: arrayOf(modelSchema)})
+fileResponseSchema.define({file: fileSchema})
+filesResponseSchema.define({files: arrayOf(fileSchema)})
 
 // Schemas for Github API responses.
 export const Schemas = {
@@ -95,7 +100,9 @@ export const Schemas = {
   USER_RESPONSE: userResponseSchema,
   STATUS: statusSchema,
   MODEL_RESPONSE: modelResponseSchema,
-  MODELS_RESPONSE: modelsResponseSchema
+  MODELS_RESPONSE: modelsResponseSchema,
+  FILE_RESPONSE: fileResponseSchema,
+  FILES_RESPONSE: filesResponseSchema
 }
 
 // Action key that carries API call info interpreted by this Redux middleware.

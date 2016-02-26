@@ -1,9 +1,11 @@
 import * as AuthActionTypes from '../actions/auth'
 import * as ModelActionTypes from '../actions/model'
+import * as FileActionTypes from '../actions/file'
 import merge from 'lodash/merge'
 import pick from 'lodash/pick'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
+import filter from 'lodash/filter'
 import paginate from './paginate'
 import { authTokenId, authUserId } from './auth'
 import { createModel } from './model'
@@ -14,12 +16,30 @@ import { combineReducers } from 'redux'
 const initialEntitiesState = {
   authTokens: {},
   users: {},
-  models: {}
+  models: {},
+  files: {}
 }
 function entities(state = initialEntitiesState, action) {
   if (action.type === AuthActionTypes.LOGOUT_REQUEST) {
     return initialEntitiesState
   }
+
+  // When we delete a model, we just clear our model cache, so we can then
+  // repopulate it without that deleted model
+  if (action.type === ModelActionTypes.DELETE_MODEL_SUCCESS) {
+    const merged = merge({}, state)
+    merged.models = {}
+    return merged
+  }
+
+  // Since files can change so frequently, when we request new ones we
+  // automatically discard the old ones in our cache
+  if (action.type === FileActionTypes.FILES_BY_USERNAME_AND_SLUG_REQUEST) {
+    const merged = merge({}, state)
+    merged.files = {}
+    return merged
+  }
+
   if (action.response && action.response.entities) {
     const merged = merge({}, state, action.response.entities)
     return pick(merged, keys(initialEntitiesState))
@@ -47,6 +67,8 @@ const register = createFetchStateFunc('registering', 'registerError', AuthAction
 const userByUsername = createFetchStateFunc('fetching', 'fetchError', AuthActionTypes, 'USER_BY_USERNAME')
 const modelsByUsername = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'MODELS_BY_USERNAME')
 const modelByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'MODEL_BY_USERNAME_AND_SLUG')
+const filesByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', FileActionTypes, 'FILES_BY_USERNAME_AND_SLUG')
+const deleteModel = createFetchStateFunc('deleting', 'deleteError', ModelActionTypes, 'DELETE_MODEL')
 
 // Updates the pagination data for different actions.
 /*
@@ -79,7 +101,9 @@ const rootReducer = combineReducers({
   userByUsername,
   modelsByUsername,
   modelByUsernameAndSlug,
+  filesByUsernameAndSlug,
   createModel,
+  deleteModel,
   //pagination,
   routing: routeReducer
 })

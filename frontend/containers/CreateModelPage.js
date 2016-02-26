@@ -63,7 +63,7 @@ class CreateModelPage extends Component {
   }
 
   handleKeepChange(ev) {
-    alert('Coming soon')
+    alert('Coming soon with paid plans!')
   }
 
   render() {

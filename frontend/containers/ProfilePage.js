@@ -28,8 +28,12 @@ class ProfilePage extends Component {
   }
 
   render() {
-    const { routeParams: { username }, user} = this.props
+    const { routeParams: { username }, authUser, user} = this.props
     const { models, modelsFetching, modelsFetchError } = this.props
+    const showEmpty = (
+      user && authUser && user.id === authUser.id && !modelsFetching &&
+      !modelsFetchError && !models.length
+    )
     return (
       <DocumentTitle title={username + ' - Gradientzoo'}>
       <div className="container" style={styles.page}>
@@ -42,6 +46,18 @@ class ProfilePage extends Component {
                    models={models}
                    fetching={modelsFetching}
                    error={modelsFetchError} />
+
+        {showEmpty ?
+          <div className="alert alert-info" role="alert">
+            Looks like you haven't created any models yet.{' '}
+            <strong>Let's create your first model.</strong><br /><br />
+            <Link to="/create-model"
+                  className="btn btn-primary">Create Model</Link>
+          </div> : null}
+        {showEmpty ?
+          <div>
+            <h3></h3>
+          </div> : null}
 
         <Footer />
       </div>

@@ -68,6 +68,23 @@ export default {
     marginRight: 40
   },
 
+  fileList: {
+    marginRight: 56
+  },
+  fileRow: {
+    listStyleType: 'none',
+    lineHeight: '4em',
+    borderBottom: '1px solid #efefef'
+  },
+  fileKind: {
+    cornerRadius: '8px',
+    backgroundColor: '#eee',
+    padding: 4
+  },
+  fileCreated: {
+    textAlign: 'right'
+  },
+
   modelDescription: {
     color: '#999',
     fontSize: '20px',

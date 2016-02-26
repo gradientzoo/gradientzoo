@@ -8,7 +8,7 @@ import (
 	"github.com/ericflo/gradientzoo/models"
 )
 
-func HandleModelByUsernameAndSlug(c *Context, w http.ResponseWriter, req *http.Request) {
+func HandleLatestFilesByUsernameAndSlug(c *Context, w http.ResponseWriter, req *http.Request) {
 	username := c.Params.ByName("username")
 	slug := c.Params.ByName("slug")
 
@@ -22,7 +22,7 @@ func HandleModelByUsernameAndSlug(c *Context, w http.ResponseWriter, req *http.R
 	if err != nil && err != sql.ErrNoRows {
 		clog.WithField("err", err).Error("Could not look up user by username")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not get that model, please try again soon"))
+			JsonErr("Could not get those files, please try again soon"))
 		return
 	}
 
@@ -38,28 +38,36 @@ func HandleModelByUsernameAndSlug(c *Context, w http.ResponseWriter, req *http.R
 	if err != nil && err != sql.ErrNoRows {
 		clog.WithField("err", err).Error("Could not look up model by username & slug")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not get that model, please try again soon"))
+			JsonErr("Could not get those files, please try again soon"))
 		return
 	}
-	if m == nil || err == sql.ErrNoRows {
+	if err == sql.ErrNoRows || m == nil {
 		c.Render.JSON(w, http.StatusNotFound, JsonErr("That model was not found"))
 		return
 	}
 	if m.Visibility == "private" && (c.User == nil || m.UserId != c.User.Id) {
 		c.Render.JSON(w, http.StatusUnauthorized,
-			JsonErr("You don't have permission to access this file"))
+			JsonErr("You don't have permission to access those files"))
 		return
 	}
 
 	clog = clog.WithField("model_id", m.Id)
 
-	// Hydrate the model object
-	if err = c.Api.Model.Hydrate([]*models.Model{m}); err != nil {
-		clog.WithField("err", err).Error("Could not hydrate")
+	files, err := c.Api.File.ByModelIdLatest(m.Id)
+	if err != nil && err != sql.ErrNoRows {
+		clog.WithField("err", err).Error("Could not look up files by model id")
 		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not get that model, please try again soon"))
+			JsonErr("Could not get those files, please try again soon"))
 		return
 	}
 
-	c.Render.JSON(w, http.StatusOK, map[string]*models.Model{"model": m})
+	// Hydrate the file objects
+	if err = c.Api.File.Hydrate(files); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate file")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not get those files, please try again soon"))
+		return
+	}
+
+	c.Render.JSON(w, http.StatusOK, map[string][]*models.File{"files": files})
 }

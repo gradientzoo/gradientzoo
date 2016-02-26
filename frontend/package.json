@@ -17,6 +17,7 @@
     "json-loader": "^0.5.4",
     "localforage": "^1.4.0",
     "lodash": "^4.3.0",
+    "moment": "^2.11.2",
     "normalizr": "^2.0.0",
     "radium": "^0.16.6",
     "react": "^0.14.7",
@@ -27,6 +28,7 @@
     "react-router": "^2.0.0",
     "react-router-redux": "^3.0.0",
     "react-textarea-autosize": "^3.3.0",
+    "react-time": "^4.0.0",
     "redux": "^3.3.1",
     "redux-logger": "^2.5.2",
     "redux-thunk": "^1.0.3"

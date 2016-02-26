@@ -58,3 +58,18 @@ export function updateModelReadme(modelId, readme) {
     }
   }
 }
+
+export const DELETE_MODEL_REQUEST = 'DELETE_MODEL_REQUEST'
+export const DELETE_MODEL_SUCCESS = 'DELETE_MODEL_SUCCESS'
+export const DELETE_MODEL_FAILURE = 'DELETE_MODEL_FAILURE'
+
+export function deleteModel(modelId) {
+  return {
+    [CALL_API]: {
+      types: [ DELETE_MODEL_REQUEST, DELETE_MODEL_SUCCESS, DELETE_MODEL_FAILURE ],
+      endpoint: `model/id/${modelId}/deleted`,
+      payload: { id: modelId },
+      schema: Schemas.STATUS
+    }
+  }
+}
