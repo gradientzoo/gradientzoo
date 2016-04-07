@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gradientzoo-web-deployment
+spec:
+  replicas: 2
+  # template defines the 'cookie cutter' used for creating
+  # new pods when necessary
+  template:
+    metadata:
+      labels:
+        app: gradientzoo-web
+    spec:
+      containers:
+        - name: gradientzoo-web
+          image: gcr.io/gradientzoo-1233/gradientzoo-web:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000

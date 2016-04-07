@@ -4,7 +4,8 @@
   "description": "Frontend app for Gradientzoo",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "node server.dev.js",
+    "prod": "node server.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -47,6 +48,6 @@
     "redux-devtools-log-monitor": "^1.0.4",
     "webpack": "^1.12.13",
     "webpack-dev-middleware": "^1.5.1",
-    "webpack-hot-middleware": "^2.7.1"
+    "webpack-hot-middleware": "^2.9.1"
   }
 }
