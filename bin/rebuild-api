@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$DIR/.."
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/gradientzoo .
+docker build -t gcr.io/gradientzoo-1233/gradientzoo-api:latest .
+rm bin/gradientzoo
+gcloud docker push gcr.io/gradientzoo-1233/gradientzoo-api:latest

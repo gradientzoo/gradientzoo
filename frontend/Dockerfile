@@ -2,6 +2,7 @@ FROM node:argon
 
 # Set up environment variables
 ENV NODE_ENV production
+ENV BUILD_VERSION 2
 
 # Create app directory
 RUN mkdir -p /app

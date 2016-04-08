@@ -7,3 +7,4 @@ webpack-stats.json
 npm-debug.log
 dist
 env
+main

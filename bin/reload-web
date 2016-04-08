@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+kubectl delete pod -l app=gradientzoo-web

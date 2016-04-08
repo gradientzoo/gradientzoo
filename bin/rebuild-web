@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$DIR/../frontend"
+
+docker build -t gcr.io/gradientzoo-1233/gradientzoo-web:latest .
+gcloud docker push gcr.io/gradientzoo-1233/gradientzoo-web:latest
