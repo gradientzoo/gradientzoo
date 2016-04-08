@@ -40,7 +40,9 @@
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-react-hmre": "^1.1.0",
-    "webpack": "^1.12.13"
+    "webpack": "^1.12.13",
+    "compression": "~1.6.1",
+    "http-proxy": "~1.13.2"
   },
   "devDependencies": {
     "concurrently": "^1.0.0",

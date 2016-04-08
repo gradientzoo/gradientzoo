@@ -17,8 +17,13 @@ import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 import Markdown from 'react-remarkable'
-import hljs from 'highlight.js'
 import Time from 'react-time'
+
+import hljs from 'highlight.js/lib/highlight'
+import hljs_javascript from 'highlight.js/lib/languages/javascript'
+import hljs_python from 'highlight.js/lib/languages/python'
+hljs.registerLanguage('javascript', hljs_javascript)
+hljs.registerLanguage('python', hljs_python)
 
 const remarkableConfig = {
   highlight: function (str, lang) {

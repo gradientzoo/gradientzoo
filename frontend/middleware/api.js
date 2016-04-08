@@ -20,7 +20,9 @@ function getNextPageUrl(response) {
 }
 */
 
-const API_ROOT = 'http://localhost:8000/'
+//const API_ROOT = 'http://localhost:8000/'
+//const API_ROOT = 'https://api.gradientzoo.com/'
+const API_ROOT = '/api/'
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
