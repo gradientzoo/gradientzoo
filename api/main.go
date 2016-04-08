@@ -12,7 +12,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/meatballhat/negroni-logrus"
 	"github.com/phyber/negroni-gzip/gzip"
-	"github.com/rs/cors"
 	"gopkg.in/unrolled/render.v1"
 )
 
@@ -111,16 +110,7 @@ func makeHandler() http.Handler {
 	GET(router, "/file/:username/:slug/:kind/:filename", HandleFile)
 	GET(router, "/model/username/:username/slug/:slug/latest-files", HandleLatestFilesByUsernameAndSlug)
 
-	c := cors.New(cors.Options{
-		AllowedOrigins:     []string{"http://localhost:8000", "http://localhost:3000"},
-		AllowedHeaders:     []string{"X-Auth-Token-Id", "Content-Type", "Content-Length", "Accept", "Authorization"},
-		OptionsPassthrough: false,
-		AllowCredentials:   true,
-		Debug:              false,
-	})
-
 	n := negroni.New(negroni.NewLogger())
-	n.Use(c)
 	n.Use(gzip.Gzip(gzip.BestCompression))
 	n.Use(negronilogrus.NewMiddleware())
 	n.UseHandler(router)

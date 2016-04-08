@@ -1,0 +1,105 @@
+hash: b3027de8dadf48726d211b8c1dd5c2cd59f22f93b8970d9ffa4d27f1e160af10
+updated: 2016-04-08T03:02:35.911342522-07:00
+imports:
+- name: github.com/aws/aws-sdk-go
+  version: af189259aa5a4fc580223a86117f25b2b92894ce
+  subpackages:
+  - aws
+  - aws/session
+  - service/s3
+  - aws/awserr
+  - aws/credentials
+  - aws/client
+  - aws/corehandlers
+  - aws/defaults
+  - aws/request
+  - private/endpoints
+  - aws/awsutil
+  - aws/client/metadata
+  - private/protocol
+  - private/protocol/restxml
+  - private/signer/v4
+  - private/waiter
+  - aws/credentials/ec2rolecreds
+  - aws/ec2metadata
+  - private/protocol/query
+  - private/protocol/rest
+  - private/protocol/xml/xmlutil
+  - private/protocol/query/queryutil
+- name: github.com/cenkalti/backoff
+  version: 32cd0c5b3aef12c76ed64aaf678f6c79736be7dc
+- name: github.com/codegangsta/negroni
+  version: c7477ad8e330bef55bf1ebe300cf8aa67c492d1b
+- name: github.com/garyburd/redigo
+  version: 4ed1111375cbeb698249ffe48dd463e9b0a63a7a
+  subpackages:
+  - redis
+  - internal
+- name: github.com/go-ini/ini
+  version: 12f418cc7edc5a618a51407b7ac1f1f512139df3
+- name: github.com/jmespath/go-jmespath
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+- name: github.com/jmoiron/sqlx
+  version: 398dd5876282499cdfd4cb8ea0f31a672abe9495
+  subpackages:
+  - reflectx
+- name: github.com/julienschmidt/httprouter
+  version: 77366a47451a56bb3ba682481eed85b64fea14e8
+- name: github.com/lib/pq
+  version: 3cd0097429be7d611bb644ef85b42bfb102ceea4
+  subpackages:
+  - oid
+- name: github.com/mattn/go-colorable
+  version: 9cbef7c35391cca05f15f8181dc0b18bc9736dbb
+- name: github.com/mattn/go-isatty
+  version: 56b76bdf51f7708750eac80fa38b952bb9f32639
+- name: github.com/maxbrunsfeld/counterfeiter
+  version: a5a62e1d47c3d02bd0a46b57eddb11f60e9b1a48
+- name: github.com/meatballhat/negroni-logrus
+  version: b8551f24ff84b857fd7ba43a2db4c0b97451249d
+- name: github.com/mgutz/ansi
+  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- name: github.com/mgutz/logxi
+  version: 4f3e648499e341551c39e1a70640b902fd35f4bf
+  subpackages:
+  - v1
+- name: github.com/mgutz/str
+  version: 968bf66e3da857419e4f6e71b2d5c9ae95682dc4
+- name: github.com/pborman/uuid
+  version: c55201b036063326c5b1b89ccfe45a184973d073
+- name: github.com/phyber/negroni-gzip
+  version: 1211b7a0892223f5b3f1af8629ea6c3d9f984028
+  subpackages:
+  - gzip
+- name: github.com/pmylund/go-cache
+  version: 1881a9bccb818787f68c52bfba648c6cf34c34fa
+- name: github.com/Sirupsen/logrus
+  version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
+- name: golang.org/x/crypto
+  version: b8a0f4bb4040f8d884435cff35b9691e362cf00c
+  subpackages:
+  - bcrypt
+  - blowfish
+- name: golang.org/x/sys
+  version: a80ff226bd294315526e7ae48959d55635143ea7
+  subpackages:
+  - unix
+- name: golang.org/x/tools
+  version: 13c24a6d6a329878e5ee2cdb76d84423604191d5
+  subpackages:
+  - imports
+- name: gopkg.in/guregu/null.v2
+  version: 4ac4f00378f403715e68ae8827a8b1d8e9addf4a
+  subpackages:
+  - zero
+- name: gopkg.in/mgutz/dat.v1
+  version: 12949dfa90b45a1a62e6227fc1607c4fa1a3274c
+  subpackages:
+  - sqlx-runner
+  - common
+  - reflectx
+  - kvs
+  - postgres
+- name: gopkg.in/unrolled/render.v1
+  version: 198ad4d8b8a4612176b804ca10555b222a086b40
+devImports: []
