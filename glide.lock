@@ -1,6 +1,10 @@
-hash: b3027de8dadf48726d211b8c1dd5c2cd59f22f93b8970d9ffa4d27f1e160af10
-updated: 2016-04-08T03:02:35.911342522-07:00
+hash: fb6abee94088eeb88b7a1babcbd1e8007c0559a0e2690b18b22ab57f7a7f1ee1
+updated: 2016-04-11T01:52:41.409422116-07:00
 imports:
+- name: bitbucket.org/liamstask/goose
+  version: 8488cc47d90c8a502b1c41a462a6d9cc8ee0a895
+  subpackages:
+  - cmd/goose
 - name: github.com/aws/aws-sdk-go
   version: af189259aa5a4fc580223a86117f25b2b92894ce
   subpackages:

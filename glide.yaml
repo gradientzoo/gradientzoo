@@ -28,3 +28,6 @@ import:
 - package: golang.org/x/tools
   subpackages:
   - imports
+- package: bitbucket.org/liamstask/goose
+  subpackages:
+  - cmd/goose
