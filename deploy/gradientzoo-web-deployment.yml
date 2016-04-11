@@ -4,8 +4,6 @@ metadata:
   name: gradientzoo-web-deployment
 spec:
   replicas: 2
-  # template defines the 'cookie cutter' used for creating
-  # new pods when necessary
   template:
     metadata:
       labels:

@@ -8,3 +8,6 @@ npm-debug.log
 dist
 env
 main
+deploy/gradientzoo-secret-postgresql.yml
+deploy/gradientzoo-secret-aws.yml
+bin/dev-env

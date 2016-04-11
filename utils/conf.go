@@ -50,26 +50,18 @@ var Conf Config = Config{
 	Localdev: os.Getenv("LOCALDEV") != "",
 	Port:     EnvDef("PORT", "8000"),
 
-	/*
-		PostgresqlHost:     HostDef("POSTGRESQL", 5432, "localhost"),
-		PostgresqlPort:     EnvDefInt("POSTGRESQL_DB_PORT", 5432),
-		PostgresqlDbName:   EnvDef("POSTGRESQL_DB_NAME", "gradientzoo"),
-		PostgresqlUser:     EnvDef("POSTGRESQL_DB_USER", "gradientzoo"),
-		PostgresqlPassword: EnvDef("POSTGRESQL_DB_PASSWORD", "gradientzoo"),
-		PostgresqlSslMode:  EnvDef("POSTGRESQL_DB_SSLMODE", "disable"),
-	*/
-	PostgresqlHost:     HostDef("POSTGRESQL", 5432, "ec2-54-204-6-113.compute-1.amazonaws.com"),
-	PostgresqlPort:     EnvDefInt("POSTGRESQL_DB_PORT", 5432),
-	PostgresqlDbName:   EnvDef("POSTGRESQL_DB_NAME", "d9idmh83ri9br2"),
-	PostgresqlUser:     EnvDef("POSTGRESQL_DB_USER", "avjsbzrnjkjfir"),
-	PostgresqlPassword: EnvDef("POSTGRESQL_DB_PASSWORD", "bdNaXH2NChX3xqcW9qtG96JvB-"),
-	PostgresqlSslMode:  EnvDef("POSTGRESQL_DB_SSLMODE", "require"),
+	PostgresqlHost:     EnvDef("POSTGRESQL_HOST", "localhost"),
+	PostgresqlPort:     EnvDefInt("POSTGRESQL_PORT", 5432),
+	PostgresqlDbName:   EnvDef("POSTGRESQL_NAME", "gradientzoo"),
+	PostgresqlUser:     EnvDef("POSTGRESQL_USER", "gradientzoo"),
+	PostgresqlPassword: EnvDef("POSTGRESQL_PASSWORD", "gradientzoo"),
+	PostgresqlSslMode:  EnvDef("POSTGRESQL_SSLMODE", "disable"),
 
-	PostgresqlTestHost:     HostDef("POSTGRESQLTST", 5432, "localhost"),
-	PostgresqlTestPort:     EnvDefInt("POSTGRESQL_TEST_DB_PORT", 5432),
-	PostgresqlTestDbName:   EnvDef("POSTGRESQL_TEST_DB_NAME", "test"),
-	PostgresqlTestUser:     EnvDef("POSTGRESQL_TEST_DB_USER", "test"),
-	PostgresqlTestPassword: EnvDef("POSTGRESQL_TEST_DB_PASSWORD", "test"),
+	PostgresqlTestHost:     EnvDef("POSTGRESQL_TEST_HOST", "localhost"),
+	PostgresqlTestPort:     EnvDefInt("POSTGRESQL_TEST_PORT", 5432),
+	PostgresqlTestDbName:   EnvDef("POSTGRESQL_TEST_NAME", "test"),
+	PostgresqlTestUser:     EnvDef("POSTGRESQL_TEST_USER", "test"),
+	PostgresqlTestPassword: EnvDef("POSTGRESQL_TEST_PASSWORD", "test"),
 
 	AWSBucket:          EnvDef("AWS_BUCKET", "gradientzoo-1"),
 	AWSRegion:          EnvDef("AWS_REGION", "us-west-2"),
@@ -82,7 +74,7 @@ func EnvDef(name, def string) string {
 	if ret == "" {
 		ret = def
 	}
-	return ret
+	return strings.TrimSpace(ret)
 }
 
 func EnvEnsure(name string) string {
@@ -90,11 +82,11 @@ func EnvEnsure(name string) string {
 	if ret == "" {
 		log.Fatalln("Must provide a " + name + " environment variable")
 	}
-	return ret
+	return strings.TrimSpace(ret)
 }
 
 func EnvInt(name string) int {
-	i, err := strconv.Atoi(os.Getenv(name))
+	i, err := strconv.Atoi(strings.TrimSpace(os.Getenv(name)))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -132,5 +124,5 @@ func HostDef(name string, port int, def string) string {
 		host = def
 	}
 
-	return host
+	return strings.TrimSpace(host)
 }
