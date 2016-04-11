@@ -1,3 +1,3 @@
 development:
     driver: postgres
-    open: host=ec2-54-204-6-113.compute-1.amazonaws.com user=avjsbzrnjkjfir password=bdNaXH2NChX3xqcW9qtG96JvB- dbname=d9idmh83ri9br2 port=5432 sslmode=require
+    open: host=$POSTGRESQL_HOST user=$POSTGRESQL_USER password=$POSTGRESQL_PASSWORD dbname=$POSTGRESQL_NAME port=$POSTGRESQL_PORT sslmode=$POSTGRESQL_SSLMODE
