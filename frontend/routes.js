@@ -4,7 +4,7 @@ import App from './containers/App'
 import IndexPage from './containers/IndexPage'
 import LoginPage from './containers/LoginPage'
 import RegisterPage from './containers/RegisterPage'
-import CreateModelPage from './containers/CreateModelPage'
+import StartModelPage from './containers/StartModelPage'
 import ProfilePage from './containers/ProfilePage'
 import ModelPage from './containers/ModelPage'
 
@@ -23,8 +23,8 @@ export default (
            component={RegisterPage} />
     <Route path="/"
            component={IndexPage} />
-    <Route path="/create-model"
-           component={CreateModelPage} />
+    <Route path="/start-model"
+           component={StartModelPage} />
     <Route path="/:username"
            component={ProfilePage} />
     <Route path="/:username/:slug"

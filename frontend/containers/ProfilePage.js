@@ -52,10 +52,10 @@ class ProfilePage extends Component {
 
         {showEmpty ?
           <div className="alert alert-info" role="alert">
-            Looks like you haven't created any models yet.{' '}
-            <strong>Let's create your first model.</strong><br /><br />
-            <Link to="/create-model"
-                  className="btn btn-primary">Create Model</Link>
+            Looks like you haven't started any models yet.{' '}
+            <strong>Let's start your first model.</strong><br /><br />
+            <Link to="/start-model"
+                  className="btn btn-primary">Start Model</Link>
           </div> : null}
         {showEmpty ?
           <div>

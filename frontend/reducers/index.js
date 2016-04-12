@@ -62,6 +62,21 @@ function createFetchStateFunc(fetchName, errorName, actionTypes, actionTypePrefi
   }
 }
 
+function createFetchStateOnceFunc(fetchName, errorName, onceName, actionTypes, actionTypePrefix) {
+  return function(state = {[fetchName]: false, [errorName]: null, [onceName]: false}, action) {
+    if (action.type === actionTypes[actionTypePrefix + '_REQUEST']) {
+      return {[fetchName]: true, [errorName]: null, [onceName]: state[onceName]}
+    }
+    if (action.type === actionTypes[actionTypePrefix + '_SUCCESS']) {
+      return {[fetchName]: false, [errorName]: null, [onceName]: true}
+    }
+    if (action.type === actionTypes[actionTypePrefix + '_FAILURE']) {
+      return {[fetchName]: false, [errorName]: action.error, [onceName]: state[onceName]}
+    }
+    return state
+  }
+}
+
 const login = createFetchStateFunc('loggingIn', 'loginError', AuthActionTypes, 'AUTH_LOGIN')
 const register = createFetchStateFunc('registering', 'registerError', AuthActionTypes, 'AUTH_REGISTER')
 const userByUsername = createFetchStateFunc('fetching', 'fetchError', AuthActionTypes, 'USER_BY_USERNAME')
@@ -69,7 +84,7 @@ const modelsByUsername = createFetchStateFunc('fetching', 'fetchError', ModelAct
 const modelByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'MODEL_BY_USERNAME_AND_SLUG')
 const filesByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', FileActionTypes, 'FILES_BY_USERNAME_AND_SLUG')
 const deleteModel = createFetchStateFunc('deleting', 'deleteError', ModelActionTypes, 'DELETE_MODEL')
-const latestPublicModels = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'LATEST_PUBLIC_MODELS')
+const latestPublicModels = createFetchStateOnceFunc('fetching', 'fetchError', 'fetchedOnce', ModelActionTypes, 'LATEST_PUBLIC_MODELS')
 
 // Updates the pagination data for different actions.
 /*

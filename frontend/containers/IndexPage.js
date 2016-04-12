@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { isNull } from 'lodash/util'
 import toArray from 'lodash/toArray'
+import map from 'lodash/map'
 import filter from 'lodash/filter'
 import extend from 'lodash/extend'
-import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
+import reverse from 'lodash/reverse'
+import take from 'lodash/take'
 import DocumentTitle from 'react-document-title'
 import { loadLatestPublicModels } from '../actions/model'
 import NavHeader from './NavHeader'
@@ -16,12 +19,17 @@ import styles from '../styles'
 
 class IndexPage extends Component {
   componentWillMount() {
-    this.props.loadLatestPublicModels()
+    if (!this.props.latestModelsFetchedOnce) {
+      this.props.loadLatestPublicModels()
+    }
   }
 
   render() {
-    const { authUser, models, modelsFetching, modelsFetchError } = this.props
-    //         Welcome, {authUser ? authUser.email : 'Unknown User'}
+    const { authUser,
+            latestModels,
+            latestModelsFetching,
+            latestModelsFetchError } = this.props
+
     return (
       <DocumentTitle title="Gradientzoo: pre-trained neural network models">
       <div className="container" style={styles.page}>
@@ -31,20 +39,35 @@ class IndexPage extends Component {
           <h1>Version and share your trained neural network models</h1>
           <p className="lead">Built-in support for Keras, Tensorflow, Lasagne, and Theano. Or integrate directly with our HTTP API.</p>
           <p>
-          <Link className="btn btn-lg btn-success"
-                to="/register"
-                htmlRole="button">
-            Sign up today
-          </Link>
+          {authUser ? 
+            <Link className="btn btn-lg btn-success"
+                  to="start-model"
+                  htmlRole="button">
+              Start a model
+            </Link> :
+            <Link className="btn btn-lg btn-success"
+                  to="/register"
+                  htmlRole="button">
+              Sign up today
+            </Link>}
           </p>
         </div>
 
         <div className="row">
           <div className="col-lg-12">
-            <h4>Public Datasets</h4>
-            <ModelList models={models}
-                       fetching={modelsFetching}
-                       error={modelsFetchError} />
+            <h4>Most Downloaded Public Datasets</h4>
+            <ModelList models={latestModels}
+                       fetching={latestModelsFetching}
+                       error={latestModelsFetchError} />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-12">
+            <h4>Latest Public Datasets</h4>
+            <ModelList models={latestModels}
+                       fetching={latestModelsFetching}
+                       error={latestModelsFetchError} />
           </div>
         </div>
 
@@ -70,20 +93,27 @@ class IndexPage extends Component {
 
 IndexPage.propTypes = {
   authUser: PropTypes.object,
-  models: PropTypes.arrayOf(PropTypes.object)
+  latestModels: PropTypes.arrayOf(PropTypes.object),
+  latestModelsFetching: PropTypes.bool,
+  latestModelsFetchError: PropTypes.string,
+  latestModelsFetchedOnce: PropTypes.bool
 }
 
 function mapStateToProps(state, props) {
   const { models, users } = state.entities
-  let processedModels = filter(toArray(models), (model) => model.visibility === 'public')
-  processedModels = map(processedModels, (model) => {
+
+  const publicModels = filter(toArray(models), (model) => model.visibility === 'public')
+  const latestModels = take(reverse(sortBy(publicModels, 'createdTime')), 10)
+  const latestModelsWithUrls = map(latestModels, (model) => {
     return extend(model, {url: '/' + users[model['userId']].username + '/' + model.slug})
   })
+
   return {
     authUser: state.authUserId ? users[state.authUserId] : null,
-    models: processedModels,
-    modelsFetching: state.latestPublicModels.fetching,
-    modelsFetchError: state.latestPublicModels.fetchError
+    latestModels: latestModelsWithUrls,
+    latestModelsFetching: state.latestPublicModels.fetching,
+    latestModelsFetchError: state.latestPublicModels.fetchError,
+    latestModelsFetchedOnce: state.latestPublicModels.fetchedOnce
   }
 }
 

@@ -12,7 +12,7 @@ import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 
-class CreateModelPage extends Component {
+class StartModelPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -70,11 +70,11 @@ class CreateModelPage extends Component {
     const errClass = this.props.error ? ' has-error' : ''
     const { visibility, description, keep } = this.state
     return (
-      <DocumentTitle title='Create Model - Gradientzoo'>
+      <DocumentTitle title='Start Model - Gradientzoo'>
       <div className="container" style={styles.page}>
-        <NavHeader activeTab='create-model' />
+        <NavHeader activeTab='start-model' />
 
-        <h2>Create Model</h2>
+        <h2>Start Model</h2>
 
         {this.props.error ?
           <div className="alert alert-danger" role="alert">
@@ -176,7 +176,7 @@ class CreateModelPage extends Component {
 
           {this.props.creating ?
             <span className="btn btn-default pull-right">Creating...</span> :
-            <button type="submit" className="btn btn-default pull-right">Create</button>}
+            <button type="submit" className="btn btn-default pull-right">Start Model</button>}
         </form>
 
         <Footer />
@@ -186,7 +186,7 @@ class CreateModelPage extends Component {
   }
 }
 
-CreateModelPage.propTypes = {
+StartModelPage.propTypes = {
   authTokenId: PropTypes.string,
   creating: PropTypes.bool,
   created: PropTypes.bool,
@@ -208,4 +208,4 @@ function mapStateToProps(state, props) {
 export default Radium(connect(mapStateToProps, {
   createModel,
   push,
-})(CreateModelPage))
+})(StartModelPage))

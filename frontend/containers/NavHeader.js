@@ -22,7 +22,7 @@ class NavHeader extends Component {
   render() {
     const { activeTab, isLoggedIn, authUser } = this.props
     const homeActiveClass = activeTab === 'home' ? 'active' : ''
-    const createModelActiveClass = activeTab === 'create-model' ? 'active' : ''
+    const createModelActiveClass = activeTab === 'start-model' ? 'active' : ''
     const profileActiveClass = activeTab === 'profile' ? 'active' : ''
     const loginActiveClass = activeTab === 'login' ? 'active' : ''
     const registerActiveClass = activeTab === 'register' && !isLoggedIn ? 'active' : ''
@@ -35,7 +35,7 @@ class NavHeader extends Component {
             </li>
             {isLoggedIn ?
               <li className={createModelActiveClass} htmlRole="presentation">
-                <Link to="/create-model">Create Model</Link>
+                <Link to="/start-model">Start Model</Link>
               </li> : null}
             {authUser ?
               <li className={profileActiveClass} htmlRole="presentation">
