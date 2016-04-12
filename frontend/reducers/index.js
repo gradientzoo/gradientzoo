@@ -69,6 +69,7 @@ const modelsByUsername = createFetchStateFunc('fetching', 'fetchError', ModelAct
 const modelByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'MODEL_BY_USERNAME_AND_SLUG')
 const filesByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', FileActionTypes, 'FILES_BY_USERNAME_AND_SLUG')
 const deleteModel = createFetchStateFunc('deleting', 'deleteError', ModelActionTypes, 'DELETE_MODEL')
+const latestPublicModels = createFetchStateFunc('fetching', 'fetchError', ModelActionTypes, 'LATEST_PUBLIC_MODELS')
 
 // Updates the pagination data for different actions.
 /*
@@ -104,6 +105,7 @@ const rootReducer = combineReducers({
   filesByUsernameAndSlug,
   createModel,
   deleteModel,
+  latestPublicModels,
   //pagination,
   routing: routeReducer
 })

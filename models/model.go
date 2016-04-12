@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/pborman/uuid"
 	"gopkg.in/guregu/null.v2/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
@@ -28,6 +29,7 @@ type ModelApi interface {
 	// TODO: Potentially this should be a separate interface
 	ByUserId(userId string) ([]*Model, error)
 	ByUserIdSlug(userId, slug string) (*Model, error)
+	ByVisibility(visibility string, limit int, last string) ([]*Model, error)
 }
 
 func NewModelDb(db *runner.DB, api *ApiCollection) *ModelDb {
@@ -170,4 +172,22 @@ func (db *ModelDb) ByUserIdSlug(userId, slug string) (*Model, error) {
 		return nil, err
 	}
 	return &model, err
+}
+
+func (db *ModelDb) ByVisibility(visibility string, limit int, last string) ([]*Model, error) {
+	if last != "" {
+		log.Error("ByVisibility does not yet handle pagination, 'last' param ignored")
+	}
+	var models []*Model
+	err := db.DB.
+		Select("*").
+		From(MODEL_TABLE).
+		Where("visibility = $1", visibility).
+		OrderBy("created_time DESC").
+		Limit(uint64(limit)).
+		QueryStructs(&models)
+	if models == nil {
+		models = []*Model{}
+	}
+	return models, err
 }

@@ -3,7 +3,11 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { isNull } from 'lodash/util'
 import toArray from 'lodash/toArray'
+import filter from 'lodash/filter'
+import extend from 'lodash/extend'
+import map from 'lodash/map'
 import DocumentTitle from 'react-document-title'
+import { loadLatestPublicModels } from '../actions/model'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
 import Footer from '../components/Footer'
@@ -11,8 +15,12 @@ import Radium from 'radium'
 import styles from '../styles'
 
 class IndexPage extends Component {
+  componentWillMount() {
+    this.props.loadLatestPublicModels()
+  }
+
   render() {
-    const { authUser, models } = this.props
+    const { authUser, models, modelsFetching, modelsFetchError } = this.props
     //         Welcome, {authUser ? authUser.email : 'Unknown User'}
     return (
       <DocumentTitle title="Gradientzoo: pre-trained neural network models">
@@ -34,7 +42,9 @@ class IndexPage extends Component {
         <div className="row">
           <div className="col-lg-12">
             <h4>Public Datasets</h4>
-            <ModelList models={models} />
+            <ModelList models={models}
+                       fetching={modelsFetching}
+                       error={modelsFetchError} />
           </div>
         </div>
 
@@ -64,10 +74,19 @@ IndexPage.propTypes = {
 }
 
 function mapStateToProps(state, props) {
+  const { models, users } = state.entities
+  let processedModels = filter(toArray(models), (model) => model.visibility === 'public')
+  processedModels = map(processedModels, (model) => {
+    return extend(model, {url: '/' + users[model['userId']].username + '/' + model.slug})
+  })
   return {
-    authUser: state.authUserId ? state.entities.users[state.authUserId] : null,
-    models: toArray(state.entities.models)
+    authUser: state.authUserId ? users[state.authUserId] : null,
+    models: processedModels,
+    modelsFetching: state.latestPublicModels.fetching,
+    modelsFetchError: state.latestPublicModels.fetchError
   }
 }
 
-export default Radium(connect(mapStateToProps, {})(IndexPage))
+export default Radium(connect(mapStateToProps, {
+  loadLatestPublicModels
+})(IndexPage))

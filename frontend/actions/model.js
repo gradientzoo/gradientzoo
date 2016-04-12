@@ -73,3 +73,17 @@ export function deleteModel(modelId) {
     }
   }
 }
+
+export const LATEST_PUBLIC_MODELS_REQUEST = 'LATEST_PUBLIC_MODELS_REQUEST'
+export const LATEST_PUBLIC_MODELS_SUCCESS = 'LATEST_PUBLIC_MODELS_SUCCESS'
+export const LATEST_PUBLIC_MODELS_FAILURE = 'LATEST_PUBLIC_MODELS_FAILURE'
+
+export function loadLatestPublicModels() {
+  return {
+    [CALL_API]: {
+      types: [ LATEST_PUBLIC_MODELS_REQUEST, LATEST_PUBLIC_MODELS_SUCCESS, LATEST_PUBLIC_MODELS_FAILURE ],
+      endpoint: `models/public/latest`,
+      schema: Schemas.MODELS_USERS_RESPONSE
+    }
+  }
+}

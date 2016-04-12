@@ -10,9 +10,9 @@ import (
 	"github.com/ericflo/gradientzoo/models"
 	"github.com/ericflo/gradientzoo/utils"
 	"github.com/julienschmidt/httprouter"
-	"github.com/meatballhat/negroni-logrus"
+	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/phyber/negroni-gzip/gzip"
-	"gopkg.in/unrolled/render.v1"
+	render "gopkg.in/unrolled/render.v1"
 )
 
 type Handler func(c *Context, w http.ResponseWriter, req *http.Request)
@@ -103,6 +103,7 @@ func makeHandler() http.Handler {
 	POST(router, "/model/create", Authed(HandleCreateModel))
 	GET(router, "/user/username/:username", HandleUserByUsername)
 	GET(router, "/models/username/:username", HandleModelsByUsername)
+	GET(router, "/models/public/latest", HandleLatestPublicModels)
 	GET(router, "/model/username/:username/slug/:slug", HandleModelByUsernameAndSlug)
 	POST(router, "/model/id/:id/readme", Authed(HandleUpdateModelReadme))
 	POST(router, "/model/id/:id/deleted", Authed(HandleDeleteModel))

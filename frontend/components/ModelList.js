@@ -14,8 +14,9 @@ class ModelList extends Component {
   renderRow(model) {
     return (
       <div key={model.id} style={styles.modelRow}>
-        <Link to={model.url}
-              style={styles.modelSlug}>{model.slug}</Link>
+        {model.url ? <Link to={model.url}
+                           style={styles.modelSlug}>{model.slug}</Link> :
+                     <span style={styles.modelSlug}>{model.slug}</span>}
         <span style={styles.modelName}>{model.name}</span>
         <span style={styles.modelCreatedTime}>{model.createdTime}</span>
         <span style={styles.modelVisibility}>{model.visibility}</span>

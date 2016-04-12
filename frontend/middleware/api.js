@@ -77,6 +77,7 @@ const statusSchema = new Schema('status')
 const modelSchema = new Schema('models')
 const modelResponseSchema = new Schema('modelResponse')
 const modelsResponseSchema = new Schema('modelsResponse')
+const modelsUsersResponseSchema = new Schema('modelsUsersResponse')
 const fileSchema = new Schema('files')
 const fileResponseSchema = new Schema('fileResponse')
 const filesResponseSchema = new Schema('filesResponse')
@@ -90,10 +91,14 @@ authResponseSchema.define({
 userResponseSchema.define({user: userSchema})
 modelResponseSchema.define({model: modelSchema})
 modelsResponseSchema.define({models: arrayOf(modelSchema)})
+modelsUsersResponseSchema.define({
+  models: arrayOf(modelSchema),
+  users: arrayOf(userSchema)
+})
 fileResponseSchema.define({file: fileSchema})
 filesResponseSchema.define({files: arrayOf(fileSchema)})
 
-// Schemas for Github API responses.
+// Schemas for Gradientzoo API responses.
 export const Schemas = {
   AUTH_USER: authUserSchema,
   AUTH_RESPONSE: authResponseSchema,
@@ -101,6 +106,7 @@ export const Schemas = {
   STATUS: statusSchema,
   MODEL_RESPONSE: modelResponseSchema,
   MODELS_RESPONSE: modelsResponseSchema,
+  MODELS_USERS_RESPONSE: modelsUsersResponseSchema,
   FILE_RESPONSE: fileResponseSchema,
   FILES_RESPONSE: filesResponseSchema
 }
