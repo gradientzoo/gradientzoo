@@ -41,7 +41,7 @@ class IndexPage extends Component {
           <p>
           {authUser ? 
             <Link className="btn btn-lg btn-success"
-                  to="start-model"
+                  to="/start-model"
                   htmlRole="button">
               Start a model
             </Link> :
@@ -50,6 +50,13 @@ class IndexPage extends Component {
                   htmlRole="button">
               Sign up today
             </Link>}
+          {' '}
+          {authUser ?
+            <Link className="btn btn-lg btn-default"
+                  to={'/' + authUser.username}
+                  htmlRole="button">
+              Go to your profile &raquo;
+            </Link> : null}
           </p>
         </div>
 
