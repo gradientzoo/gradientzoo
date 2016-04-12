@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+./bin/rebuild-api && ./bin/rebuild-web && ./bin/reload-api && ./bin/reload-web
