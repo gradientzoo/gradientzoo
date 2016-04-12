@@ -42,7 +42,10 @@
     "babel-preset-react-hmre": "^1.1.0",
     "webpack": "^1.12.13",
     "compression": "~1.6.1",
-    "http-proxy": "~1.13.2"
+    "http-proxy": "~1.13.2",
+    "basic-auth-connect": "~1.0.0",
+    "react-ga": "~1.3.0",
+    "object-assign": "~4.0.1"
   },
   "devDependencies": {
     "concurrently": "^1.0.0",

@@ -29,5 +29,12 @@ module.exports = {
         loader: 'json'
       }
     ]
+  },
+  resolve: {
+    alias: {
+      // temporary fix for missing require in `react-ga`
+      // cf. https://github.com/react-ga/react-ga/issues/53
+      'react/lib/Object.assign': 'object-assign'
+    }
   }
 }

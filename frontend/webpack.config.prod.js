@@ -1,6 +1,8 @@
 var path = require('path')
 var webpack = require('webpack')
 
+var gaid = process.env.GOOGLE_ANALYTICS_ID
+
 module.exports = {
   entry: [
     './index'
@@ -13,8 +15,9 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
-      },
+        NODE_ENV: JSON.stringify('production'),
+        GOOGLE_ANALYTICS_ID: gaid ? JSON.stringify(gaid) : null
+      }
     }),
     new webpack.NoErrorsPlugin(),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -56,5 +59,12 @@ module.exports = {
         loader: 'json'
       }
     ]
+  },
+  resolve: {
+    alias: {
+      // temporary fix for missing require in `react-ga`
+      // cf. https://github.com/react-ga/react-ga/issues/53
+      'react/lib/Object.assign': 'object-assign'
+    }
   }
 }

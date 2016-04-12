@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import bindAll from 'lodash/bindAll'
 import filter from 'lodash/filter'
+import toArray from 'lodash/toArray'
+import extend from 'lodash/extend'
+import map from 'lodash/map'
 import head from 'lodash/head'
 import DocumentTitle from 'react-document-title'
 import { loadUserByUsername } from '../actions/auth'
@@ -80,19 +83,23 @@ ProfilePage.propTypes = {
 }
 
 function mapStateToProps(state, props) {
-  const { routeParams: { username }} = props
-  const authUser = state.authUserId ? state.entities.users[state.authUserId] : null
+  const { routeParams: { username } } = props
+  const { users, models } = state.entities
+  const authUser = state.authUserId ? users[state.authUserId] : null
   // TODO: Use reselect instead of filtering through all users
-  const user = head(filter(state.entities.users, (u) => u.username === username)) || null
-  const models = user ? filter(state.entities.models, (m) => m.userId === user.id) : []
+  const user = head(filter(users, (u) => u.username === username)) || null
+  let processedModels = filter(toArray(models), (model) => model.userId === user.id)
+  processedModels = map(processedModels, (model) => {
+    return extend(model, {url: '/' + users[model['userId']].username + '/' + model.slug})
+  })
   return {
     userFetching: state.userByUsername.fetching,
     userFetchError: state.userByUsername.fetchError,
     modelsFetching: state.modelsByUsername.fetching,
     modelsFetchError: state.modelsByUsername.fetchError,
+    models: processedModels,
     authUser,
     user,
-    models,
   }
 }
 

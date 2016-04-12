@@ -6,5 +6,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd "$DIR/../frontend"
 
-NODE_ENV=production docker build -t gcr.io/gradientzoo-1233/gradientzoo-web:latest .
+NODE_ENV=production docker build --build-arg GOOGLE_ANALYTICS_ID_ARG=$GOOGLE_ANALYTICS_ID -t gcr.io/gradientzoo-1233/gradientzoo-web:latest .
 gcloud docker push gcr.io/gradientzoo-1233/gradientzoo-web:latest

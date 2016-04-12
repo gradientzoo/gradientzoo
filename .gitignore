@@ -10,4 +10,5 @@ env
 main
 deploy/gradientzoo-secret-postgresql.yml
 deploy/gradientzoo-secret-aws.yml
+deploy/gradientzoo-secret-google-analytics.yml
 bin/dev-env

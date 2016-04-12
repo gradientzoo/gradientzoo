@@ -14,7 +14,7 @@ class ModelList extends Component {
   renderRow(model) {
     return (
       <div key={model.id} style={styles.modelRow}>
-        <Link to={'/' + this.props.user.username + '/' + model.slug}
+        <Link to={model.url}
               style={styles.modelSlug}>{model.slug}</Link>
         <span style={styles.modelName}>{model.name}</span>
         <span style={styles.modelCreatedTime}>{model.createdTime}</span>
@@ -31,6 +31,7 @@ class ModelList extends Component {
         </div>
       )
     }
+    console.log('this.props.models.length: ' + this.props.models.length + ' this.props.models.length > 0: ' + (this.props.models.length > 0))
     return (
       <div style={styles.modelList}>
         {this.props.models.length > 0 ?
@@ -47,7 +48,6 @@ class ModelList extends Component {
 }
 
 ModelList.propTypes = {
-  user: PropTypes.object,
   models: PropTypes.arrayOf(PropTypes.object),
   fetching: PropTypes.bool,
   error: PropTypes.string
