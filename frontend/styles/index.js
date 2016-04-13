@@ -76,7 +76,7 @@ export default {
     lineHeight: '4em',
     borderBottom: '1px solid #efefef'
   },
-  fileKind: {
+  fileFramework: {
     cornerRadius: '8px',
     backgroundColor: '#eee',
     padding: 4

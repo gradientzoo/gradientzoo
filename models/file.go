@@ -48,19 +48,19 @@ type File struct {
 	ModelId     string    `db:"model_id" json:"model_id" msgpack:"model_id"`
 	Filename    string    `db:"filename" json:"filename" msgpack:"filename"`
 	Status      string    `db:"status" json:"-" msgpack:"-"`
-	Kind        string    `db:"kind" json:"kind" msgpack:"kind"`
+	Framework   string    `db:"framework" json:"framework" msgpack:"framework"`
 	ClientName  string    `db:"client_name" json:"client_name" msgpack:"client_name"`
 	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
 }
 
-func NewFile(userId, modelId, filename, kind, clientName string) *File {
+func NewFile(userId, modelId, filename, framework, clientName string) *File {
 	f := &File{
 		Id:          uuid.NewUUID().String(),
 		UserId:      userId,
 		ModelId:     modelId,
 		Filename:    filename,
 		Status:      "pending",
-		Kind:        kind,
+		Framework:   framework,
 		ClientName:  clientName,
 		CreatedTime: time.Now().UTC(),
 	}
@@ -118,7 +118,7 @@ func (db *FileDb) Save(f *File) error {
 		"model_id",
 		"filename",
 		"status",
-		"kind",
+		"framework",
 		"client_name",
 		"created_time",
 	}
@@ -128,7 +128,7 @@ func (db *FileDb) Save(f *File) error {
 		f.ModelId,
 		f.Filename,
 		f.Status,
-		f.Kind,
+		f.Framework,
 		f.ClientName,
 		f.CreatedTime,
 	}

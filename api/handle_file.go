@@ -11,13 +11,13 @@ import (
 func HandleFile(c *Context, w http.ResponseWriter, req *http.Request) {
 	username := c.Params.ByName("username")
 	slug := c.Params.ByName("slug")
-	kind := c.Params.ByName("kind")
+	framework := c.Params.ByName("framework")
 	filename := c.Params.ByName("filename")
 
 	fields := log.Fields{
 		"file_username":   username,
 		"file_model_slug": slug,
-		"file_kind":       kind,
+		"file_framework":  framework,
 		"filename":        filename,
 	}
 	if c.User != nil {

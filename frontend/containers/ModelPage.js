@@ -150,7 +150,7 @@ class ModelPage extends Component {
                       <a href="#" onClick={this.handleFileClick}>{file.filename}</a>
                     </div>
                     <div className="col-md-3">
-                      <span style={styles.fileKind}>{file.kind}</span>
+                      <span style={styles.fileFramework}>{file.framework}</span>
                     </div>
                     <div className="col-md-6" style={styles.fileCreated}>
                       <Time 

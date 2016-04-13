@@ -12,7 +12,7 @@ import (
 func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	username := c.Params.ByName("username")
 	slug := c.Params.ByName("slug")
-	kind := c.Params.ByName("kind")
+	framework := c.Params.ByName("framework")
 	filename := c.Params.ByName("filename")
 	clientName := req.Header.Get("X-Gradientzoo-Client-Name")
 
@@ -20,7 +20,7 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 		"user_id":         c.User.Id,
 		"file_username":   username,
 		"file_model_slug": slug,
-		"file_kind":       kind,
+		"file_framework":  framework,
 		"filename":        filename,
 		"client_name":     clientName,
 	})
@@ -72,7 +72,7 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Now let's create the new file object
-	f := models.NewFile(c.User.Id, m.Id, filename, kind, clientName)
+	f := models.NewFile(c.User.Id, m.Id, filename, framework, clientName)
 	if err = c.Api.File.Save(f); err != nil {
 		clog.WithField("err", err).Error("Could not save file to database")
 		c.Render.JSON(w, http.StatusBadGateway,
