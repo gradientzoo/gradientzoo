@@ -27,8 +27,6 @@ Here's what we're going to do:
 
 **TODO:** *Finish writing this README*
 
-Finally, you'll want to point your DNS entries to your new cluster
-
 Here are the commands you'll need to open up the firewall:
 
 ```console
@@ -40,3 +38,6 @@ gcloud compute firewall-rules create allow-130-211-0-0-22 \
   --target-tags $TAG \
   --allow tcp:$WWW_NODE_PORT,tcp:$API_NODE_PORT
 ```
+
+Finally, you'll want to point your DNS entries to your new cluster, and then
+you're set!
