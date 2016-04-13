@@ -3,6 +3,6 @@ Frontend
 
 To start the server, enter the following command:
 
-```bash
+```console
 npm run dev
 ```
