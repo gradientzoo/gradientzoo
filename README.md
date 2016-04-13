@@ -51,3 +51,34 @@ gcloud compute firewall-rules create allow-130-211-0-0-22 \
 
 Finally, you'll want to point your DNS entries to your new cluster, and then
 you're set!
+
+TODO
+====
+
+* Add file size metadata to file row
+* Moar integrations
+* Add more metadata to file row (accuracy?)
+* Keep track of and display download count for each file
+* Prevent files larger than a max filesize from being uploaded
+* Write page explaining the open source aspect of the project
+* Allow user to download by clicking on file on web
+* Update homepage to list the real most downloaded models
+* Links from homepage to full model lists
+* Infinite pagination on the full model lists
+* Implement Stripe, different account levels, and pricing page
+* Improve empty states and loading screens
+* Fill in marketing information on the homepage
+* Overhaul the model list look and feel
+* Allow user to edit the name and description of their model
+* Toggle between other integration examples besides Keras, and only show the
+  frameworks that are represented in the file listing
+* Update Keras README example code to be more modern
+* Format times properly across the site
+* Add time created display to model page
+* Forgot password flow
+* Log in with GitHub
+* [ops] Switch to Google Cloud Storage rather than AWS for blob storage
+* [ops] Switch to internal PostgreSQL for latency and devops simplicity reasons
+* [ops] Set up an ElasticSearch, Logstash/Heka, Kibana (E[LH]K) stack
+* Badge for projects on GitHub
+* Import common public domain datasets for popular libraries into a 'commons'
