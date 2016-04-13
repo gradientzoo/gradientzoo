@@ -1,11 +1,21 @@
 Gradientzoo
 -----------
 
-To start the server, enter the following command:
+To start the development server, enter the following command:
 
 ```console
-go run main.go
+source bin/dev-env && go run main.go
 ```
+
+If that doesn't work, you need to set up your development configuration, first
+by copying the template:
+
+```console
+cp bin/dev-env.template bin/dev-env
+```
+
+Then fill in the information pointing to your PostgreSQL and AWS services, and
+re-run the command above starting with ``source``.
 
 First-Time Deployment
 =====================
