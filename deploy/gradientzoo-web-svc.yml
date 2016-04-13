@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: gradientzoo-web-svc
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-  - port: 80 # the port that this service should serve on
+  - port: 3000 # the port that this service should serve on
     targetPort: 3000 # the container on each pod to connect to, can be a name (e.g. 'www') or a number (e.g. 80)
     protocol: TCP
   # just like the selector in the deployment,

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gradientzoo-api-ingress
+spec:
+  tls:
+    - secretName: gradientzoo-api-cert
+      hosts:
+        - api.gradientzoo.com
+  backend:
+    serviceName: gradientzoo-web-svc
+    servicePort: 3000
+  rules:
+  - host: api.gradientzoo.com
+    http:
+      paths:
+      - backend:
+          serviceName: gradientzoo-api-svc
+          servicePort: 8000

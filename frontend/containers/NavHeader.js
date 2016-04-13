@@ -31,7 +31,7 @@ class NavHeader extends Component {
         <nav>
           <ul className="nav nav-pills pull-right">
             <li className={homeActiveClass} htmlRole="presentation">
-              <Link to="/">Home</Link>
+              <Link to="/index">Home</Link>
             </li>
             {isLoggedIn ?
               <li className={createModelActiveClass} htmlRole="presentation">
@@ -52,7 +52,7 @@ class NavHeader extends Component {
             </li>
           </ul>
         </nav>
-        <h3 className="text-muted" style={styles.masthead}><Link to="/">Gradientzoo</Link></h3>
+        <h3 className="text-muted" style={styles.masthead}><Link to="/index">Gradientzoo</Link></h3>
       </div>
     )
   }

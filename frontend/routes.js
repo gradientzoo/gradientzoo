@@ -17,11 +17,12 @@ import ModelPage from './containers/ModelPage'
 
 export default (
   <Route path="" component={App}>
+    <Route path="/" component={() => React.createElement('span', null, 'Coming Soon...')} />
     <Route path="/login"
            component={LoginPage} />
     <Route path="/register"
            component={RegisterPage} />
-    <Route path="/"
+    <Route path="/index"
            component={IndexPage} />
     <Route path="/start-model"
            component={StartModelPage} />

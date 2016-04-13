@@ -112,6 +112,19 @@ func makeHandler() http.Handler {
 	GET(router, "/model/username/:username/slug/:slug/latest-files", HandleLatestFilesByUsernameAndSlug)
 
 	n := negroni.New(negroni.NewLogger())
+
+	// In production, redirect all traffic to https (except /, for LB health check)
+	if !utils.Conf.Localdev {
+		n.UseHandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/" && r.Header.Get("X-Forwarded-Proto") != "https" {
+				http.RedirectHandler(
+					"https://api.gradientzoo.com"+r.URL.RequestURI(),
+					http.StatusFound,
+				).ServeHTTP(rw, r)
+			}
+		})
+	}
+
 	n.Use(gzip.Gzip(gzip.BestCompression))
 	n.Use(negronilogrus.NewMiddleware())
 	n.UseHandler(router)
