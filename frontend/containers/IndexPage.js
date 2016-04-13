@@ -62,7 +62,7 @@ class IndexPage extends Component {
 
         <div className="row">
           <div className="col-lg-12">
-            <h4>Most Downloaded Public Datasets</h4>
+            <h4>Most Downloaded Public Models</h4>
             <ModelList models={latestModels}
                        fetching={latestModelsFetching}
                        error={latestModelsFetchError} />
@@ -71,7 +71,7 @@ class IndexPage extends Component {
 
         <div className="row">
           <div className="col-lg-12">
-            <h4>Latest Public Datasets</h4>
+            <h4>Latest Public Models</h4>
             <ModelList models={latestModels}
                        fetching={latestModelsFetching}
                        error={latestModelsFetchError} />
