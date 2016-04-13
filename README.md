@@ -82,3 +82,4 @@ TODO
 * [ops] Set up an ElasticSearch, Logstash/Heka, Kibana (E[LH]K) stack
 * Badge for projects on GitHub
 * Import common public domain datasets for popular libraries into a 'commons'
+* Make the webapp universal
