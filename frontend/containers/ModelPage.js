@@ -53,8 +53,7 @@ zoo.load_weights(your_keras_model)
 
 # Save updated weights to Gradientzoo after each epoch
 save_weights = zoo.make_save_callback(your_keras_model)
-your_keras_model.fit(X_train, t_train, nb_epoch=3, batch_size=16,
-                     callbacks=[save_weights])
+your_keras_model.fit(/* ... */, callbacks=[save_weights])
 \`\`\`
 `
 
