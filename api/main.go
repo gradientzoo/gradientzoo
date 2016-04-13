@@ -118,7 +118,7 @@ func makeHandler() http.Handler {
 		n.UseHandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 			if r.URL.Path != "/" && r.Header.Get("X-Forwarded-Proto") != "https" {
 				http.RedirectHandler(
-					"https://api.gradientzoo.com"+r.URL.RequestURI(),
+					"https://"+r.Host+r.URL.RequestURI(),
 					http.StatusFound,
 				).ServeHTTP(rw, r)
 			}
