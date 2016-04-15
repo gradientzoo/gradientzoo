@@ -37,7 +37,7 @@ class IndexPage extends Component {
 
         <div className="jumbotron">
           <h1>Version and share your trained neural network models</h1>
-          <p className="lead">Built-in support for Keras, Tensorflow, Lasagne, and Theano. Or integrate directly with our HTTP API.</p>
+          <p className="lead">Built-in support for Tensorflow, Keras, and Lasagne. Or integrate directly with our open Python or HTTP APIs!</p>
           <p>
           {authUser ? 
             <Link className="btn btn-lg btn-success"
