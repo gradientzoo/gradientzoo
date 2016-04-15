@@ -57,10 +57,6 @@ class ProfilePage extends Component {
             <Link to="/start-model"
                   className="btn btn-primary">Start Model</Link>
           </div> : null}
-        {showEmpty ?
-          <div>
-            <h3></h3>
-          </div> : null}
 
         <Footer />
       </div>

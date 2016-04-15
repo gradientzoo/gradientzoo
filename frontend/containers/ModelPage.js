@@ -5,6 +5,7 @@ import { push } from 'react-router-redux'
 import bindAll from 'lodash/bindAll'
 import filter from 'lodash/filter'
 import head from 'lodash/head'
+import each from 'lodash/each'
 import map from 'lodash/map'
 import DocumentTitle from 'react-document-title'
 import { loadUserByUsername } from '../actions/auth'
@@ -108,7 +109,7 @@ class ModelPage extends Component {
   handleFileClick(file, ev) {
     ev.preventDefault()
     const { routeParams: { username, slug }, authTokenId} = this.props
-    const path = `/api/file/${username}/${slug}/${file.framework}/${file.filename}`
+    const path = `/api/file-id/${file.id}`
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -156,6 +157,9 @@ class ModelPage extends Component {
         <FileList files={files}
                   filesFetching={filesFetching}
                   error={filesFetchError}
+                  username={username}
+                  modelSlug={slug}
+                  showDetails={false}
                   onFileClick={this.handleFileClick} />
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
@@ -222,10 +226,28 @@ ModelPage.propTypes = {
 function mapStateToProps(state, props) {
   const { routeParams: { username, slug }} = props
   const authUser = state.authUserId ? state.entities.users[state.authUserId] : null
-  // TODO: Use reselect instead of filtering through all users
-  const user = head(filter(state.entities.users, (u) => u.username === username)) || null
-  const model = user ? head(filter(state.entities.models, (m) => m.userId === user.id && m.slug === slug)) : null
-  const files = model ? filter(state.entities.files, (f) => f.modelId === model.id) : null
+  
+  const user = head(filter(
+    state.entities.users,
+    (u) => u.username === username
+  ))
+
+  const model = user ? head(filter(
+    state.entities.models,
+    (m) => m.userId === user.id && m.slug === slug
+  )) : null
+
+  const files = []
+  if (model) {
+    each(state.entities.files, (file) => {
+      if (file.status === 'latest' &&
+          file.modelId === model.id &&
+          file.userId === user.id) {
+        files.push(file)
+      }
+    })
+  } 
+
   return {
     authTokenId: state.authTokenId,
     userFetching: state.userByUsername.fetching,

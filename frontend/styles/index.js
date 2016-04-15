@@ -69,7 +69,11 @@ export default {
   },
 
   fileList: {
-    marginRight: 56
+    marginRight: 56,
+    marginTop: 24
+  },
+  firstFileRow: {
+    borderTop: '1px solid #efefef'
   },
   fileRow: {
     listStyleType: 'none',
@@ -86,6 +90,12 @@ export default {
   },
   fileCreated: {
     textAlign: 'right'
+  },
+  fileChevron: {
+    textAlign: 'right'
+  },
+  fileId: {
+    fontSize: '12px'
   },
 
   modelDescription: {

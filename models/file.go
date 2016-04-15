@@ -28,7 +28,7 @@ type FileApi interface {
 
 	// TODO: Potentially this should be a separate interface
 	ByModelIdFilenameLatest(modelId, filename string) (*File, error)
-	ByModelIdFilename(modelId, filename string) ([]*File, error)
+	ByModelIdFrameworkFilename(modelId, framework, filename string) ([]*File, error)
 	ByModelIdLatest(modelId string) ([]*File, error)
 	ByModelId(modelId string) ([]*File, error)
 	DeletePending(modelId, filename string) error
@@ -48,7 +48,7 @@ type File struct {
 	UserId           string                 `db:"user_id" json:"user_id"`
 	ModelId          string                 `db:"model_id" json:"model_id"`
 	Filename         string                 `db:"filename" json:"filename"`
-	Status           string                 `db:"status" json:"-"`
+	Status           string                 `db:"status" json:"status"`
 	Framework        string                 `db:"framework" json:"framework"`
 	FrameworkVersion string                 `db:"framework_version" json:"framework_version"`
 	ClientName       string                 `db:"client_name" json:"client_name"`
@@ -196,7 +196,8 @@ func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) (*File, erro
 	err := db.DB.
 		Select("*").
 		From(FILE_TABLE).
-		Where("model_id = $1 AND filename = $2 AND status = $3", modelId, filename, "latest").
+		Where("model_id = $1 AND filename = $2 AND status = $3",
+			modelId, filename, "latest").
 		QueryStruct(&f)
 	if err == sql.ErrNoRows {
 		return nil, err
@@ -207,12 +208,16 @@ func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) (*File, erro
 	return &f, err
 }
 
-func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
+func (db *FileDb) ByModelIdFrameworkFilename(modelId, framework, filename string) ([]*File, error) {
 	var files []*File
 	err := db.DB.
 		Select("*").
 		From(FILE_TABLE).
-		Where("model_id = $1 AND filename = $2 AND (status = $3 OR status = $4)", modelId, filename, "latest", "old").
+		Where("model_id = $1 AND "+
+			"framework = $2 AND "+
+			"filename = $3 AND "+
+			"(status = $4 OR status = $5)",
+			modelId, framework, filename, "latest", "old").
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}

@@ -29,13 +29,6 @@ function entities(state = initialEntitiesState, action) {
   if (action.type === ModelActionTypes.DELETE_MODEL_SUCCESS) {
     const merged = merge({}, state)
     merged.models = {}
-    return merged
-  }
-
-  // Since files can change so frequently, when we request new ones we
-  // automatically discard the old ones in our cache
-  if (action.type === FileActionTypes.FILES_BY_USERNAME_AND_SLUG_REQUEST) {
-    const merged = merge({}, state)
     merged.files = {}
     return merged
   }
@@ -85,6 +78,7 @@ const modelByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', Mo
 const filesByUsernameAndSlug = createFetchStateFunc('fetching', 'fetchError', FileActionTypes, 'FILES_BY_USERNAME_AND_SLUG')
 const deleteModel = createFetchStateFunc('deleting', 'deleteError', ModelActionTypes, 'DELETE_MODEL')
 const latestPublicModels = createFetchStateOnceFunc('fetching', 'fetchError', 'fetchedOnce', ModelActionTypes, 'LATEST_PUBLIC_MODELS')
+const fileVersions = createFetchStateFunc('fetching', 'fetchError', FileActionTypes, 'FILE_VERSIONS')
 
 // Updates the pagination data for different actions.
 /*
@@ -121,6 +115,7 @@ const rootReducer = combineReducers({
   createModel,
   deleteModel,
   latestPublicModels,
+  fileVersions,
   //pagination,
   routing: routeReducer
 })

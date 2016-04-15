@@ -109,6 +109,8 @@ func makeHandler() http.Handler {
 	POST(router, "/model/id/:id/deleted", Authed(HandleDeleteModel))
 	POST(router, "/file/:username/:slug/:framework/:filename", Authed(HandleFileUpload))
 	GET(router, "/file/:username/:slug/:framework/:filename", HandleFile)
+	GET(router, "/file-id/:id", HandleFileById)
+	GET(router, "/file-versions/:username/:slug/:framework/:filename", HandleFileVersions)
 	GET(router, "/model/username/:username/slug/:slug/latest-files", HandleLatestFilesByUsernameAndSlug)
 
 	n := negroni.New(negroni.NewLogger())

@@ -13,23 +13,37 @@ class FileList extends Component {
     bindAll(this, 'renderRow');
   }
 
-  renderRow(file) {
+  renderRow(file, rowNum) {
+    const { username, modelSlug } = this.props
+    const rowStyle = [styles.fileRow];
+    if (rowNum === 0) {
+      rowStyle.push(styles.firstFileRow);
+    }
     return (
-      <li key={file.id} style={styles.fileRow} className="row">
+      <li key={file.id} style={rowStyle} className="row">
         <div className="col-md-3">
           <a href="#" onClick={this.props.onFileClick.bind(this, file)}>{file.filename}</a>
         </div>
-        <div className="col-md-3">
+        <div className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
           <span style={styles.fileFramework}>{file.framework}</span>
         </div>
-        <div className="col-md-3">
+        <div className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
           <span style={styles.fileSize}>{filesize(file.sizeBytes)}</span>
         </div>
-        <div className="col-md-3" style={styles.fileCreated}>
+        {this.props.showDetails ? 
+          <div className="col-md-3" style={styles.fileId}>
+            {file.id}
+          </div> : null}
+        <div className="col-md-2" style={styles.fileCreated}>
           <Time 
               value={file.createdTime}
-              format="YYYY/MM/DD" relative={true} />
+              format="YYYY/MM/DD" relative={true} />          
         </div>
+        {this.props.showDetails ? null :
+          <div className="col-md-1" style={styles.fileChevron}>
+            <Link to={`/${username}/${modelSlug}/${file.framework}/${file.filename}`}
+                 className="glyphicon glyphicon-chevron-right"></Link>
+          </div>}
       </li>
     )
   }
@@ -54,7 +68,10 @@ FileList.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object),
   fetching: PropTypes.bool,
   error: PropTypes.string,
-  onFileClick: PropTypes.func
+  username: PropTypes.string.isRequired,
+  modelSlug: PropTypes.string.isRequired,
+  onFileClick: PropTypes.func.isRequired,
+  showDetails: PropTypes.bool
 }
 
 export default Radium(FileList)

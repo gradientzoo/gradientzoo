@@ -13,3 +13,17 @@ export function loadFilesByUsernameAndSlug(username, slug) {
     }
   }
 }
+
+export const FILE_VERSIONS_REQUEST = 'FILE_VERSIONS_REQUEST'
+export const FILE_VERSIONS_SUCCESS = 'FILE_VERSIONS_SUCCESS'
+export const FILE_VERSIONS_FAILURE = 'FILE_VERSIONS_FAILURE'
+
+export function loadFileVersions(username, slug, framework, filename) {
+  return {
+    [CALL_API]: {
+      types: [ FILE_VERSIONS_REQUEST, FILE_VERSIONS_SUCCESS, FILE_VERSIONS_FAILURE ],
+      endpoint: `file-versions/${username}/${slug}/${framework}/${filename}`,
+      schema: Schemas.FILES_RESPONSE
+    }
+  }
+}

@@ -7,13 +7,7 @@ import RegisterPage from './containers/RegisterPage'
 import StartModelPage from './containers/StartModelPage'
 import ProfilePage from './containers/ProfilePage'
 import ModelPage from './containers/ModelPage'
-
-/*
-<Route path="/:login/:name"
-       component={RepoPage} />
-<Route path="/:login"
-       component={UserPage} />
-*/
+import FilePage from './containers/FilePage'
 
 export default (
   <Route path="" component={App}>
@@ -28,6 +22,8 @@ export default (
            component={StartModelPage} />
     <Route path="/:username"
            component={ProfilePage} />
+    <Route path="/:username/:slug/:framework/:filename"
+           component={FilePage} />
     <Route path="/:username/:slug"
            component={ModelPage} />
   </Route>
