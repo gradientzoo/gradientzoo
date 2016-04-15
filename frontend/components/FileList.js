@@ -27,8 +27,9 @@ class FileList extends Component {
         <div className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
           <span style={styles.fileFramework}>{file.framework}</span>
         </div>
-        <div className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
-          <span style={styles.fileSize}>{filesize(file.sizeBytes)}</span>
+        <div style={styles.fileSize}
+             className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
+          <span>{filesize(file.sizeBytes)}</span>
         </div>
         {this.props.showDetails ? 
           <div className="col-md-3" style={styles.fileId}>

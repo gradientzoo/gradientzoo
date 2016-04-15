@@ -72,6 +72,13 @@ export default {
     marginRight: 56,
     marginTop: 24
   },
+  fileListHeader: {
+    marginTop: 32,
+    listStyleType: 'none'
+  },
+  fileListRowCenter: {
+    textAlign: 'center'
+  },
   firstFileRow: {
     borderTop: '1px solid #efefef'
   },
@@ -86,7 +93,7 @@ export default {
     padding: 4
   },
   fileSize: {
-
+    textAlign: 'center'
   },
   fileCreated: {
     textAlign: 'right'
@@ -95,7 +102,8 @@ export default {
     textAlign: 'right'
   },
   fileId: {
-    fontSize: '12px'
+    fontSize: '12px',
+    textAlign: 'center'
   },
 
   modelDescription: {
