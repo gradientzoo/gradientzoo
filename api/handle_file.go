@@ -87,5 +87,8 @@ func HandleFile(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	c.Render.JSON(w, http.StatusOK, map[string]string{"url": u})
+	c.Render.JSON(w, http.StatusOK, map[string]interface{}{
+		"url":  u,
+		"file": f,
+	})
 }

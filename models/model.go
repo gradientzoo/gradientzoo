@@ -40,18 +40,18 @@ func NewModelDb(db *runner.DB, api *ApiCollection) *ModelDb {
 }
 
 type Model struct {
-	Id          string    `db:"id" json:"id" msgpack:"id"`
-	UserId      string    `db:"user_id" json:"user_id" msgpack:"user_id"`
-	Slug        string    `db:"slug" json:"slug" msgpack:"slug"`
-	Name        string    `db:"name" json:"name" msgpack:"name"`
-	Description string    `db:"description" json:"description" msgpack:"description"`
-	Visibility  string    `db:"visibility" json:"visibility" msgpack:"visibility"`
-	Keep        int       `db:"keep" json:"keep" msgpack:"keep"`
-	Readme      string    `db:"readme" json:"-" msgpack:"-"`
-	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
+	Id          string    `db:"id" json:"id"`
+	UserId      string    `db:"user_id" json:"user_id"`
+	Slug        string    `db:"slug" json:"slug"`
+	Name        string    `db:"name" json:"name"`
+	Description string    `db:"description" json:"description"`
+	Visibility  string    `db:"visibility" json:"visibility"`
+	Keep        int       `db:"keep" json:"keep"`
+	Readme      string    `db:"readme" json:"-"`
+	CreatedTime time.Time `db:"created_time" json:"created_time"`
 
 	// Hydrated fields
-	HydratedReadme zero.String `json:"readme,omitempty" msgpack:"readme,omitempty"`
+	HydratedReadme zero.String `json:"readme,omitempty"`
 }
 
 func NewModel(userId, slug, name, description, visibility string, keep int) *Model {

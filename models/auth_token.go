@@ -34,9 +34,9 @@ func NewAuthTokenDb(db *runner.DB, api *ApiCollection) *AuthTokenDb {
 }
 
 type AuthToken struct {
-	Id          string    `db:"id" json:"id" msgpack:"id"`
-	UserId      string    `db:"user_id" json:"user_id" msgpack:"user_id"`
-	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
+	Id          string    `db:"id" json:"id"`
+	UserId      string    `db:"user_id" json:"user_id"`
+	CreatedTime time.Time `db:"created_time" json:"created_time"`
 }
 
 func NewAuthToken(userId string) *AuthToken {

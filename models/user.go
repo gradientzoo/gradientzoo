@@ -40,15 +40,15 @@ func NewUserDb(db *runner.DB, api *ApiCollection) *UserDb {
 }
 
 type User struct {
-	Id               string    `db:"id" json:"id" msgpack:"id"`
-	Email            string    `db:"email" json:"-" msgpack:"-"`
-	Username         string    `db:"username" json:"username" msgpack:"username"`
-	PasswordHash     string    `db:"password_hash" json:"-" msgpack:"-"`
-	StripeCustomerId string    `db:"stripe_customer_id" json:"-" msgpack:"-"`
-	CreatedTime      time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
+	Id               string    `db:"id" json:"id"`
+	Email            string    `db:"email" json:"-"`
+	Username         string    `db:"username" json:"username"`
+	PasswordHash     string    `db:"password_hash" json:"-"`
+	StripeCustomerId string    `db:"stripe_customer_id" json:"-"`
+	CreatedTime      time.Time `db:"created_time" json:"created_time"`
 
 	// Hydrated fields
-	HasStripeCustomerId zero.Bool `json:"has_stripe_customer_id,omitempty" msgpack:"has_stripe_customer_id,omitempty"`
+	HasStripeCustomerId zero.Bool `json:"has_stripe_customer_id,omitempty"`
 }
 
 func NewUser(email, username, password string) *User {

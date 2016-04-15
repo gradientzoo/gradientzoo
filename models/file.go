@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -43,28 +44,52 @@ func NewFileDb(db *runner.DB, api *ApiCollection) *FileDb {
 }
 
 type File struct {
-	Id          string    `db:"id" json:"id" msgpack:"id"`
-	UserId      string    `db:"user_id" json:"user_id" msgpack:"user_id"`
-	ModelId     string    `db:"model_id" json:"model_id" msgpack:"model_id"`
-	Filename    string    `db:"filename" json:"filename" msgpack:"filename"`
-	Status      string    `db:"status" json:"-" msgpack:"-"`
-	Framework   string    `db:"framework" json:"framework" msgpack:"framework"`
-	ClientName  string    `db:"client_name" json:"client_name" msgpack:"client_name"`
-	CreatedTime time.Time `db:"created_time" json:"created_time" msgpack:"created_time"`
+	Id               string                 `db:"id" json:"id"`
+	UserId           string                 `db:"user_id" json:"user_id"`
+	ModelId          string                 `db:"model_id" json:"model_id"`
+	Filename         string                 `db:"filename" json:"filename"`
+	Status           string                 `db:"status" json:"-"`
+	Framework        string                 `db:"framework" json:"framework"`
+	FrameworkVersion string                 `db:"framework_version" json:"framework_version"`
+	ClientName       string                 `db:"client_name" json:"client_name"`
+	SizeBytes        int                    `db:"size_bytes" json:"size_bytes"`
+	MetadataString   string                 `db:"metadata" json:"-"`
+	Metadata         map[string]interface{} `db:"-" json:"metadata"`
+	CreatedTime      time.Time              `db:"created_time" json:"created_time"`
 }
 
-func NewFile(userId, modelId, filename, framework, clientName string) *File {
-	f := &File{
-		Id:          uuid.NewUUID().String(),
-		UserId:      userId,
-		ModelId:     modelId,
-		Filename:    filename,
-		Status:      "pending",
-		Framework:   framework,
-		ClientName:  clientName,
-		CreatedTime: time.Now().UTC(),
+func NewFile(userId, modelId, filename, framework, frameworkVersion,
+	clientName string, sizeBytes int, metadata map[string]interface{}) (*File, error) {
+	encodedMetadata, err := json.Marshal(metadata)
+	if err != nil {
+		return nil, err
 	}
-	return f
+	f := &File{
+		Id:               uuid.NewUUID().String(),
+		UserId:           userId,
+		ModelId:          modelId,
+		Filename:         filename,
+		Status:           "pending",
+		Framework:        framework,
+		FrameworkVersion: frameworkVersion,
+		ClientName:       clientName,
+		SizeBytes:        sizeBytes,
+		Metadata:         metadata,
+		MetadataString:   string(encodedMetadata),
+		CreatedTime:      time.Now().UTC(),
+	}
+	return f, nil
+}
+
+func (f *File) FillMetadata() error {
+	if f.MetadataString == "" {
+		f.Metadata = map[string]interface{}{}
+		return nil
+	}
+	if err := json.Unmarshal([]byte(f.MetadataString), &f.Metadata); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (f *File) BlobFilename() string {
@@ -87,6 +112,9 @@ func (db *FileDb) ById(id interface{}) (*File, error) {
 	if err == sql.ErrNoRows {
 		return nil, err
 	}
+	if err = f.FillMetadata(); err != nil {
+		return nil, err
+	}
 	return &f, err
 }
 
@@ -99,6 +127,11 @@ func (db *FileDb) ByIds(ids []interface{}) ([]*File, error) {
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}
+	}
+	for _, f := range files {
+		if err = f.FillMetadata(); err != nil {
+			return nil, err
+		}
 	}
 	return files, err
 }
@@ -119,7 +152,10 @@ func (db *FileDb) Save(f *File) error {
 		"filename",
 		"status",
 		"framework",
+		"framework_version",
 		"client_name",
+		"size_bytes",
+		"metadata",
 		"created_time",
 	}
 	vals := []interface{}{
@@ -129,7 +165,10 @@ func (db *FileDb) Save(f *File) error {
 		f.Filename,
 		f.Status,
 		f.Framework,
+		f.FrameworkVersion,
 		f.ClientName,
+		f.SizeBytes,
+		f.MetadataString,
 		f.CreatedTime,
 	}
 	_, err := db.DB.
@@ -153,16 +192,19 @@ func (db *FileDb) Truncate() error {
 // -
 
 func (db *FileDb) ByModelIdFilenameLatest(modelId, filename string) (*File, error) {
-	var file File
+	var f File
 	err := db.DB.
 		Select("*").
 		From(FILE_TABLE).
 		Where("model_id = $1 AND filename = $2 AND status = $3", modelId, filename, "latest").
-		QueryStruct(&file)
+		QueryStruct(&f)
 	if err == sql.ErrNoRows {
 		return nil, err
 	}
-	return &file, err
+	if err = f.FillMetadata(); err != nil {
+		return nil, err
+	}
+	return &f, err
 }
 
 func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
@@ -174,6 +216,11 @@ func (db *FileDb) ByModelIdFilename(modelId, filename string) ([]*File, error) {
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}
+	}
+	for _, f := range files {
+		if err = f.FillMetadata(); err != nil {
+			return nil, err
+		}
 	}
 	return files, err
 }
@@ -188,6 +235,11 @@ func (db *FileDb) ByModelIdLatest(modelId string) ([]*File, error) {
 	if files == nil {
 		files = []*File{}
 	}
+	for _, f := range files {
+		if err = f.FillMetadata(); err != nil {
+			return nil, err
+		}
+	}
 	return files, err
 }
 
@@ -200,6 +252,11 @@ func (db *FileDb) ByModelId(modelId string) ([]*File, error) {
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}
+	}
+	for _, f := range files {
+		if err = f.FillMetadata(); err != nil {
+			return nil, err
+		}
 	}
 	return files, err
 }
@@ -233,6 +290,11 @@ func (db *FileDb) ToDelete(modelId, filename string, n int) ([]*File, error) {
 		QueryStructs(&files)
 	if files == nil {
 		files = []*File{}
+	}
+	for _, f := range files {
+		if err = f.FillMetadata(); err != nil {
+			return nil, err
+		}
 	}
 	return files, err
 }

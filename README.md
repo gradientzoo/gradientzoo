@@ -55,9 +55,6 @@ you're set!
 TODO
 ====
 
-* Add file size metadata to file row
-* Moar integrations
-* Add more metadata to file row (accuracy?)
 * Keep track of and display download count for each file
 * Prevent files larger than a max filesize from being uploaded
 * Write page explaining the open source aspect of the project
