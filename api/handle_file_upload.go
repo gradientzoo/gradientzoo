@@ -17,10 +17,10 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	frameworkVersion := req.Header.Get("X-Gradientzoo-Framework-Version")
 	filename := c.Params.ByName("filename")
 	clientName := req.Header.Get("X-Gradientzoo-Client-Name")
+	metadataString := req.FormValue("metadata")
 
-	decoder := json.NewDecoder(req.Body)
 	var metadata map[string]interface{}
-	if err := decoder.Decode(&metadata); err != nil {
+	if err := json.Unmarshal([]byte(metadataString), &metadata); err != nil {
 		msg := "Could not decode metadata"
 		log.WithField("err", err).Error(msg)
 		c.Render.JSON(w, http.StatusBadRequest, JsonErr(msg))
