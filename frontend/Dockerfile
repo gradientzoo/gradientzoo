@@ -2,7 +2,7 @@ FROM node:argon
 
 # Set up environment variables
 ENV NODE_ENV production
-ENV BUILD_VERSION 10
+ENV BUILD_VERSION 11
 
 # List the Google Analytics ID as an arg to docker build, and save as env var
 ARG GOOGLE_ANALYTICS_ID_ARG

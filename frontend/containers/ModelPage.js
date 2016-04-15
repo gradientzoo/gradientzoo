@@ -12,12 +12,12 @@ import { loadModelByUsernameAndSlug, updateModelReadme, deleteModel } from '../a
 import { loadFilesByUsernameAndSlug } from '../actions/file'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
+import FileList from '../components/FileList'
 import ReadmeEditor from '../components/ReadmeEditor'
 import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 import Markdown from 'react-remarkable'
-import Time from 'react-time'
 
 import hljs from 'highlight.js/lib/highlight'
 import hljs_javascript from 'highlight.js/lib/languages/javascript'
@@ -138,32 +138,7 @@ class ModelPage extends Component {
             <Markdown source={keras} options={remarkableConfig} />
           </div>: null}
 
-        { files && !filesFetching ?
-          <div>
-            <h3>Files</h3>
-            <ul style={styles.fileList}>
-              {map(files, file => {
-                return (
-                  <li key={file.id} style={styles.fileRow} className="row">
-                    <div className="col-md-3">
-                      <a href="#" onClick={this.handleFileClick}>{file.filename}</a>
-                    </div>
-                    <div className="col-md-3">
-                      <span style={styles.fileFramework}>{file.framework}</span>
-                    </div>
-                    <div className="col-md-6" style={styles.fileCreated}>
-                      <Time 
-                          value={file.createdTime}
-                          format="YYYY/MM/DD" relative={true} />
-                    </div>
-                    
-                    
-                    
-                  </li>
-                )
-              })}
-            </ul>
-          </div> : null}
+        <FileList files={files} filesFetching={filesFetching} error={filesFetchError} />
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'later' button, then show the readme creation dialog. */}

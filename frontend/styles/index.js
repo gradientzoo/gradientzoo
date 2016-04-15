@@ -81,6 +81,9 @@ export default {
     backgroundColor: '#eee',
     padding: 4
   },
+  fileSize: {
+
+  },
   fileCreated: {
     textAlign: 'right'
   },

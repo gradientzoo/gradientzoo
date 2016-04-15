@@ -32,7 +32,6 @@ class ModelList extends Component {
         </div>
       )
     }
-    console.log('this.props.models.length: ' + this.props.models.length + ' this.props.models.length > 0: ' + (this.props.models.length > 0))
     return (
       <div style={styles.modelList}>
         {this.props.models.length > 0 ?

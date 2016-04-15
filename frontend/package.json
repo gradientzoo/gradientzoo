@@ -47,7 +47,8 @@
     "react-ga": "~1.3.0",
     "object-assign": "~4.0.1",
     "express-sslify": "~1.0.1",
-    "forcedomain": "~0.6.0"
+    "forcedomain": "~0.6.0",
+    "filesize": "~3.2.1"
   },
   "devDependencies": {
     "concurrently": "^1.0.0",
