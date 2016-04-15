@@ -18,6 +18,7 @@ import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
 import Markdown from 'react-remarkable'
+import 'isomorphic-fetch'
 
 import hljs from 'highlight.js/lib/highlight'
 import hljs_javascript from 'highlight.js/lib/languages/javascript'
@@ -104,8 +105,22 @@ class ModelPage extends Component {
     this.props.deleteModel(this.props.model.id)
   }
 
-  handleFileClick(ev) {
+  handleFileClick(file, ev) {
     ev.preventDefault()
+    const { routeParams: { username, slug }, authTokenId} = this.props
+    const path = `/api/file/${username}/${slug}/${file.framework}/${file.filename}`
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+    if (authTokenId) {
+      headers['X-Auth-Token-Id'] = authTokenId
+    }
+    fetch(path, {headers: headers})
+      .then(response => response.json().then(json => ({ json, response })))
+      .then(({ json, response }) => {
+        window.location.assign(json.url)
+      })
   }
 
   render() {
@@ -138,7 +153,10 @@ class ModelPage extends Component {
             <Markdown source={keras} options={remarkableConfig} />
           </div>: null}
 
-        <FileList files={files} filesFetching={filesFetching} error={filesFetchError} />
+        <FileList files={files}
+                  filesFetching={filesFetching}
+                  error={filesFetchError}
+                  onFileClick={this.handleFileClick} />
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'later' button, then show the readme creation dialog. */}

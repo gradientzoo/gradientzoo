@@ -13,15 +13,11 @@ class FileList extends Component {
     bindAll(this, 'renderRow');
   }
 
-  handleFileClick(ev) {
-    alert('let\'s get your file!')
-  }
-
   renderRow(file) {
     return (
       <li key={file.id} style={styles.fileRow} className="row">
         <div className="col-md-3">
-          <a href="#" onClick={this.handleFileClick}>{file.filename}</a>
+          <a href="#" onClick={this.props.onFileClick.bind(this, file)}>{file.filename}</a>
         </div>
         <div className="col-md-3">
           <span style={styles.fileFramework}>{file.framework}</span>
@@ -57,7 +53,8 @@ class FileList extends Component {
 FileList.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object),
   fetching: PropTypes.bool,
-  error: PropTypes.string
+  error: PropTypes.string,
+  onFileClick: PropTypes.func
 }
 
 export default Radium(FileList)
