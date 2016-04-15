@@ -58,7 +58,6 @@ TODO
 * Keep track of and display download count for each file
 * Prevent files larger than a max filesize from being uploaded
 * Write page explaining the open source aspect of the project
-* Allow user to download by clicking on file on web
 * Update homepage to list the real most downloaded models
 * Links from homepage to full model lists
 * Infinite pagination on the full model lists
@@ -80,3 +79,4 @@ TODO
 * Badge for projects on GitHub
 * Import common public domain datasets for popular libraries into a 'commons'
 * Make the webapp universal
+* Add loading spinner to file versions page
