@@ -56,7 +56,6 @@ TODO
 ====
 
 * Keep track of and display download count for each file
-* Prevent files larger than a max filesize from being uploaded
 * Write page explaining the open source aspect of the project
 * Update homepage to list the real most downloaded models
 * Links from homepage to full model lists

@@ -10,7 +10,11 @@ import (
 	"github.com/ericflo/gradientzoo/models"
 )
 
+const MaxFileSize = 500 * 1024 * 1024 // 500MB max
+
 func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
+	req.Body = http.MaxBytesReader(w, req.Body, MaxFileSize) // Limit file size
+
 	username := c.Params.ByName("username")
 	slug := c.Params.ByName("slug")
 	framework := c.Params.ByName("framework")
