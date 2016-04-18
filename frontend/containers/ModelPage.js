@@ -127,11 +127,13 @@ class ModelPage extends Component {
   }
 
   render() {
-    const { routeParams: { username, slug }, user, authTokenId} = this.props
+    const { routeParams: { username, slug }, authTokenId} = this.props
+    const { user, authUser } = this.props
     const { model, modelFetching, modelFetchError } = this.props
     const { files, filesFetching, filesFetchError } = this.props
     const { deleting, deleteError } = this.props
     const { readmeLater, editReadme } = this.state
+    const isOwner = user && authUser && user.id === authUser.id
     const modelLoaded = !modelFetching && model
     const keras = kerasIntegration
       .replace(/\{username\}/g, username)
@@ -177,7 +179,7 @@ class ModelPage extends Component {
         {/* If the model is loaded and does have a readme, show it */}
         { modelLoaded && model.readme && !editReadme ?
           <div>
-            <h3>Readme <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a></h3>
+            <h3>Readme{isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}</h3>
             <div className="well">
               <Markdown source={model.readme} options={remarkableConfig} />
             </div>
