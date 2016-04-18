@@ -179,7 +179,7 @@ class ModelPage extends Component {
         {/* If the model is loaded and does have a readme, show it */}
         { modelLoaded && model.readme && !editReadme ?
           <div>
-            <h3>Readme{isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}</h3>
+            <h3>Readme {isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}</h3>
             <div className="well">
               <Markdown source={model.readme} options={remarkableConfig} />
             </div>
