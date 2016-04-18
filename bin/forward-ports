@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+kubectl port-forward $(kubectl get pods -l app=gradientzoo-postgres -o jsonpath="{.items[0].metadata.name}") 5432

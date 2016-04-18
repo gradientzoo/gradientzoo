@@ -21,7 +21,7 @@ If you want to connect to a remote postgres instead of running a local one
 after you've deployed, run this command to forward the port:
 
 ```console
-kubectl port-forward $(kubectl get pods -l app=gradientzoo-postgres -o jsonpath="{.items[0].metadata.name}") 5432
+./bin/forward-ports
 ```
 
 First-Time Deployment
