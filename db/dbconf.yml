@@ -1,3 +1,3 @@
 development:
     driver: postgres
-    open: host=$POSTGRESQL_HOST user=$POSTGRESQL_USER password=$POSTGRESQL_PASSWORD dbname=$POSTGRESQL_NAME port=$POSTGRESQL_PORT sslmode=$POSTGRESQL_SSLMODE
+    open: host=127.0.0.1 user=$POSTGRESQL_USER password=$POSTGRESQL_PASSWORD dbname=$POSTGRESQL_NAME port=$POSTGRESQL_PORT sslmode=$POSTGRESQL_SSLMODE

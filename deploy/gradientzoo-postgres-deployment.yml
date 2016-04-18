@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gradientzoo-postgres-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gradientzoo-postgres
+    spec:
+      containers:
+        - name: gradientzoo-postgres
+          image: postgres:9.5.2
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: gradientzoo-postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: gradientzoo-postgres-storage
+          gcePersistentDisk:
+            pdName: gradientzoo-postgres-disk
+            fsType: ext4

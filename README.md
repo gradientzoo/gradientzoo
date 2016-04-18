@@ -15,7 +15,14 @@ cp bin/dev-env.template bin/dev-env
 ```
 
 Make sure to fill in the blanks in the file ``bin/dev-env``. (Mainly this means
-entering your PostgreSQL and AWS credentials.)
+entering your AWS credentials.)
+
+If you want to connect to a remote postgres instead of running a local one
+after you've deployed, run this command to forward the port:
+
+```console
+kubectl port-forward $(kubectl get pods -l app=gradientzoo-postgres -o jsonpath="{.items[0].metadata.name}") 5432
+```
 
 First-Time Deployment
 =====================
@@ -24,18 +31,23 @@ Before you get started, you'll need these things set up:
 
 * Go
 * Python
-* PostgreSQL server (Heroku Postgres is what I use)
 * AWS Credentials and an S3 bucket set up
 * Google Container Engine cluster set up and CLI configured
 
 Here's what we're going to do:
 
 * Use the .template files in the repo to fill in cluster secrets & config files
+* Provision a disk for use by the database
 * Make builds of both the API and the web frontend, and push those Docker images
 * Send Kubernetes all of the configuration files it needs to spin up the cluster
 * Open up the firewall to allow incoming traffic
 
 **TODO:** *Finish writing this README*
+
+Here is the command to provision a disk for the database:
+```console
+gcloud compute disks create gradientzoo-postgres-disk --size 250GB
+```
 
 Here are the commands you'll need to open up the firewall:
 
@@ -72,7 +84,6 @@ TODO
 * Forgot password flow
 * Log in with GitHub
 * [ops] Switch to Google Cloud Storage rather than AWS for blob storage
-* [ops] Switch to internal PostgreSQL for latency and devops simplicity reasons
 * [ops] Set up an ElasticSearch, Logstash/Heka, Kibana (E[LH]K) stack
 * Badge for projects on GitHub
 * Import common public domain datasets for popular libraries into a 'commons'

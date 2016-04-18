@@ -47,7 +47,9 @@ func (db *DownloadHourDb) MarkDownload(fileId, userId, ip string, t time.Time) e
   INSERT INTO
     download_hour (file_id, user_id, ip, hour, downloads)
   VALUES ($1, $2, $3, $4, 1)
-  ON CONFLICT DO UPDATE SET downloads = downloads + 1
+  ON CONFLICT ON CONSTRAINT download_hour_file_id_hour_ip_key
+    DO UPDATE SET downloads = download_hour.downloads + 1
+  RETURNING *
   `
 
 	_, err := db.DB.Exec(sql, fileId, userId, ip, t)

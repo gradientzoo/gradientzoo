@@ -50,7 +50,7 @@ var Conf Config = Config{
 	Localdev: os.Getenv("LOCALDEV") != "",
 	Port:     EnvDef("PORT", "8000"),
 
-	PostgresqlHost:     EnvDef("POSTGRESQL_HOST", "localhost"),
+	PostgresqlHost:     HostDef("GRADIENTZOO_POSTGRES_SVC", EnvDefInt("POSTGRESQL_PORT", 5432), "localhost"),
 	PostgresqlPort:     EnvDefInt("POSTGRESQL_PORT", 5432),
 	PostgresqlDbName:   EnvDef("POSTGRESQL_NAME", "gradientzoo"),
 	PostgresqlUser:     EnvDef("POSTGRESQL_USER", "gradientzoo"),

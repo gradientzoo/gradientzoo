@@ -2,13 +2,6 @@
 
 export LOCALDEV="true"
 
-export POSTGRESQL_HOST=
-export POSTGRESQL_PORT=5432
-export POSTGRESQL_NAME=
-export POSTGRESQL_USER=
-export POSTGRESQL_PASSWORD=
-export POSTGRESQL_SSLMODE=require
-
 export AWS_BUCKET=
 export AWS_REGION=us-west-2
 export AWS_ACCESS_KEY_ID=
