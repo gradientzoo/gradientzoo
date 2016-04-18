@@ -76,9 +76,6 @@ TODO
 * Fill in marketing information on the homepage
 * Overhaul the model list look and feel
 * Allow user to edit the name and description of their model
-* Update Keras README example code to be more modern
-* Format times properly across the site
-* Add time created display to model page
 * Forgot password flow
 * Log in with GitHub
 * [ops] Switch to Google Cloud Storage rather than AWS for blob storage
