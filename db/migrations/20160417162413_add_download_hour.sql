@@ -6,7 +6,6 @@ CREATE TABLE download_hour (
     ip VARCHAR(45),
     user_id UUID,
     downloads INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY (file_id) REFERENCES file(id),
     FOREIGN KEY (user_id) REFERENCES auth_user(id),
     UNIQUE(file_id, hour, ip)
 );

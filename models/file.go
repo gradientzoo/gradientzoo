@@ -141,12 +141,7 @@ func (db *FileDb) ByIds(ids []interface{}) ([]*File, error) {
 }
 
 func (db *FileDb) Delete(id interface{}) error {
-	err := db.Api.DownloadHour.DeleteByFileId(id)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.DB.
+	_, err := db.DB.
 		DeleteFrom(FILE_TABLE).
 		Where("id = $1", id).
 		Exec()
