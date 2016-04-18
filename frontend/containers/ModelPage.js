@@ -120,7 +120,9 @@ class ModelPage extends Component {
     fetch(path, {headers: headers})
       .then(response => response.json().then(json => ({ json, response })))
       .then(({ json, response }) => {
-        window.location.assign(json.url)
+        if (json && json.url) {
+          window.location.assign(json.url)
+        }
       })
   }
 
