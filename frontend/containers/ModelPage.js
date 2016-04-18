@@ -138,7 +138,7 @@ class ModelPage extends Component {
     const keras = kerasIntegration
       .replace(/\{username\}/g, username)
       .replace(/\{slug\}/g, slug)
-      .replace(/\{authTokenId\}/g, authTokenId);
+      .replace(/\{authTokenId\}/g, authTokenId || '');
     return (
       <DocumentTitle title={username + '/' + slug + ' - Gradientzoo'}>
       <div className="container" style={styles.page}>
@@ -168,11 +168,11 @@ class ModelPage extends Component {
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'later' button, then show the readme creation dialog. */}
-        { modelLoaded && !model.readme && !readmeLater ?
+        { isOwner && modelLoaded && !model.readme && !readmeLater ?
           <div className="alert alert-info" role="alert">
             <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
           </div>: null}
-        { modelLoaded && ((!model.readme && !readmeLater) || editReadme) ?
+        { isOwner && modelLoaded && ((!model.readme && !readmeLater) || editReadme) ?
           <ReadmeEditor onChange={this.handleReadmeChange}
                         onLaterClick={this.handleReadmeLater} /> : null}
 
@@ -185,7 +185,7 @@ class ModelPage extends Component {
             </div>
           </div> : null}
 
-        { modelLoaded && model.readme && !editReadme ?
+        { isOwner && modelLoaded && model.readme && !editReadme ?
           <div className="row">
             <div className="col-md-2">
               <a href="#"

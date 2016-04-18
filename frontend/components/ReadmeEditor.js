@@ -82,14 +82,14 @@ Public domain
 
 const STATES = {
   blank: '',
-  default: DEFAULT_TEMPLATE,
-  minimal: MINIMAL_TEMPLATE
+  minimal: MINIMAL_TEMPLATE,
+  academic: DEFAULT_TEMPLATE
 }
 
 class ReadmeEditor extends Component {
   constructor(props) {
     super(props)
-    this.state = {template: 'default', readme: props.initialReadme || STATES['default']}
+    this.state = {template: 'minimal', readme: props.initialReadme || STATES['minimal']}
     bindAll(this, 'handleTemplateChange', 'handleReadmeChange', 'handleSubmit',
       'handleLaterClick')
   }
@@ -137,9 +137,9 @@ class ReadmeEditor extends Component {
               <select className="form-control"
                       value={this.state.template}
                       onChange={this.handleTemplateChange}>
-                <option value="default">Default</option>
                 <option value="blank">Blank</option>
                 <option value="minimal">Minimal</option>
+                <option value="academic">Academic</option>
               </select>
             </div>
           </div>
