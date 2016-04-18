@@ -84,6 +84,9 @@ func (db *ModelDb) ById(id interface{}) (*Model, error) {
 }
 
 func (db *ModelDb) ByIds(ids []interface{}) ([]*Model, error) {
+	if len(ids) == 0 {
+		return []*Model{}, nil
+	}
 	var models []*Model
 	err := db.DB.
 		Select("*").

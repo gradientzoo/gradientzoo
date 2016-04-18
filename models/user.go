@@ -92,6 +92,9 @@ func (db *UserDb) ById(id interface{}) (*User, error) {
 }
 
 func (db *UserDb) ByIds(ids []interface{}) ([]*User, error) {
+	if len(ids) == 0 {
+		return []*User{}, nil
+	}
 	var users []*User
 	err := db.DB.
 		Select("*").

@@ -295,15 +295,18 @@ func (db *FileDb) DeletePending(modelId, filename string) error {
 		return err
 	}
 
-	_, err = db.DB.
-		DeleteFrom(DOWNLOAD_HOUR_TABLE).
-		Where("file_id IN $1", ids).
-		Exec()
+	if len(ids) > 0 {
+		_, err = db.DB.
+			DeleteFrom(DOWNLOAD_HOUR_TABLE).
+			Where("file_id IN $1", ids).
+			Exec()
 
-	_, err = db.DB.
-		DeleteFrom(FILE_TABLE).
-		Where("id IN $1", ids).
-		Exec()
+		_, err = db.DB.
+			DeleteFrom(FILE_TABLE).
+			Where("id IN $1", ids).
+			Exec()
+	}
+
 	return err
 }
 

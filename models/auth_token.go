@@ -61,6 +61,9 @@ func (db *AuthTokenDb) ById(id interface{}) (*AuthToken, error) {
 }
 
 func (db *AuthTokenDb) ByIds(ids []interface{}) ([]*AuthToken, error) {
+	if len(ids) == 0 {
+		return []*AuthToken{}, nil
+	}
 	var authTokens []*AuthToken
 	err := db.DB.
 		Select("*").
