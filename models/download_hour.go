@@ -69,6 +69,10 @@ func (db *DownloadHourDb) TotalCountByFile(fileId string) (int, error) {
 }
 
 func (db *DownloadHourDb) TotalCountsByFiles(fileIds []string) (map[string]int, error) {
+	if len(fileIds) == 0 {
+		return map[string]int{}, nil
+	}
+
 	sql := `
   SELECT
     DH.file_id AS file_id,
@@ -109,6 +113,10 @@ func (db *DownloadHourDb) TotalCountByModel(modelId string) (int, error) {
 }
 
 func (db *DownloadHourDb) TotalCountsByModels(modelIds []string) (map[string]int, error) {
+	if len(modelIds) == 0 {
+		return map[string]int{}, nil
+	}
+
 	sql := `
   SELECT
     F.model_id AS model_id,
