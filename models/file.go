@@ -185,14 +185,18 @@ func (db *FileDb) Save(f *File) error {
 }
 
 func (db *FileDb) Hydrate(files []*File) error {
-	var downloads int
-	var err error
+	fileIds := make([]string, 0, len(files))
 	for _, file := range files {
-		downloads, err = db.Api.DownloadHour.TotalCountByFile(file.Id)
-		if err != nil {
-			return err
-		}
-		file.Downloads = null.IntFrom(int64(downloads))
+		fileIds = append(fileIds, file.Id)
+	}
+
+	counts, err := db.Api.DownloadHour.TotalCountsByFiles(fileIds)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		file.Downloads = null.IntFrom(int64(counts[file.Id]))
 	}
 	return nil
 }

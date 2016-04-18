@@ -137,14 +137,18 @@ func (db *ModelDb) Save(model *Model) error {
 }
 
 func (db *ModelDb) Hydrate(models []*Model) error {
-	var downloads int
-	var err error
+	modelIds := make([]string, 0, len(models))
 	for _, model := range models {
-		downloads, err = db.Api.DownloadHour.TotalCountByModel(model.Id)
-		if err != nil {
-			return err
-		}
-		model.Downloads = null.IntFrom(int64(downloads))
+		modelIds = append(modelIds, model.Id)
+	}
+
+	counts, err := db.Api.DownloadHour.TotalCountsByModels(modelIds)
+	if err != nil {
+		return err
+	}
+
+	for _, model := range models {
+		model.Downloads = null.IntFrom(int64(counts[model.Id]))
 		model.HydratedReadme = zero.StringFrom(model.Readme)
 	}
 	return nil
