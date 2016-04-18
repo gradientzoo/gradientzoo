@@ -124,13 +124,15 @@ class ModelPage extends Component {
                              authTokenId={authTokenId} /> : null}
 
         <h3>Files</h3>
-        <FileList files={files}
-                  filesFetching={filesFetching}
-                  error={filesFetchError}
-                  username={username}
-                  modelSlug={slug}
-                  showDetails={false}
-                  onFileClick={this.handleFileClick} />
+        <table className="table">
+          <FileList files={files}
+                    filesFetching={filesFetching}
+                    error={filesFetchError}
+                    username={username}
+                    modelSlug={slug}
+                    showDetails={false}
+                    onFileClick={this.handleFileClick} />
+        </table>
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'later' button, then show the readme creation dialog. */}

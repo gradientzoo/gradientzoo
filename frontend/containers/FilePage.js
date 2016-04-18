@@ -67,33 +67,27 @@ class FilePage extends Component {
           {filename}
         </h2>
 
-        <ul style={styles.fileList}>
-          <li style={styles.fileListHeader} className="row">
-            <div className="col-md-3">
-              <strong>Filename</strong>
-            </div>
-            <div className="col-md-2">
-              <strong>Framework</strong>
-            </div>
-            <div style={styles.fileListRowCenter} className="col-md-2">
-              <strong>Filesize</strong>
-            </div>
-            <div style={styles.fileListRowCenter} className="col-md-3">
-              <strong>ID</strong>
-            </div>
-            <div style={styles.fileCreated} className="col-md-2">
-              <strong>Time Uploaded</strong>
-            </div>
-          </li>
-        </ul>
-
-        <FileList files={files}
-                  filesFetching={filesFetching}
-                  error={filesFetchError}
-                  username={username}
-                  modelSlug={slug}
-                  showDetails={true}
-                  onFileClick={this.handleFileClick} />
+        <div style={styles.filePageTable}>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Filename</th>
+                <th>Framework</th>
+                <th>Filesize</th>
+                <th>Downloads</th>
+                <th>ID</th>
+                <th>Time Uploaded</th>
+              </tr>
+            </thead>
+            <FileList files={files}
+                      filesFetching={filesFetching}
+                      error={filesFetchError}
+                      username={username}
+                      modelSlug={slug}
+                      showDetails={true}
+                      onFileClick={this.handleFileClick} />
+          </table>
+        </div>
         
         <Footer />
       </div>

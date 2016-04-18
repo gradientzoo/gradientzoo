@@ -50,6 +50,14 @@ func HandleModelsByUsername(c *Context, w http.ResponseWriter, req *http.Request
 		filteredModels = append(filteredModels, m)
 	}
 
+	// Hydrate the model objects
+	if err = c.Api.Model.Hydrate(filteredModels); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not get those models, please try again soon"))
+		return
+	}
+
 	c.Render.JSON(w, http.StatusOK, map[string][]*models.Model{
 		"models": filteredModels,
 	})

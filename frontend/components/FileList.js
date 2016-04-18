@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import map from 'lodash/map'
 import bindAll from 'lodash/bindAll'
 import styles from '../styles'
+import DownloadCount from './DownloadCount'
 import Time from 'react-time'
 import filesize from 'filesize'
 
@@ -14,53 +15,51 @@ class FileList extends Component {
   }
 
   renderRow(file, rowNum) {
-    const { username, modelSlug } = this.props
-    const rowStyle = [styles.fileRow];
-    if (rowNum === 0) {
-      rowStyle.push(styles.firstFileRow);
-    }
+    const { username, modelSlug, files } = this.props
     return (
-      <li key={file.id} style={rowStyle} className="row">
-        <div className="col-md-3">
+      <tr key={file.id} style={rowNum === files.length - 1 ? styles.lastFileRow : []}>
+        <td>
           <a href="#" onClick={this.props.onFileClick.bind(this, file)}>{file.filename}</a>
-        </div>
-        <div className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
+        </td>
+        <td>
           <span style={styles.fileFramework}>{file.framework}</span>
-        </div>
-        <div style={styles.fileSize}
-             className={this.props.showDetails ? 'col-md-2' : 'col-md-3'}>
-          <span>{filesize(file.sizeBytes)}</span>
-        </div>
+        </td>
+        <td>
+          {filesize(file.sizeBytes)}
+        </td>
+        <td>
+          <DownloadCount downloads={file.downloads} />
+        </td>
         {this.props.showDetails ? 
-          <div className="col-md-3" style={styles.fileId}>
+          <td>
             {file.id}
-          </div> : null}
-        <div className="col-md-2" style={styles.fileCreated}>
-          <Time 
-              value={file.createdTime}
-              format="YYYY/MM/DD" relative={true} />          
-        </div>
+          </td> : null}
+        <td>
+          <Time value={file.createdTime}
+                format="YYYY/MM/DD"
+                relative={true} />          
+        </td>
         {this.props.showDetails ? null :
-          <div className="col-md-1" style={styles.fileChevron}>
+          <td>
             <Link to={`/${username}/${modelSlug}/${file.framework}/${file.filename}`}
                  className="glyphicon glyphicon-chevron-right"></Link>
-          </div>}
-      </li>
+          </td>}
+      </tr>
     )
   }
 
   render() {
     if (this.props.fetching) {
       return (
-        <div style={styles.fileList}>
+        <div>
           <h3>Fetching files...</h3>
         </div>
       )
     }
     return (
-      <ul style={styles.fileList}>
+      <tbody>
         {map(this.props.files, this.renderRow)}
-      </ul>
+      </tbody>
     )
   }
 }

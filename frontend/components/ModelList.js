@@ -4,6 +4,8 @@ import { Link } from 'react-router'
 import map from 'lodash/map'
 import bindAll from 'lodash/bindAll'
 import styles from '../styles'
+import Time from 'react-time'
+import DownloadCount from './DownloadCount'
 
 class ModelList extends Component {
   constructor(props) {
@@ -11,38 +13,57 @@ class ModelList extends Component {
     bindAll(this, 'renderRow');
   }
 
-  renderRow(model) {
+  renderRow(model, rowNum) {
+    const { models } = this.props
     return (
-      <div key={model.id} style={styles.modelRow}>
-        {model.url ? <Link to={model.url}
-                           style={styles.modelSlug}>{model.slug}</Link> :
-                     <span style={styles.modelSlug}>{model.slug}</span>}
-        <span style={styles.modelName}>{model.name}</span>
-        <span style={styles.modelCreatedTime}>{model.createdTime}</span>
-        <span style={styles.modelVisibility}>{model.visibility}</span>
-      </div>
+      <tr key={model.id} style={rowNum === models.length - 1 ? styles.lastModelRow : []}>
+        <td>
+          {model.url ? <Link to={model.url}>{model.slug}</Link> :
+                       <span>{model.slug}</span>}
+        </td>
+        <td>
+          <span style={styles.modelName}>{model.name}</span>
+        </td>
+        <td>
+          <Time value={model.createdTime}
+                format="YYYY/MM/DD"
+                relative={true} /> 
+        </td>
+        <td>
+          <DownloadCount downloads={model.downloads} />
+        </td>
+        <td>
+          <span style={styles.modelVisibility}>{model.visibility}</span>
+        </td>
+      </tr>
     )
   }
 
   render() {
-    if (this.props.fetching) {
+    const { fetching, showHeaders } = this.props
+    if (fetching) {
       return (
-        <div style={[styles.modelList, styles.modelListFetching]}>
+        <div>
           <h3>Fetching models...</h3>
         </div>
       )
     }
     return (
-      <div style={styles.modelList}>
-        {this.props.models.length > 0 ?
-          <div style={styles.modelRow}>
-            <span style={[styles.modelListHeader, {visibility: 'hidden'}]}></span>
-            <span style={styles.modelListHeader}>Model Name</span>
-            <span style={styles.modelListHeader}>Time Created</span>
-            <span style={styles.modelListHeader}>Visibility</span>
-          </div> : null}
-        {map(this.props.models, this.renderRow)}
-      </div>
+      <table className="table" style={styles.modelList}>
+        {showHeaders ?
+          <thead>
+            <tr>
+              <th></th>
+              <th>Model Name</th>
+              <th>Time Created</th>
+              <th>Downloads</th>
+              <th>Visibility</th>
+            </tr>
+          </thead> : null}
+        <tbody>
+          {map(this.props.models, this.renderRow)}
+        </tbody>
+      </table>
     )
   }
 }
@@ -50,6 +71,7 @@ class ModelList extends Component {
 ModelList.propTypes = {
   models: PropTypes.arrayOf(PropTypes.object),
   fetching: PropTypes.bool,
+  showHeaders: PropTypes.bool,
   error: PropTypes.string
 }
 

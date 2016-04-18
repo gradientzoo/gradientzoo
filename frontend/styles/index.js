@@ -4,6 +4,7 @@ export default {
     paddingBottom: 20
   },
 
+  // Top nav
   header: {
     paddingBottom: 20,
     borderBottom: '1px solid #e5e5e5',
@@ -15,6 +16,7 @@ export default {
     lineHeight: '40px'
   },
 
+  // Footer
   footer: {
     marginTop: 20,
     paddingTop: 19,
@@ -22,96 +24,41 @@ export default {
     borderTop: '1px solid #e5e5e5'
   },
 
+  // Model page
   descriptionTextarea: {
     height: 80
   },
-
-  modelList: {
-
-  },
-  modelListFetching: {
-    fontWeight: 'bold'
-  },
-
-  modelRow: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: '20px',
-    marginBottom: '20px'
-  },
-  modelSlug: {
-    flex: 1,
-    fontSize: '22px'
-  },
-  modelName: {
-    flex: 1,
-    fontSize: '22px',
-    textAlign: 'center'
-  },
-  modelCreatedTime: {
-    flex: 1,
-    fontSize: '14px',
-    textAlign: 'center',
-    color: '#999'
-  },
-  modelVisibility: {
-    flex: 1,
-    fontSize: '22px',
-    textAlign: 'center'
-  },
-  modelListHeader: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#999',
-    borderBottom: '1px solid #eee',
-    marginLeft: 40,
-    marginRight: 40
-  },
-
-  fileList: {
-    marginRight: 56,
-    marginTop: 24
-  },
-  fileListHeader: {
-    marginTop: 32,
-    listStyleType: 'none'
-  },
-  fileListRowCenter: {
-    textAlign: 'center'
-  },
-  firstFileRow: {
-    borderTop: '1px solid #efefef'
-  },
-  fileRow: {
-    listStyleType: 'none',
-    lineHeight: '4em',
-    borderBottom: '1px solid #efefef'
-  },
-  fileFramework: {
-    cornerRadius: '8px',
-    backgroundColor: '#eee',
-    padding: 4
-  },
-  fileSize: {
-    textAlign: 'center'
-  },
-  fileCreated: {
-    textAlign: 'right'
-  },
-  fileChevron: {
-    textAlign: 'right'
-  },
-  fileId: {
-    fontSize: '12px',
-    textAlign: 'center'
-  },
-
   modelDescription: {
     color: '#999',
     fontSize: '20px',
     marginLeft: '20px'
   },
+  // Model page integration
+  integrationContent: {
+    marginTop: '8px'
+  },
 
+  // Model list
+  modelList: {
+    marginTop: 16,
+    marginBottom: 16
+  },
+  lastModelRow: {
+    borderBottom: '1px solid #ddd'
+  },
+
+  // File list
+  lastFileRow: {
+    borderBottom: '1px solid #ddd'
+  },
+
+  // File page
+  filePageTable: {
+    paddingTop: 8,
+    paddingBottom: 16
+  },
+
+  // Readme
   readmeTemplateLabel: {
     textAlign: 'left'
   },
@@ -121,9 +68,5 @@ export default {
   readmeEditorHeading: {
     paddingBottom: '0.5em',
     borderBottom: '1px solid #ddd'
-  },
-
-  integrationContent: {
-    marginTop: '8px'
   }
 }

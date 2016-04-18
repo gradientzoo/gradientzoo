@@ -47,6 +47,7 @@ class ProfilePage extends Component {
 
         <ModelList user={user}
                    models={models}
+                   showHeaders={true}
                    fetching={modelsFetching}
                    error={modelsFetchError} />
 

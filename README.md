@@ -67,7 +67,6 @@ you're set!
 TODO
 ====
 
-* Display download count for each file
 * Write page explaining the open source aspect of the project
 * Update homepage to list the real most downloaded models
 * Links from homepage to full model lists
@@ -77,7 +76,6 @@ TODO
 * Fill in marketing information on the homepage
 * Overhaul the model list look and feel
 * Allow user to edit the name and description of their model
-* Toggle between other integration examples besides Keras
 * Update Keras README example code to be more modern
 * Format times properly across the site
 * Add time created display to model page
