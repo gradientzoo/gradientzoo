@@ -18,8 +18,8 @@ class ModelList extends Component {
     return (
       <tr key={model.id} style={rowNum === models.length - 1 ? styles.lastModelRow : []}>
         <td>
-          {model.url ? <Link to={model.url}>{model.slug}</Link> :
-                       <span>{model.slug}</span>}
+          {model.url ? <Link to={model.url}>{model.user.username}/{model.slug}</Link> :
+                       <span>{model.user.username}/{model.slug}</span>}
         </td>
         <td>
           <span style={styles.modelName}>{model.name}</span>

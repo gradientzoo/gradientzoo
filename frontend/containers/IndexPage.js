@@ -112,7 +112,10 @@ function mapStateToProps(state, props) {
   const publicModels = filter(toArray(models), (model) => model.visibility === 'public')
   const latestModels = take(reverse(sortBy(publicModels, 'createdTime')), 10)
   const latestModelsWithUrls = map(latestModels, (model) => {
-    return extend(model, {url: '/' + users[model['userId']].username + '/' + model.slug})
+    return extend(model, {
+      url: '/' + users[model['userId']].username + '/' + model.slug,
+      user: users[model.userId]
+    })
   })
 
   return {

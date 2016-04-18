@@ -87,7 +87,10 @@ function mapStateToProps(state, props) {
   const user = head(filter(users, (u) => u.username === username)) || null
   let processedModels = filter(toArray(models), (model) => model.userId === user.id)
   processedModels = map(processedModels, (model) => {
-    return extend(model, {url: '/' + users[model['userId']].username + '/' + model.slug})
+    return extend(model, {
+      url: '/' + users[model['userId']].username + '/' + model.slug,
+      user: users[model.userId]
+    })
   })
   return {
     userFetching: state.userByUsername.fetching,
