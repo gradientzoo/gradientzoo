@@ -28,6 +28,7 @@ class NavHeader extends Component {
     const registerActiveClass = activeTab === 'register' && !isLoggedIn ? 'active' : ''
     return (
       <div className="header clearfix" style={styles.header}>
+        <h3 className="text-muted pull-left" style={styles.masthead}><Link to="/index">Gradientzoo</Link></h3>
         <nav>
           <ul className="nav nav-pills pull-right">
             <li className={homeActiveClass} htmlRole="presentation">
@@ -52,7 +53,6 @@ class NavHeader extends Component {
             </li>
           </ul>
         </nav>
-        <h3 className="text-muted" style={styles.masthead}><Link to="/index">Gradientzoo</Link></h3>
       </div>
     )
   }
