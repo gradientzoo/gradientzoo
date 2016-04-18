@@ -121,5 +121,9 @@ export default {
   readmeEditorHeading: {
     paddingBottom: '0.5em',
     borderBottom: '1px solid #ddd'
+  },
+
+  integrationContent: {
+    marginTop: '8px'
   }
 }

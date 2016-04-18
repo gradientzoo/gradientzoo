@@ -10,7 +10,7 @@ import filesize from 'filesize'
 class FileList extends Component {
   constructor(props) {
     super(props)
-    bindAll(this, 'renderRow');
+    bindAll(this, 'renderRow')
   }
 
   renderRow(file, rowNum) {

@@ -2,30 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import Radium from 'radium'
 import styles from '../styles'
 import bindAll from 'lodash/bindAll'
+import each from 'lodash/each'
 import TextareaAutosize from 'react-textarea-autosize'
-import Markdown from 'react-remarkable'
-
-import hljs from 'highlight.js/lib/highlight'
-import hljs_javascript from 'highlight.js/lib/languages/javascript'
-import hljs_python from 'highlight.js/lib/languages/python'
-hljs.registerLanguage('javascript', hljs_javascript)
-hljs.registerLanguage('python', hljs_python)
-
-const remarkableConfig = {
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(lang, str).value;
-      } catch (err) {}
-    }
-
-    try {
-      return hljs.highlightAuto(str).value;
-    } catch (err) {}
-
-    return '' // use external default escaping
-  }
-}
+import CustomMarkdown from './CustomMarkdown'
 
 const DEFAULT_TEMPLATE = `
 ## Background
@@ -77,7 +56,7 @@ Public domain
 
 ### Supported Platforms
 
-* This model's language and/or framework
+* The framework(s) used by this model
 `.trim()
 
 const STATES = {
@@ -89,7 +68,23 @@ const STATES = {
 class ReadmeEditor extends Component {
   constructor(props) {
     super(props)
-    this.state = {template: 'minimal', readme: props.initialReadme || STATES['minimal']}
+
+    let template = '' // Default to a custom template
+    // If there's a readme passed in, let's check to see if it's a default one
+    if (props.initialReadme) {
+      each(STATES, (source, slug) => {
+        // If it is, that's our template slug
+        if (source == props.initialReadme) {
+          template = slug
+          return false
+        }
+      })
+    } else {
+      // With no readme passed in, default to the minimal template
+      template = 'minimal'
+    }
+    
+    this.state = {template: template, readme: props.initialReadme || STATES['minimal']}
     bindAll(this, 'handleTemplateChange', 'handleReadmeChange', 'handleSubmit',
       'handleLaterClick')
   }
@@ -126,6 +121,8 @@ class ReadmeEditor extends Component {
   }
 
   render() {
+    const { template, readme } = this.state
+    const isCustomized = readme.trim() != (STATES[template] || '').trim()
     return (
       <div>
         <form className="form-horizontal clearfix" onSubmit={this.handleSubmit}>
@@ -135,11 +132,12 @@ class ReadmeEditor extends Component {
                    style={styles.readmeTemplateLabel}>Template:</label>
             <div className="col-sm-11">
               <select className="form-control"
-                      value={this.state.template}
+                      value={isCustomized ? '' : template}
                       onChange={this.handleTemplateChange}>
                 <option value="blank">Blank</option>
                 <option value="minimal">Minimal</option>
                 <option value="academic">Academic</option>
+                {isCustomized ? <option value=""></option> : null}
               </select>
             </div>
           </div>
@@ -159,11 +157,11 @@ class ReadmeEditor extends Component {
                                 type="text"
                                 name="readme"
                                 ref="readme"
-                                value={this.state.readme}
+                                value={readme}
                                 onChange={this.handleReadmeChange} />
             </div>
             <div className="col-sm-6">
-              <Markdown source={this.state.readme} options={remarkableConfig} />
+              <CustomMarkdown source={readme} />
             </div>
           </div>
 

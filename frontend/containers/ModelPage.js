@@ -14,50 +14,14 @@ import { loadFilesByUsernameAndSlug } from '../actions/file'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
 import FileList from '../components/FileList'
+import IntegrationHelper from '../components/IntegrationHelper'
+import CustomMarkdown from '../components/CustomMarkdown'
 import ReadmeEditor from '../components/ReadmeEditor'
 import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
-import Markdown from 'react-remarkable'
 import 'isomorphic-fetch'
 
-import hljs from 'highlight.js/lib/highlight'
-import hljs_javascript from 'highlight.js/lib/languages/javascript'
-import hljs_python from 'highlight.js/lib/languages/python'
-hljs.registerLanguage('javascript', hljs_javascript)
-hljs.registerLanguage('python', hljs_python)
-
-const remarkableConfig = {
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(lang, str).value;
-      } catch (err) {}
-    }
-
-    try {
-      return hljs.highlightAuto(str).value;
-    } catch (err) {}
-
-    return '' // use external default escaping
-  }
-}
-
-const kerasIntegration = `
-\`\`\`python
-from keras_gradientzoo import KerasGradientzoo
-# Note: For better security, pass this auth token id as an environment variable
-#       or read it from a file whose access can be restricted.
-zoo = KerasGradientzoo('{username}/{slug}', auth_token_id='{authTokenId}')
-
-# Load latest weights from Gradientzoo
-zoo.load_weights(your_keras_model)
-
-# Save updated weights to Gradientzoo after each epoch
-save_weights = zoo.make_save_callback(your_keras_model)
-your_keras_model.fit(/* ... */, callbacks=[save_weights])
-\`\`\`
-`
 
 class ModelPage extends Component {
   constructor(props) {
@@ -88,14 +52,19 @@ class ModelPage extends Component {
   }
 
   handleReadmeLater(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
     this.setState({readmeLater: true, editReadme: false})
   }
 
   handleEditClick(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
     this.setState({editReadme: true});
   }
 
   handleDeleteClick(ev) {
+    ev.stopPropagation()
     ev.preventDefault()
     if (this.props.deleting) {
       return
@@ -107,6 +76,7 @@ class ModelPage extends Component {
   }
 
   handleFileClick(file, ev) {
+    ev.stopPropagation()
     ev.preventDefault()
     const { routeParams: { username, slug }, authTokenId} = this.props
     const path = `/api/file-id/${file.id}`
@@ -134,11 +104,7 @@ class ModelPage extends Component {
     const { deleting, deleteError } = this.props
     const { readmeLater, editReadme } = this.state
     const isOwner = user && authUser && user.id === authUser.id
-    const modelLoaded = !modelFetching && model
-    const keras = kerasIntegration
-      .replace(/\{username\}/g, username)
-      .replace(/\{slug\}/g, slug)
-      .replace(/\{authTokenId\}/g, authTokenId || '');
+    const modelLoaded = !modelFetching && model;
     return (
       <DocumentTitle title={username + '/' + slug + ' - Gradientzoo'}>
       <div className="container" style={styles.page}>
@@ -153,11 +119,11 @@ class ModelPage extends Component {
         {/*model && ? <span>{model.createdTime}</span> : null*/}
         {model ? <p>{model.description}</p> : null}
         {model && user && model.userId === user.id ?
-          <div>
-            <h3>Keras Integration</h3>
-            <Markdown source={keras} options={remarkableConfig} />
-          </div>: null}
+          <IntegrationHelper username={username}
+                             slug={slug}
+                             authTokenId={authTokenId} /> : null}
 
+        <h3>Files</h3>
         <FileList files={files}
                   filesFetching={filesFetching}
                   error={filesFetchError}
@@ -173,7 +139,8 @@ class ModelPage extends Component {
             <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
           </div>: null}
         { isOwner && modelLoaded && ((!model.readme && !readmeLater) || editReadme) ?
-          <ReadmeEditor onChange={this.handleReadmeChange}
+          <ReadmeEditor initialReadme={model.readme}
+                        onChange={this.handleReadmeChange}
                         onLaterClick={this.handleReadmeLater} /> : null}
 
         {/* If the model is loaded and does have a readme, show it */}
@@ -181,7 +148,7 @@ class ModelPage extends Component {
           <div>
             <h3>Readme {isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}</h3>
             <div className="well">
-              <Markdown source={model.readme} options={remarkableConfig} />
+              <CustomMarkdown source={model.readme} />
             </div>
           </div> : null}
 
