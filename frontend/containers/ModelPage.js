@@ -25,8 +25,8 @@ import 'isomorphic-fetch'
 class ModelPage extends Component {
   constructor(props) {
     super(props)
-    this.state = {readmeLater: false, editReadme: false}
-    bindAll(this, 'handleReadmeChange', 'handleReadmeLater', 'handleEditClick',
+    this.state = {readmeCancel: false, editReadme: false}
+    bindAll(this, 'handleReadmeChange', 'handleReadmeCancel', 'handleEditClick',
       'handleDeleteClick', 'handleFileClick')
   }
 
@@ -50,16 +50,16 @@ class ModelPage extends Component {
     this.props.updateModelReadme(this.props.model.id, readme)
   }
 
-  handleReadmeLater(ev) {
+  handleReadmeCancel(ev) {
     ev.stopPropagation()
     ev.preventDefault()
-    this.setState({readmeLater: true, editReadme: false})
+    this.setState({readmeCancel: true, editReadme: false})
   }
 
   handleEditClick(ev) {
     ev.stopPropagation()
     ev.preventDefault()
-    this.setState({editReadme: true});
+    this.setState({readmeCancel: false, editReadme: true});
   }
 
   handleDeleteClick(ev) {
@@ -101,7 +101,7 @@ class ModelPage extends Component {
     const { model, modelFetching, modelFetchError } = this.props
     const { files, filesFetching, filesFetchError } = this.props
     const { deleting, deleteError } = this.props
-    const { readmeLater, editReadme } = this.state
+    const { readmeCancel, editReadme } = this.state
     const isOwner = user && authUser && user.id === authUser.id
     const modelLoaded = !modelFetching && model;
     return (
@@ -134,15 +134,15 @@ class ModelPage extends Component {
         </table>
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
-            clicked the 'later' button, then show the readme creation dialog. */}
-        { isOwner && modelLoaded && !model.readme && !readmeLater ?
+            clicked the 'cancel' button, then show the readme creation dialog. */}
+        { isOwner && modelLoaded && !model.readme && !readmeCancel ?
           <div className="alert alert-info" role="alert">
             <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
           </div>: null}
-        { isOwner && modelLoaded && ((!model.readme && !readmeLater) || editReadme) ?
+        { isOwner && modelLoaded && (!model.readme || editReadme) && !readmeCancel ?
           <ReadmeEditor initialReadme={model.readme}
                         onChange={this.handleReadmeChange}
-                        onLaterClick={this.handleReadmeLater} /> : null}
+                        onCancelClick={this.handleReadmeCancel} /> : null}
 
         {/* If the model is loaded and does have a readme, show it */}
         { modelLoaded && model.readme && !editReadme ?

@@ -60,7 +60,7 @@ Public domain
 `.trim()
 
 const STATES = {
-  blank: '',
+  blank: ' ',
   minimal: MINIMAL_TEMPLATE,
   academic: DEFAULT_TEMPLATE
 }
@@ -86,7 +86,7 @@ class ReadmeEditor extends Component {
     
     this.state = {template: template, readme: props.initialReadme || STATES['minimal']}
     bindAll(this, 'handleTemplateChange', 'handleReadmeChange', 'handleSubmit',
-      'handleLaterClick')
+      'handleCancelClick')
   }
 
   handleTemplateChange(ev) {
@@ -110,14 +110,22 @@ class ReadmeEditor extends Component {
 
   handleSubmit(ev) {
     ev.preventDefault()
+    ev.stopPropagation()
+
+    let { readme } = this.state
+    if (readme === '') {
+      readme = ' '
+    }
+
     if (this.props.onChange) {
-      this.props.onChange(this.state.readme)
+      this.props.onChange(readme, ev)
     }
   }
 
-  handleLaterClick(ev) {
+  handleCancelClick(ev) {
     ev.preventDefault()
-    this.props.onLaterClick()
+    ev.stopPropagation()
+    this.props.onCancelClick(ev)
   }
 
   render() {
@@ -166,9 +174,9 @@ class ReadmeEditor extends Component {
           </div>
 
           <button type="submit" className="btn btn-primary pull-right">Save Readme</button>
-          {this.props.onLaterClick ?
+          {this.props.onCancelClick ?
             <button className="btn btn-default"
-                    onClick={this.handleLaterClick}>Later</button> : null}
+                    onClick={this.handleCancelClick}><strong>Cancel</strong></button> : null}
         </form>
       </div>
     )
@@ -178,7 +186,7 @@ class ReadmeEditor extends Component {
 ReadmeEditor.propTypes = {
   initialReadme: PropTypes.string,
   onChange: PropTypes.func,
-  onLaterClick: PropTypes.func
+  onCancelClick: PropTypes.func
 }
 
 ReadmeEditor.defaultProps = {
