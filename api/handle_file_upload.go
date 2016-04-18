@@ -164,6 +164,11 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 
 	clog.Info("Upload successful")
 
+	// Hydrate the file object
+	if err = c.Api.File.Hydrate([]*models.File{f}); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate")
+	}
+
 	// Return the new user and auth token objects
 	c.Render.JSON(w, http.StatusOK, map[string]*models.File{"file": f})
 }

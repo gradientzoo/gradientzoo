@@ -1,5 +1,5 @@
-hash: fb6abee94088eeb88b7a1babcbd1e8007c0559a0e2690b18b22ab57f7a7f1ee1
-updated: 2016-04-11T17:25:13.101031473-07:00
+hash: 29380ee0add56960f9e9d4a615b934fa18d1adc0f5d226eaa136c560b9be94cf
+updated: 2016-04-17T17:19:49.297146142-07:00
 imports:
 - name: bitbucket.org/liamstask/goose
   version: 8488cc47d90c8a502b1c41a462a6d9cc8ee0a895
@@ -89,11 +89,11 @@ imports:
   subpackages:
   - unix
 - name: golang.org/x/tools
-  version: 2da0720e4f0a8d82e510747c24a9e09038acb984
+  version: 3114265539b6c85f1c6f172bb589baecc129874b
   subpackages:
   - imports
-- name: gopkg.in/guregu/null.v2
-  version: 4ac4f00378f403715e68ae8827a8b1d8e9addf4a
+- name: gopkg.in/guregu/null.v3
+  version: 41961cea0328defc5f95c1c473f89ebf0d1813f6
   subpackages:
   - zero
 - name: gopkg.in/mgutz/dat.v1

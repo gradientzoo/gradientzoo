@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/pborman/uuid"
+	null "gopkg.in/guregu/null.v3"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
 
@@ -56,6 +57,9 @@ type File struct {
 	MetadataString   string                 `db:"metadata" json:"-"`
 	Metadata         map[string]interface{} `db:"-" json:"metadata"`
 	CreatedTime      time.Time              `db:"created_time" json:"created_time"`
+
+	// Hydrated fields
+	Downloads null.Int `db:"-" json:"downloads"`
 }
 
 func NewFile(userId, modelId, filename, framework, frameworkVersion,
@@ -137,7 +141,12 @@ func (db *FileDb) ByIds(ids []interface{}) ([]*File, error) {
 }
 
 func (db *FileDb) Delete(id interface{}) error {
-	_, err := db.DB.
+	err := db.Api.DownloadHour.DeleteByFileId(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.DB.
 		DeleteFrom(FILE_TABLE).
 		Where("id = $1", id).
 		Exec()
@@ -181,6 +190,15 @@ func (db *FileDb) Save(f *File) error {
 }
 
 func (db *FileDb) Hydrate(files []*File) error {
+	var downloads int
+	var err error
+	for _, file := range files {
+		downloads, err = db.Api.DownloadHour.TotalCountByFile(file.Id)
+		if err != nil {
+			return err
+		}
+		file.Downloads = null.IntFrom(int64(downloads))
+	}
 	return nil
 }
 
@@ -267,9 +285,25 @@ func (db *FileDb) ByModelId(modelId string) ([]*File, error) {
 }
 
 func (db *FileDb) DeletePending(modelId, filename string) error {
-	_, err := db.DB.
-		DeleteFrom(FILE_TABLE).
+	var ids []interface{}
+
+	err := db.DB.
+		Select("id").
+		From(FILE_TABLE).
 		Where("model_id = $1 AND filename = $2 AND status = 'pending'", modelId, filename).
+		QuerySlice(&ids)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.DB.
+		DeleteFrom(DOWNLOAD_HOUR_TABLE).
+		Where("file_id IN $1", ids).
+		Exec()
+
+	_, err = db.DB.
+		DeleteFrom(FILE_TABLE).
+		Where("id IN $1", ids).
 		Exec()
 	return err
 }

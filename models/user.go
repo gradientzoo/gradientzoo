@@ -6,7 +6,7 @@ import (
 
 	"github.com/pborman/uuid"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/guregu/null.v2/zero"
+	"gopkg.in/guregu/null.v3/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
 

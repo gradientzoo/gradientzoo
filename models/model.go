@@ -6,7 +6,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/pborman/uuid"
-	"gopkg.in/guregu/null.v2/zero"
+	null "gopkg.in/guregu/null.v3"
+	"gopkg.in/guregu/null.v3/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
 
@@ -51,7 +52,8 @@ type Model struct {
 	CreatedTime time.Time `db:"created_time" json:"created_time"`
 
 	// Hydrated fields
-	HydratedReadme zero.String `json:"readme,omitempty"`
+	Downloads      null.Int    `db:"-" json:"downloads"`
+	HydratedReadme zero.String `db:"-" json:"readme,omitempty"`
 }
 
 func NewModel(userId, slug, name, description, visibility string, keep int) *Model {
@@ -135,7 +137,14 @@ func (db *ModelDb) Save(model *Model) error {
 }
 
 func (db *ModelDb) Hydrate(models []*Model) error {
+	var downloads int
+	var err error
 	for _, model := range models {
+		downloads, err = db.Api.DownloadHour.TotalCountByModel(model.Id)
+		if err != nil {
+			return err
+		}
+		model.Downloads = null.IntFrom(int64(downloads))
 		model.HydratedReadme = zero.StringFrom(model.Readme)
 	}
 	return nil

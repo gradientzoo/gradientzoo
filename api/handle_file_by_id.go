@@ -3,9 +3,11 @@ package api
 import (
 	"database/sql"
 	"net/http"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/ericflo/gradientzoo/models"
 )
 
 func HandleFileById(c *Context, w http.ResponseWriter, req *http.Request) {
@@ -16,6 +18,16 @@ func HandleFileById(c *Context, w http.ResponseWriter, req *http.Request) {
 		fields["auth_user_id"] = c.User.Id
 	}
 	clog := log.WithFields(fields)
+
+	// Get the remote IP
+	var ip string
+	ips := strings.Split(req.Header.Get("X-Forwarded-For"), ", ")
+	if len(ips) > 0 {
+		ip = ips[0]
+	} else {
+		clog.Warn("X-Forwarded-For header not found, falling back to remote addr")
+		ip = req.RemoteAddr
+	}
 
 	// Get the file by its id
 	f, err := c.Api.File.ById(id)
@@ -83,6 +95,22 @@ func HandleFileById(c *Context, w http.ResponseWriter, req *http.Request) {
 	u, err := c.Blob.MakeUrl(f.BlobFilename(), 120*time.Second)
 	if err != nil {
 		clog.WithField("err", err).Error("Could not make file url")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not get your file, please try again soon"))
+		return
+	}
+
+	err = c.Api.DownloadHour.MarkDownload(f.Id, user.Id, ip, time.Now().UTC())
+	if err != nil {
+		clog.WithField("err", err).Error("Could not mark download")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not get your file, please try again soon"))
+		return
+	}
+
+	// Hydrate the file object
+	if err = c.Api.File.Hydrate([]*models.File{f}); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate")
 		c.Render.JSON(w, http.StatusBadGateway,
 			JsonErr("Could not get your file, please try again soon"))
 		return

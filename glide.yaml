@@ -17,9 +17,6 @@ import:
 - package: golang.org/x/crypto
   subpackages:
   - bcrypt
-- package: gopkg.in/guregu/null.v2
-  subpackages:
-  - zero
 - package: gopkg.in/mgutz/dat.v1
   subpackages:
   - sqlx-runner
@@ -31,3 +28,4 @@ import:
 - package: bitbucket.org/liamstask/goose
   subpackages:
   - cmd/goose
+- package: gopkg.in/guregu/null.v3
