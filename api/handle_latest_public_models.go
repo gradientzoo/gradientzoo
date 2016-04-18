@@ -23,6 +23,14 @@ func HandleLatestPublicModels(c *Context, w http.ResponseWriter, req *http.Reque
 		return
 	}
 
+	// Hydrate the model objects
+	if err = c.Api.Model.Hydrate(ms); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could not get those models, please try again soon"))
+		return
+	}
+
 	// Build up a unique list of user ids in the keys of a map
 	userIdKeys := map[string]bool{}
 	for _, m := range ms {

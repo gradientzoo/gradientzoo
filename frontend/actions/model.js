@@ -25,7 +25,7 @@ export function loadModelsByUsername(username) {
     [CALL_API]: {
       types: [ MODELS_BY_USERNAME_REQUEST, MODELS_BY_USERNAME_SUCCESS, MODELS_BY_USERNAME_FAILURE ],
       endpoint: `models/username/${username}`,
-      schema: Schemas.MODELS_RESPONSE
+      schema: Schemas.MODELS_USERS_RESPONSE
     }
   }
 }
