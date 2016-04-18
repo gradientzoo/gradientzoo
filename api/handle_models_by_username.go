@@ -58,7 +58,7 @@ func HandleModelsByUsername(c *Context, w http.ResponseWriter, req *http.Request
 		return
 	}
 
-	c.Render.JSON(w, http.StatusOK, map[string][]interface{}{
+	c.Render.JSON(w, http.StatusOK, map[string]interface{}{
 		"models": filteredModels,
 		"users":  []*models.User{user},
 	})
