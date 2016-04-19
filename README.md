@@ -83,3 +83,4 @@ TODO
 * Import common public domain datasets for popular libraries into a 'commons'
 * Make the webapp universal
 * Add loading spinner to file versions page
+* Add TOS and privacy policy
