@@ -73,7 +73,6 @@ TODO
 * Infinite pagination on the full model lists
 * Implement Stripe, different account levels, and pricing page
 * Improve empty states and loading screens
-* Fill in marketing information on the homepage
 * Overhaul the model list look and feel
 * Allow user to edit the name and description of their model
 * Forgot password flow

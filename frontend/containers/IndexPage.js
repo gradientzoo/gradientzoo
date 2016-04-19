@@ -78,18 +78,28 @@ class IndexPage extends Component {
           </div>
         </div>
 
+        <br className="br" />
+
         <div className="row">
-          <div className="col-lg-12">
-            <h4></h4>
-            <p></p>
+          <div className="col-md-6">
+            <h4>Go back in time</h4>
+            <p>Overfit your training data? No problem, change one line of code to pull an older version of the weights and fine tune from there.</p>
+            <br className="br" />
 
-            <h4></h4>
-            <p></p>
+            <h4>Copy your neighbor&rsquo;s work</h4>
+            <p>Don&rsquo;t waste your time training a model that hundreds of others have already trained and shared, simply pull one from the public models above!</p>
+          </div>
+          <div className="col-md-6">
+            <h4>Private models for your own use</h4>
+            <p>Working on something that can&rsquo;t be shared? Start a private model instead of public, and you will be the only one with access to the files.</p>
+            <br className="br" />
 
-            <h4></h4>
-            <p></p>
+            <h4>Transfer learning for everyone</h4>
+            <p>Trained neural networks can be used outside of their original training domain. Try using a related pre-trained net from Gradientzoo and fine tuning it to fit your use case.</p>
           </div>
         </div>
+
+        <br className="br" />
 
         <Footer />
       </div>
