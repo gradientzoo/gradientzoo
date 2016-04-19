@@ -67,7 +67,6 @@ you're set!
 TODO
 ====
 
-* Write page explaining the open source aspect of the project
 * Update homepage to list the real most downloaded models
 * Links from homepage to full model lists
 * Infinite pagination on the full model lists
