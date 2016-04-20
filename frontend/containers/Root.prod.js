@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Provider } from 'react-redux'
 import routes from '../routes'
-import { Router, browserHistory } from 'react-router'
+import { Router } from 'react-router'
 import ga from 'react-ga'
 
 const gaid = process.env.GOOGLE_ANALYTICS_ID
@@ -17,15 +17,16 @@ function logPageView() {
 
 export default class Root extends Component {
   render() {
-    const { store } = this.props
+    const { store, history } = this.props
     return (
       <Provider store={store}>
-        <Router history={browserHistory} routes={routes} onUpdate={logPageView} />
+        <Router history={history} routes={routes} onUpdate={logPageView} />
       </Provider>
     )
   }
 }
 
 Root.propTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }

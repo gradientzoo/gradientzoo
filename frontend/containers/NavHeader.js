@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
+import { Link, browserHistory } from 'react-router'
 import { loadAuthUser, logout } from '../actions/auth'
 import isString from 'lodash/isString'
 import bindAll from 'lodash/bindAll'
@@ -16,7 +15,7 @@ class NavHeader extends Component {
   handleLogout(ev) {
     ev.preventDefault()
     this.props.logout()
-    this.props.push('/')
+    browserHistory.push('/index')
   }
 
   render() {
@@ -66,8 +65,7 @@ NavHeader.PropTypes = {
   activeTab: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
   authUser: PropTypes.object,
-  logout: PropTypes.func.isRequired,
-  push: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -78,6 +76,5 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  logout,
-  push
+  logout
 })(NavHeader))

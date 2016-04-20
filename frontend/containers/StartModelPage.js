@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
+import { Link, browserHistory } from 'react-router'
 import { createModel } from '../actions/model'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
@@ -23,7 +22,13 @@ class StartModelPage extends Component {
       keep: '10'
     }
     bindAll(this, 'handleSubmit', 'handleSlugChange', 'handleNameChange',
-      'handleDescriptionChange', 'handleVisibilityChange');
+      'handleDescriptionChange', 'handleVisibilityChange')
+  }
+
+  componentDidMount() {
+    if (!this.props.authUser) {
+      browserHistory.push('/login')
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -31,7 +36,7 @@ class StartModelPage extends Component {
       // If we've logged in, send the user to their dashboard
       const { authUser: { username } } = this.props
       const { slug } = this.state
-      this.props.push(`/${username}/${slug}`)
+      browserHistory.push(`/${username}/${slug}`)
     }
   }
 
@@ -83,16 +88,6 @@ class StartModelPage extends Component {
 
         <form onSubmit={this.handleSubmit} className="clearfix">
           <div className={'form-group' + errClass}>
-            <label htmlFor="slug">Model slug</label>
-            <input className="form-control"
-                   type="text"
-                   name="slug"
-                   disabled={this.props.creating}
-                   placeholder="Model slug"
-                   onChange={this.handleSlugChange} />
-          </div>
-
-          <div className={'form-group' + errClass}>
             <label htmlFor="name">Model name</label>
             <input className="form-control"
                    type="text"
@@ -100,6 +95,18 @@ class StartModelPage extends Component {
                    disabled={this.props.creating}
                    placeholder="Model name"
                    onChange={this.handleNameChange} />
+          </div>
+
+          <div className={'form-group' + errClass}>
+            <label htmlFor="slug" style={styles.slugLabel}>gradientzoo.com/</label>
+            <input className="form-control"
+                   style={styles.slugInput}
+                   type="text"
+                   name="slug"
+                   disabled={this.props.creating}
+                   placeholder="mnist-cnn"
+                   onChange={this.handleSlugChange} />
+            <div className="clearfix" />
           </div>
 
           <div className={'form-group' + errClass + (description.length > 200 ? ' has-error' : '')}>
@@ -191,7 +198,6 @@ StartModelPage.propTypes = {
   creating: PropTypes.bool,
   created: PropTypes.bool,
   error: PropTypes.string,
-  push: PropTypes.func.isRequired,
   createModel: PropTypes.func.isRequired
 }
 
@@ -206,6 +212,5 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  createModel,
-  push,
+  createModel
 })(StartModelPage))

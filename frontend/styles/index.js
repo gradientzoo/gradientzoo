@@ -38,6 +38,16 @@ export default {
     height: 20
   },
 
+  // Start model page
+  slugLabel: {
+    position: 'absolute',
+    paddingTop: 7,
+    paddingLeft: 12
+  },
+  slugInput: {
+    textIndent: 118
+  },
+
   // Model page
   descriptionTextarea: {
     height: 80

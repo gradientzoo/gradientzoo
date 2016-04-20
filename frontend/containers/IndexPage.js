@@ -8,6 +8,7 @@ import filter from 'lodash/filter'
 import sortBy from 'lodash/sortBy'
 import reverse from 'lodash/reverse'
 import take from 'lodash/take'
+import isEqual from 'lodash/isEqual'
 import DocumentTitle from 'react-document-title'
 import { loadLatestPublicModels, loadTopModels } from '../actions/model'
 import NavHeader from './NavHeader'
@@ -36,6 +37,14 @@ class IndexPage extends Component {
   componentWillUpdate(nextProps, nextState) {
     if (this.state.period !== nextState.period) {
       this.props.loadTopModels(nextState.period)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.authUser, nextProps.authUser)) {
+      console.log('asdf')
+      this.props.loadLatestPublicModels()
+      this.props.loadTopModels(this.state.period)
     }
   }
 

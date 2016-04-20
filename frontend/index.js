@@ -7,9 +7,11 @@ import Root from './containers/Root'
 import configureStore from './store/configureStore'
 
 const store = configureStore()
+
+// Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store)
 
 render(
-  <Root store={store} />,
+  <Root store={store} history={history} />,
   document.getElementById('root')
 )

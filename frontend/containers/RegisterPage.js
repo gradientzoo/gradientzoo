@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
+import { Link, browserHistory } from 'react-router'
 import { register } from '../actions/auth'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
@@ -27,7 +26,7 @@ class RegisterPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isNull(nextProps.authTokenId)) {
       // If we've logged in, send the user to their dashboard
-      this.props.push('/')
+      browserHistory.push('/index')
     }
   }
 
@@ -116,8 +115,7 @@ RegisterPage.propTypes = {
   authTokenId: PropTypes.string,
   registering: PropTypes.bool,
   registerError: PropTypes.string,
-  register: PropTypes.func.isRequired,
-  push: PropTypes.func.isRequired
+  register: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -129,6 +127,5 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  register,
-  push
+  register
 })(RegisterPage))

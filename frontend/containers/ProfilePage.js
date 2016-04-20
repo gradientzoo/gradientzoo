@@ -7,6 +7,7 @@ import toArray from 'lodash/toArray'
 import extend from 'lodash/extend'
 import map from 'lodash/map'
 import head from 'lodash/head'
+import isEqual from 'lodash/isEqual'
 import DocumentTitle from 'react-document-title'
 import { loadUserByUsername } from '../actions/auth'
 import { loadModelsByUsername } from '../actions/model'
@@ -30,6 +31,14 @@ class ProfilePage extends Component {
     const { routeParams: { username }} = this.props
     this.props.loadModelsByUsername(username)
     this.props.loadUserByUsername(username)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.authUser, nextProps.authUser)) {
+      const { routeParams: { username }} = this.props
+      this.props.loadModelsByUsername(username)
+      this.props.loadUserByUsername(username)
+    }
   }
 
   render() {

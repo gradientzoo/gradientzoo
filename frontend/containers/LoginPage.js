@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
+import { Link, browserHistory } from 'react-router'
 import { login } from '../actions/auth'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
@@ -24,9 +23,10 @@ class LoginPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.authTokenId)
     if (!isNull(nextProps.authTokenId)) {
       // If we've logged in, send the user to their dashboard
-      this.props.push('/')
+      browserHistory.push('/index')
     }
   }
 
@@ -98,8 +98,7 @@ LoginPage.propTypes = {
   authTokenId: PropTypes.string,
   loggingIn: PropTypes.bool,
   loginError: PropTypes.string,
-  login: PropTypes.func.isRequired,
-  push: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -111,6 +110,5 @@ function mapStateToProps(state, props) {
 }
 
 export default Radium(connect(mapStateToProps, {
-  login,
-  push
+  login
 })(LoginPage))

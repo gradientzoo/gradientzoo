@@ -33,6 +33,15 @@ class FilePage extends Component {
     this.props.loadFileVersions(username, slug, framework, filename)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authTokenId !== nextProps.authTokenId) {
+      const { routeParams: { username, slug, framework, filename }} = this.props
+      this.props.loadUserByUsername(username)
+      this.props.loadModelByUsernameAndSlug(username, slug)
+      this.props.loadFileVersions(username, slug, framework, filename)
+    }
+  }
+
   handleFileClick(file, ev) {
     ev.preventDefault()
     const { routeParams: { username, slug }, authTokenId} = this.props

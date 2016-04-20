@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
+import { Link, browserHistory } from 'react-router'
 import bindAll from 'lodash/bindAll'
 import filter from 'lodash/filter'
 import head from 'lodash/head'
@@ -31,19 +30,25 @@ class ModelPage extends Component {
       'handleDeleteClick', 'handleFileClick')
   }
 
-  componentWillReceiveProps(nextProps) {
-    // If we've deleted successfully, send them back to their profile page
-    if (this.props.deleting && !nextProps.deleting && !nextProps.deleteError) {
-      const { push, routeParams: { username } } = this.props
-      push('/' + username)
-    }
-  }
-
   componentWillMount() {
     const { routeParams: { username, slug }} = this.props
     this.props.loadModelByUsernameAndSlug(username, slug)
     this.props.loadFilesByUsernameAndSlug(username, slug)
     this.props.loadUserByUsername(username)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // If we've deleted successfully, send them back to their profile page
+    if (this.props.deleting && !nextProps.deleting && !nextProps.deleteError) {
+      const { routeParams: { username } } = this.props
+      browserHistory.push('/' + username)
+    }
+    if (this.props.authTokenId !== nextProps.authTokenId) {
+      const { routeParams: { username, slug }} = this.props
+      this.props.loadModelByUsernameAndSlug(username, slug)
+      this.props.loadFilesByUsernameAndSlug(username, slug)
+      this.props.loadUserByUsername(username)
+    }
   }
 
   handleReadmeChange(readme) {
@@ -104,7 +109,8 @@ class ModelPage extends Component {
     const { deleting, deleteError } = this.props
     const { readmeCancel, editReadme } = this.state
     const isOwner = user && authUser && user.id === authUser.id
-    const modelLoaded = !modelFetching && model;
+    const modelLoaded = !modelFetching && model
+    const editorShowing = isOwner && modelLoaded && (!model.readme || editReadme) && !readmeCancel
     return (
       <DocumentTitle title={username + '/' + slug + ' - Gradientzoo'}>
       <div className="container" style={styles.page}>
@@ -127,15 +133,21 @@ class ModelPage extends Component {
           Files{' '}
           <LoadingSpinner active={filesFetching} />
         </h3>
-        <table className="table">
-          <FileList files={files}
-                    filesFetching={filesFetching}
-                    error={filesFetchError}
-                    username={username}
-                    modelSlug={slug}
-                    showDetails={false}
-                    onFileClick={this.handleFileClick} />
-        </table>
+        {files && files.length > 0 ?
+          <table className="table">
+            <FileList files={files}
+                      filesFetching={filesFetching}
+                      error={filesFetchError}
+                      username={username}
+                      modelSlug={slug}
+                      showDetails={false}
+                      onFileClick={this.handleFileClick} />
+          </table> :
+          <div>
+            <p>No files yet</p>
+            <br className="br" />
+          </div>}
+        
 
         {/* If the model is loaded, but doesn't have a readme, and the user hasn't
             clicked the 'cancel' button, then show the readme creation dialog. */}
@@ -143,7 +155,7 @@ class ModelPage extends Component {
           <div className="alert alert-info" role="alert">
             <strong>Next step:</strong> Next step: let&rsquo;s create a readme for your model!
           </div>: null}
-        { isOwner && modelLoaded && (!model.readme || editReadme) && !readmeCancel ?
+        { editorShowing ?
           <ReadmeEditor initialReadme={model.readme}
                         onChange={this.handleReadmeChange}
                         onCancelClick={this.handleReadmeCancel} /> : null}
@@ -161,7 +173,7 @@ class ModelPage extends Component {
             </div>
           </div> : null}
 
-        { isOwner && modelLoaded && model.readme && !editReadme ?
+        { isOwner && !editorShowing ?
           <div className="row">
             <div className="col-md-2">
               <a href="#"
@@ -199,8 +211,7 @@ ModelPage.propTypes = {
   loadModelByUsernameAndSlug: PropTypes.func.isRequired,
   loadFilesByUsernameAndSlug: PropTypes.func.isRequired,
   updateModelReadme: PropTypes.func.isRequired,
-  deleteModel: PropTypes.func.isRequired,
-  push: PropTypes.func.isRequired
+  deleteModel: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -250,6 +261,5 @@ export default Radium(connect(mapStateToProps, {
   loadModelByUsernameAndSlug,
   loadFilesByUsernameAndSlug,
   updateModelReadme,
-  deleteModel,
-  push
+  deleteModel
 })(ModelPage))
