@@ -24,6 +24,20 @@ export default {
     borderTop: '1px solid #e5e5e5'
   },
 
+  // Homepage
+  modelFetchError: {
+    display: 'inline-block',
+    paddingTop: 10,
+    paddingLeft: 18,
+    color: '#E77'
+  },
+
+  // Loading spinner
+  loadingSpinner: {
+    width: 20,
+    height: 20
+  },
+
   // Model page
   descriptionTextarea: {
     height: 80

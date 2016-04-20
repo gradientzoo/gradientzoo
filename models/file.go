@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/pborman/uuid"
-	null "gopkg.in/guregu/null.v3"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
 
@@ -59,7 +58,7 @@ type File struct {
 	CreatedTime      time.Time              `db:"created_time" json:"created_time"`
 
 	// Hydrated fields
-	Downloads null.Int `db:"-" json:"downloads"`
+	Downloads *DownloadCounts `db:"-" json:"downloads,omitempty"`
 }
 
 func NewFile(userId, modelId, filename, framework, frameworkVersion,
@@ -190,13 +189,14 @@ func (db *FileDb) Hydrate(files []*File) error {
 		fileIds = append(fileIds, file.Id)
 	}
 
-	counts, err := db.Api.DownloadHour.TotalCountsByFiles(fileIds)
+	counts, err := db.Api.DownloadHour.CountsByFiles(fileIds)
 	if err != nil {
 		return err
 	}
 
 	for _, file := range files {
-		file.Downloads = null.IntFrom(int64(counts[file.Id]))
+		c := counts[file.Id]
+		file.Downloads = &c
 	}
 	return nil
 }

@@ -16,6 +16,7 @@ import FileList from '../components/FileList'
 import IntegrationHelper from '../components/IntegrationHelper'
 import CustomMarkdown from '../components/CustomMarkdown'
 import ReadmeEditor from '../components/ReadmeEditor'
+import LoadingSpinner from '../components/LoadingSpinner'
 import Footer from '../components/Footer'
 import Radium from 'radium'
 import styles from '../styles'
@@ -122,7 +123,10 @@ class ModelPage extends Component {
                              slug={slug}
                              authTokenId={authTokenId} /> : null}
 
-        <h3>Files</h3>
+        <h3>
+          Files{' '}
+          <LoadingSpinner active={filesFetching} />
+        </h3>
         <table className="table">
           <FileList files={files}
                     filesFetching={filesFetching}
@@ -147,7 +151,11 @@ class ModelPage extends Component {
         {/* If the model is loaded and does have a readme, show it */}
         { modelLoaded && model.readme && !editReadme ?
           <div>
-            <h3>Readme {isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}</h3>
+            <h3>
+              Readme{' '}
+              {isOwner ? <a href="#" style={{fontSize: 14}} onClick={this.handleEditClick}>Edit</a> : null}{' '}
+              <LoadingSpinner active={modelFetching} />
+            </h3>
             <div className="well">
               <CustomMarkdown source={model.readme} />
             </div>

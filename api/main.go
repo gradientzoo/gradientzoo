@@ -104,6 +104,7 @@ func makeHandler() http.Handler {
 	GET(router, "/user/username/:username", HandleUserByUsername)
 	GET(router, "/models/username/:username", HandleModelsByUsername)
 	GET(router, "/models/public/latest", HandleLatestPublicModels)
+	GET(router, "/models/public/top/:period", HandleTopPublicModels)
 	GET(router, "/model/username/:username/slug/:slug", HandleModelByUsernameAndSlug)
 	POST(router, "/model/id/:id/readme", Authed(HandleUpdateModelReadme))
 	POST(router, "/model/id/:id/deleted", Authed(HandleDeleteModel))

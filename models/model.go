@@ -6,7 +6,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/pborman/uuid"
-	null "gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	runner "gopkg.in/mgutz/dat.v1/sqlx-runner"
 )
@@ -31,6 +30,7 @@ type ModelApi interface {
 	ByUserId(userId string) ([]*Model, error)
 	ByUserIdSlug(userId, slug string) (*Model, error)
 	ByVisibility(visibility string, limit int, last string) ([]*Model, error)
+	ByDownloads(visibility string, start, end time.Time, limit int, last string) ([]*Model, error)
 }
 
 func NewModelDb(db *runner.DB, api *ApiCollection) *ModelDb {
@@ -52,8 +52,8 @@ type Model struct {
 	CreatedTime time.Time `db:"created_time" json:"created_time"`
 
 	// Hydrated fields
-	Downloads      null.Int    `db:"-" json:"downloads"`
-	HydratedReadme zero.String `db:"-" json:"readme,omitempty"`
+	Downloads      *DownloadCounts `db:"-" json:"downloads,omitempty"`
+	HydratedReadme zero.String     `db:"-" json:"readme,omitempty"`
 }
 
 func NewModel(userId, slug, name, description, visibility string, keep int) *Model {
@@ -145,13 +145,14 @@ func (db *ModelDb) Hydrate(models []*Model) error {
 		modelIds = append(modelIds, model.Id)
 	}
 
-	counts, err := db.Api.DownloadHour.TotalCountsByModels(modelIds)
+	counts, err := db.Api.DownloadHour.CountsByModels(modelIds)
 	if err != nil {
 		return err
 	}
 
 	for _, model := range models {
-		model.Downloads = null.IntFrom(int64(counts[model.Id]))
+		c := counts[model.Id]
+		model.Downloads = &c
 		model.HydratedReadme = zero.StringFrom(model.Readme)
 	}
 	return nil
@@ -202,6 +203,37 @@ func (db *ModelDb) ByVisibility(visibility string, limit int, last string) ([]*M
 		OrderBy("created_time DESC").
 		Limit(uint64(limit)).
 		QueryStructs(&models)
+	if models == nil {
+		models = []*Model{}
+	}
+	return models, err
+}
+
+func (db *ModelDb) ByDownloads(visibility string, start, end time.Time, limit int, last string) ([]*Model, error) {
+	if last != "" {
+		log.Error("ByDownloads does not yet handle pagination, 'last' param ignored")
+	}
+	sql := `
+	SELECT
+		M.*
+	FROM download_hour DH
+	LEFT JOIN file F ON (F.id = DH.file_id)
+	LEFT JOIN model M ON (M.id = F.model_id)
+	WHERE M.visibility = $1
+	GROUP BY M.id,
+					 M.user_id,
+					 M.slug,
+					 M.name,
+					 M.description,
+					 M.visibility,
+					 M.keep,
+					 M.readme,
+					 M.created_time
+	ORDER BY COALESCE(SUM(CASE WHEN DH.hour >= $2 AND DH.hour < $3 THEN DH.downloads ELSE 0 END)) DESC
+	LIMIT $4
+	`
+	var models []*Model
+	err := db.DB.SQL(sql, visibility, start, end, limit).QueryStructs(&models)
 	if models == nil {
 		models = []*Model{}
 	}

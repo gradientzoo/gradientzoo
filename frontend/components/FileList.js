@@ -15,7 +15,7 @@ class FileList extends Component {
   }
 
   renderRow(file, rowNum) {
-    const { username, modelSlug, files } = this.props
+    const { username, modelSlug, files, period } = this.props
     return (
       <tr key={file.id} style={rowNum === files.length - 1 ? styles.lastFileRow : []}>
         <td>
@@ -28,7 +28,7 @@ class FileList extends Component {
           {filesize(file.sizeBytes)}
         </td>
         <td>
-          <DownloadCount downloads={file.downloads} />
+          <DownloadCount downloads={file.downloads} period={period} />
         </td>
         {this.props.showDetails ? 
           <td>
@@ -71,7 +71,12 @@ FileList.propTypes = {
   username: PropTypes.string.isRequired,
   modelSlug: PropTypes.string.isRequired,
   onFileClick: PropTypes.func.isRequired,
-  showDetails: PropTypes.bool
+  showDetails: PropTypes.bool,
+  period: PropTypes.string
+}
+
+FileList.defaultProps = {
+  period: 'all'
 }
 
 export default Radium(FileList)

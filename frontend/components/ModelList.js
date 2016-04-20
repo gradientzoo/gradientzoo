@@ -14,7 +14,7 @@ class ModelList extends Component {
   }
 
   renderRow(model, rowNum) {
-    const { models } = this.props
+    const { models, period } = this.props
     return (
       <tr key={model.id} style={rowNum === models.length - 1 ? styles.lastModelRow : []}>
         <td>
@@ -30,7 +30,7 @@ class ModelList extends Component {
                 relative={true} /> 
         </td>
         <td>
-          <DownloadCount downloads={model.downloads} />
+          <DownloadCount downloads={model.downloads} period={period} />
         </td>
         <td>
           <span style={styles.modelVisibility}>{model.visibility}</span>
@@ -40,14 +40,7 @@ class ModelList extends Component {
   }
 
   render() {
-    const { fetching, showHeaders } = this.props
-    if (fetching) {
-      return (
-        <div>
-          <h3>Fetching models...</h3>
-        </div>
-      )
-    }
+    const { showHeaders } = this.props
     return (
       <table className="table" style={styles.modelList}>
         {showHeaders ?
@@ -70,9 +63,12 @@ class ModelList extends Component {
 
 ModelList.propTypes = {
   models: PropTypes.arrayOf(PropTypes.object),
-  fetching: PropTypes.bool,
   showHeaders: PropTypes.bool,
-  error: PropTypes.string
+  period: PropTypes.string
+}
+
+ModelList.defaultProps = {
+  period: 'all'
 }
 
 export default Radium(ModelList)

@@ -13,8 +13,10 @@ import { loadModelsByUsername } from '../actions/model'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
 import Footer from '../components/Footer'
+import LoadingSpinner from '../components/LoadingSpinner'
 import Radium from 'radium'
 import styles from '../styles'
+import UserUtils from '../utils/UserUtils'
 
 class ProfilePage extends Component {
   /*
@@ -43,13 +45,14 @@ class ProfilePage extends Component {
 
         <NavHeader activeTab='profile' />
 
-        <h2>{username}&rsquo;s Models</h2>
+        <h2>
+          {username}&rsquo;s Models{' '}
+          <LoadingSpinner active={modelsFetching} />
+        </h2>
 
         <ModelList user={user}
                    models={models}
-                   showHeaders={true}
-                   fetching={modelsFetching}
-                   error={modelsFetchError} />
+                   showHeaders={true} />
 
         {showEmpty ?
           <div className="alert alert-info" role="alert">
@@ -86,12 +89,7 @@ function mapStateToProps(state, props) {
   // TODO: Use reselect instead of filtering through all users
   const user = head(filter(users, (u) => u.username === username)) || null
   let processedModels = filter(toArray(models), (model) => model.userId === user.id)
-  processedModels = map(processedModels, (model) => {
-    return extend(model, {
-      url: '/' + users[model['userId']].username + '/' + model.slug,
-      user: users[model.userId]
-    })
-  })
+  processedModels = UserUtils.addUserUrls(processedModels, users)
   return {
     userFetching: state.userByUsername.fetching,
     userFetchError: state.userByUsername.fetchError,

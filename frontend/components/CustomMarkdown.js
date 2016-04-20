@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
+import Radium from 'radium'
+
 import Markdown from 'react-remarkable'
 
 import hljs from 'highlight.js/lib/highlight'
@@ -34,4 +36,4 @@ CustomMarkdown.propTypes = {
   source: PropTypes.string.isRequired
 }
 
-export default CustomMarkdown
+export default Radium(CustomMarkdown)

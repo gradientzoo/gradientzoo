@@ -13,23 +13,29 @@ type DownloadHourDb struct {
 	Api *ApiCollection
 }
 
+type DownloadCounts struct {
+	Week  int `json:"week"`
+	Month int `json:"month"`
+	All   int `json:"all"`
+}
+
 type FileDownloads struct {
-	FileId    string `db:"file_id"`
-	Downloads int    `db:"downloads"`
+	FileId string `db:"file_id"`
+	DownloadCounts
 }
 
 type ModelDownloads struct {
-	ModelId   string `db:"model_id"`
-	Downloads int    `db:"downloads"`
+	ModelId string `db:"model_id"`
+	DownloadCounts
 }
 
 //go:generate counterfeiter $GOFILE DownloadHourApi
 type DownloadHourApi interface {
 	MarkDownload(fileId, userId, ip string, t time.Time) error
-	TotalCountByFile(fileId string) (int, error)
-	TotalCountsByFiles(fileIds []string) (map[string]int, error)
-	TotalCountByModel(modelId string) (int, error)
-	TotalCountsByModels(modelIds []string) (map[string]int, error)
+	CountByFile(fileId string) (DownloadCounts, error)
+	CountsByFiles(fileIds []string) (map[string]DownloadCounts, error)
+	CountByModel(modelId string) (DownloadCounts, error)
+	CountsByModels(modelIds []string) (map[string]DownloadCounts, error)
 	Truncate() error
 }
 
@@ -56,27 +62,32 @@ func (db *DownloadHourDb) MarkDownload(fileId, userId, ip string, t time.Time) e
 	return err
 }
 
-func (db *DownloadHourDb) TotalCountByFile(fileId string) (int, error) {
+func (db *DownloadHourDb) CountByFile(fileId string) (DownloadCounts, error) {
 	sql := `
-  SELECT COALESCE(SUM(DH.downloads), 0)
+  SELECT
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
+    COALESCE(SUM(DH.downloads), 0) AS all
   FROM download_hour DH
   WHERE DH.file_id = $1
   `
 
-	var downloads int
-	err := db.DB.SQL(sql, fileId).QueryScalar(&downloads)
+	var downloads DownloadCounts
+	err := db.DB.SQL(sql, fileId).QueryStruct(&downloads)
 	return downloads, err
 }
 
-func (db *DownloadHourDb) TotalCountsByFiles(fileIds []string) (map[string]int, error) {
+func (db *DownloadHourDb) CountsByFiles(fileIds []string) (map[string]DownloadCounts, error) {
 	if len(fileIds) == 0 {
-		return map[string]int{}, nil
+		return map[string]DownloadCounts{}, nil
 	}
 
 	sql := `
   SELECT
     DH.file_id AS file_id,
-    COALESCE(SUM(DH.downloads), 0) AS downloads
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
+    COALESCE(SUM(DH.downloads), 0) AS all
   FROM download_hour DH
   WHERE DH.file_id IN $1
   GROUP BY DH.file_id
@@ -88,39 +99,48 @@ func (db *DownloadHourDb) TotalCountsByFiles(fileIds []string) (map[string]int, 
 	}
 
 	// Now build up the map out of the structs we downloaded
-	resp := map[string]int{}
+	resp := map[string]DownloadCounts{}
 	for _, fileId := range fileIds {
-		resp[fileId] = 0
+		resp[fileId] = DownloadCounts{}
 	}
 	for _, fileDownload := range fileDownloads {
-		resp[fileDownload.FileId] = fileDownload.Downloads
+		resp[fileDownload.FileId] = DownloadCounts{
+			Week:  fileDownload.Week,
+			Month: fileDownload.Month,
+			All:   fileDownload.All,
+		}
 	}
 
 	return resp, nil
 }
 
-func (db *DownloadHourDb) TotalCountByModel(modelId string) (int, error) {
+func (db *DownloadHourDb) CountByModel(modelId string) (DownloadCounts, error) {
 	sql := `
-  SELECT COALESCE(SUM(DH.downloads), 0)
+  SELECT
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
+    COALESCE(SUM(DH.downloads), 0) AS all
   FROM download_hour DH
   LEFT JOIN file F ON (F.id = DH.file_id)
   WHERE F.model_id = $1
   `
 
-	var downloads int
-	err := db.DB.SQL(sql, modelId).QueryScalar(&downloads)
+	var downloads DownloadCounts
+	err := db.DB.SQL(sql, modelId).QueryStruct(&downloads)
 	return downloads, err
 }
 
-func (db *DownloadHourDb) TotalCountsByModels(modelIds []string) (map[string]int, error) {
+func (db *DownloadHourDb) CountsByModels(modelIds []string) (map[string]DownloadCounts, error) {
 	if len(modelIds) == 0 {
-		return map[string]int{}, nil
+		return map[string]DownloadCounts{}, nil
 	}
 
 	sql := `
   SELECT
     F.model_id AS model_id,
-    COALESCE(SUM(DH.downloads), 0) AS downloads
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
+    COALESCE(SUM(DH.downloads), 0) AS all
   FROM download_hour DH
   LEFT JOIN file F ON (F.id = DH.file_id)
   WHERE F.model_id IN $1
@@ -133,12 +153,16 @@ func (db *DownloadHourDb) TotalCountsByModels(modelIds []string) (map[string]int
 	}
 
 	// Now build up the map out of the structs we downloaded
-	resp := map[string]int{}
+	resp := map[string]DownloadCounts{}
 	for _, modelId := range modelIds {
-		resp[modelId] = 0
+		resp[modelId] = DownloadCounts{}
 	}
 	for _, modelDownload := range modelDownloads {
-		resp[modelDownload.ModelId] = modelDownload.Downloads
+		resp[modelDownload.ModelId] = DownloadCounts{
+			Week:  modelDownload.Week,
+			Month: modelDownload.Month,
+			All:   modelDownload.All,
+		}
 	}
 
 	return resp, nil

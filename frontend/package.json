@@ -48,7 +48,8 @@
     "object-assign": "~4.0.1",
     "express-sslify": "~1.0.1",
     "forcedomain": "~0.6.0",
-    "filesize": "~3.2.1"
+    "filesize": "~3.2.1",
+    "file-loader": "~0.8.5"
   },
   "devDependencies": {
     "concurrently": "^1.0.0",

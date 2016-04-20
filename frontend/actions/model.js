@@ -87,3 +87,17 @@ export function loadLatestPublicModels() {
     }
   }
 }
+
+export const TOP_MODELS_REQUEST = 'TOP_MODELS_REQUEST'
+export const TOP_MODELS_SUCCESS = 'TOP_MODELS_SUCCESS'
+export const TOP_MODELS_FAILURE = 'TOP_MODELS_FAILURE'
+
+export function loadTopModels(period) {
+  return {
+    [CALL_API]: {
+      types: [ TOP_MODELS_REQUEST, TOP_MODELS_SUCCESS, TOP_MODELS_FAILURE ],
+      endpoint: `models/public/top/${period}`,
+      schema: Schemas.MODELS_USERS_RESPONSE
+    }
+  }
+}

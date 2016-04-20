@@ -5,30 +5,55 @@ import { isNull } from 'lodash/util'
 import toArray from 'lodash/toArray'
 import map from 'lodash/map'
 import filter from 'lodash/filter'
-import extend from 'lodash/extend'
 import sortBy from 'lodash/sortBy'
 import reverse from 'lodash/reverse'
 import take from 'lodash/take'
 import DocumentTitle from 'react-document-title'
-import { loadLatestPublicModels } from '../actions/model'
+import { loadLatestPublicModels, loadTopModels } from '../actions/model'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
 import Footer from '../components/Footer'
+import LoadingSpinner from '../components/LoadingSpinner'
 import Radium from 'radium'
 import styles from '../styles'
+import UserUtils from '../utils/UserUtils'
 
 class IndexPage extends Component {
   componentWillMount() {
-    if (!this.props.latestModelsFetchedOnce) {
-      this.props.loadLatestPublicModels()
+    this.state = {
+      period: 'week'
+    }
+    this.props.loadLatestPublicModels()
+    this.props.loadTopModels(this.state.period)
+  }
+
+  handlePeriodClick(period, ev) {
+    ev.preventDefault()
+    ev.stopPropagation()
+    this.setState({period})
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.period !== nextState.period) {
+      this.props.loadTopModels(nextState.period)
     }
   }
 
   render() {
     const { authUser,
-            latestModels,
+            models,
+            users,
             latestModelsFetching,
-            latestModelsFetchError } = this.props
+            latestModelsFetchError,
+            topModelsFetching,
+            topModelsFetchError } = this.props
+    const { period } = this.state
+
+    let latestModels = take(reverse(sortBy(models, 'createdTime')), 10)
+    latestModels = UserUtils.addUserUrls(latestModels, users)
+
+    let topModels = take(reverse(sortBy(models, 'downloads.all')), 10)
+    topModels = UserUtils.addUserUrls(topModels, users)
 
     return (
       <DocumentTitle title="Gradientzoo: pre-trained neural network models">
@@ -62,19 +87,43 @@ class IndexPage extends Component {
 
         <div className="row">
           <div className="col-lg-12">
-            <h4>Most Downloaded Public Models</h4>
-            <ModelList models={latestModels}
-                       fetching={latestModelsFetching}
-                       error={latestModelsFetchError} />
+            <h4 className="pull-left">
+              Most Downloaded Public Models{' '}
+              <LoadingSpinner active={topModelsFetching} />
+            </h4>
+            {topModelsFetchError ?
+              <span style={styles.modelFetchError}>Error loading these models ({topModelsFetchError})</span>: null}
+            <h5 className="pull-right">
+              (
+                {period === 'day' ? 'Day' :
+                  <a href="#"
+                     onClick={this.handlePeriodClick.bind(this, 'day')}>Day</a>},{' '}
+                {period === 'week' ? 'Week' :
+                  <a href="#"
+                     onClick={this.handlePeriodClick.bind(this, 'week')}>Week</a>},{' '}
+                {period === 'month' ? 'Month' :
+                  <a href="#"
+                     onClick={this.handlePeriodClick.bind(this, 'month')}>Month</a>}, or{' '} 
+                {period === 'all' ? 'All Time' :
+                  <a href="#"
+                     onClick={this.handlePeriodClick.bind(this, 'all')}>All Time</a>}
+              )
+            </h5>
+            <div className="clearfix" />
+            <ModelList models={topModels} period={period} />
           </div>
         </div>
 
         <div className="row">
           <div className="col-lg-12">
-            <h4>Latest Public Models</h4>
-            <ModelList models={latestModels}
-                       fetching={latestModelsFetching}
-                       error={latestModelsFetchError} />
+            <h4 className="pull-left">
+              Latest Public Models{' '}
+              <LoadingSpinner active={latestModelsFetching} />
+            </h4>
+            {latestModelsFetchError ?
+              <span style={styles.modelFetchError}>Error loading these models ({latestModelsFetchError})</span>: null}
+            <div className="clearfix" />
+            <ModelList models={latestModels} />
           </div>
         </div>
 
@@ -110,33 +159,29 @@ class IndexPage extends Component {
 
 IndexPage.propTypes = {
   authUser: PropTypes.object,
-  latestModels: PropTypes.arrayOf(PropTypes.object),
+  models: PropTypes.arrayOf(PropTypes.object),
+  users: PropTypes.object,
   latestModelsFetching: PropTypes.bool,
   latestModelsFetchError: PropTypes.string,
-  latestModelsFetchedOnce: PropTypes.bool
+  topModelsFetching: PropTypes.bool,
+  topModelsFetchError: PropTypes.string
 }
 
 function mapStateToProps(state, props) {
   const { models, users } = state.entities
-
   const publicModels = filter(toArray(models), (model) => model.visibility === 'public')
-  const latestModels = take(reverse(sortBy(publicModels, 'createdTime')), 10)
-  const latestModelsWithUrls = map(latestModels, (model) => {
-    return extend(model, {
-      url: '/' + users[model['userId']].username + '/' + model.slug,
-      user: users[model.userId]
-    })
-  })
-
   return {
     authUser: state.authUserId ? users[state.authUserId] : null,
-    latestModels: latestModelsWithUrls,
+    models: publicModels,
+    users: users,
     latestModelsFetching: state.latestPublicModels.fetching,
     latestModelsFetchError: state.latestPublicModels.fetchError,
-    latestModelsFetchedOnce: state.latestPublicModels.fetchedOnce
+    topModelsFetching: state.topModels.fetching,
+    topModelsFetchError: state.topModels.fetchError
   }
 }
 
 export default Radium(connect(mapStateToProps, {
-  loadLatestPublicModels
+  loadLatestPublicModels,
+  loadTopModels
 })(IndexPage))

@@ -3,9 +3,10 @@ import React, { Component } from 'react'
 import DocumentTitle from 'react-document-title'
 import NavHeader from '../containers/NavHeader'
 import Footer from './Footer'
+import Radium from 'radium'
 import styles from '../styles'
 
-export default (props) => {
+export default Radium((props) => {
   return (
     <DocumentTitle title={`Open Source - Gradientzoo`}>
     <div className="container" style={styles.page}>
@@ -61,4 +62,4 @@ export default (props) => {
     </div>
     </DocumentTitle>
   )
-}
+})

@@ -15,6 +15,7 @@ import { loadUserByUsername } from '../actions/auth'
 import NavHeader from './NavHeader'
 import FileList from '../components/FileList'
 import Footer from '../components/Footer'
+import LoadingSpinner from '../components/LoadingSpinner'
 import Radium from 'radium'
 import styles from '../styles'
 import 'isomorphic-fetch'
@@ -64,7 +65,8 @@ class FilePage extends Component {
         <h2>
           <Link to={`/${username}`}>{username}</Link> /{' '}
           <Link to={`/${username}/${slug}`}>{slug}</Link> /{' '}
-          {filename}
+          {filename}{' '}
+          <LoadingSpinner active={filesFetching} />
         </h2>
 
         <div style={styles.filePageTable}>
