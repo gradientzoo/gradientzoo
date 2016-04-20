@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	Localdev bool
-	Port     string
+	Flavor     string
+	Production bool
+	Port       string
 
 	PostgresqlHost     string
 	PostgresqlPort     int
@@ -18,13 +19,6 @@ type Config struct {
 	PostgresqlUser     string
 	PostgresqlPassword string
 	PostgresqlSslMode  string
-
-	PostgresqlTestHost     string
-	PostgresqlTestPort     int
-	PostgresqlTestDbName   string
-	PostgresqlTestUser     string
-	PostgresqlTestPassword string
-	PostgresqlTestSslMode  string
 
 	AWSBucket          string
 	AWSRegion          string
@@ -47,8 +41,9 @@ func (c Config) Valid() bool {
 }
 
 var Conf Config = Config{
-	Localdev: os.Getenv("LOCALDEV") != "",
-	Port:     EnvDef("PORT", "8000"),
+	Flavor:     os.Getenv("FLAVOR"),
+	Production: os.Getenv("FLAVOR") == "production",
+	Port:       EnvDef("PORT", "8000"),
 
 	PostgresqlHost:     HostDef("GRADIENTZOO_POSTGRES_SVC", EnvDefInt("POSTGRESQL_PORT", 5432), "localhost"),
 	PostgresqlPort:     EnvDefInt("POSTGRESQL_PORT", 5432),
@@ -56,12 +51,6 @@ var Conf Config = Config{
 	PostgresqlUser:     EnvDef("POSTGRESQL_USER", "gradientzoo"),
 	PostgresqlPassword: EnvDef("POSTGRESQL_PASSWORD", "gradientzoo"),
 	PostgresqlSslMode:  EnvDef("POSTGRESQL_SSLMODE", "disable"),
-
-	PostgresqlTestHost:     EnvDef("POSTGRESQL_TEST_HOST", "localhost"),
-	PostgresqlTestPort:     EnvDefInt("POSTGRESQL_TEST_PORT", 5432),
-	PostgresqlTestDbName:   EnvDef("POSTGRESQL_TEST_NAME", "test"),
-	PostgresqlTestUser:     EnvDef("POSTGRESQL_TEST_USER", "test"),
-	PostgresqlTestPassword: EnvDef("POSTGRESQL_TEST_PASSWORD", "test"),
 
 	AWSBucket:          EnvDef("AWS_BUCKET", "gradientzoo-1"),
 	AWSRegion:          EnvDef("AWS_REGION", "us-west-2"),

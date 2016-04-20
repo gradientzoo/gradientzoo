@@ -4,17 +4,17 @@ Gradientzoo
 To start the development server, enter the following command:
 
 ```console
-source bin/dev-env && go run main.go
+source bin/env && go run main.go
 ```
 
 If that doesn't work, you need to set up your development configuration
 starting from the provided template:
 
 ```console
-cp bin/dev-env.template bin/dev-env
+cp bin/env.template bin/env
 ```
 
-Make sure to fill in the blanks in the file ``bin/dev-env``. (Mainly this means
+Make sure to fill in the blanks in the file ``bin/env``. (Mainly this means
 entering your AWS credentials.)
 
 If you want to connect to a remote postgres instead of running a local one
@@ -67,7 +67,6 @@ you're set!
 TODO
 ====
 
-* Forgot password flow
 * Log in with GitHub
 * Add TOS and privacy policy
 * Import common public domain datasets for popular libraries into a 'commons'

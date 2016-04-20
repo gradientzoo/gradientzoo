@@ -6,6 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TMPDIR="/tmp/rebuild-gradientzoo-api"
 TMPBINDIR="$TMPDIR/bin"
 
+source "$DIR/env"
+
 cd "$DIR/.."
 
 mkdir -p $TMPBINDIR
@@ -13,7 +15,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o $TMPBINDIR/gradientzoo .
 cp Dockerfile $TMPDIR
 
 cd $TMPDIR
-docker build -t gcr.io/gradientzoo-1233/gradientzoo-api:latest .
+docker build -t gcr.io/$PROJECT_NAME/gradientzoo-api:latest .
 rm $TMPBINDIR/gradientzoo
 
-gcloud docker push gcr.io/gradientzoo-1233/gradientzoo-api:latest
+gcloud docker push gcr.io/$PROJECT_NAME/gradientzoo-api:latest

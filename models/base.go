@@ -58,30 +58,16 @@ func (api *ApiCollection) Truncate() error {
 
 // DB Opener Util
 
-func NewDB(test bool) (*runner.DB, error) {
-	var dsn string
-	if test {
-		dsn = fmt.Sprintf(
-			"dbname=%s user=%s password=%s host=%s port=%d sslmode=%s",
-			utils.Conf.PostgresqlTestDbName,
-			utils.Conf.PostgresqlTestUser,
-			utils.Conf.PostgresqlTestPassword,
-			utils.Conf.PostgresqlTestHost,
-			utils.Conf.PostgresqlTestPort,
-			utils.Conf.PostgresqlTestSslMode,
-		)
-	} else {
-		dsn = fmt.Sprintf(
-			"dbname=%s user=%s password=%s host=%s port=%d sslmode=%s",
-			utils.Conf.PostgresqlDbName,
-			utils.Conf.PostgresqlUser,
-			utils.Conf.PostgresqlPassword,
-			utils.Conf.PostgresqlHost,
-			utils.Conf.PostgresqlPort,
-			utils.Conf.PostgresqlSslMode,
-		)
-	}
-	db, err := sql.Open("postgres", dsn)
+func NewDB() (*runner.DB, error) {
+	db, err := sql.Open("postgres", fmt.Sprintf(
+		"dbname=%s user=%s password=%s host=%s port=%d sslmode=%s",
+		utils.Conf.PostgresqlDbName,
+		utils.Conf.PostgresqlUser,
+		utils.Conf.PostgresqlPassword,
+		utils.Conf.PostgresqlHost,
+		utils.Conf.PostgresqlPort,
+		utils.Conf.PostgresqlSslMode,
+	))
 	if err != nil {
 		return nil, err
 	}

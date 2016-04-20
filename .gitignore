@@ -11,4 +11,4 @@ deploy/gradientzoo-secret-postgresql.yml
 deploy/gradientzoo-secret-aws.yml
 deploy/gradientzoo-web-cert.yml
 deploy/gradientzoo-api-cert.yml
-bin/dev-env
+bin/env

@@ -117,7 +117,7 @@ func makeHandler() http.Handler {
 	n := negroni.New(negroni.NewLogger())
 
 	// In production, redirect all traffic to https (except /, for LB health check)
-	if !utils.Conf.Localdev {
+	if utils.Conf.Production {
 		n.UseHandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 			if r.URL.Path != "/" && r.Header.Get("X-Forwarded-Proto") != "https" {
 				http.RedirectHandler(
@@ -136,24 +136,19 @@ func makeHandler() http.Handler {
 }
 
 func Main() {
-	if utils.Conf.Localdev {
+	if !utils.Conf.Production {
+		log.Info("Initializing, please wait...")
 		time.Sleep(10 * time.Second)
 	}
 
 	// Connect to the Postgres DB
-	db, err := models.NewDB(false)
+	db, err := models.NewDB()
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Error("Could not connect to db")
 	}
 
 	// Create API Collection
 	api = models.NewApiCollection(db)
-
-	// TODO: Migrate any models that need to be migrated
-	//if err := api.Migrate(); err != nil {
-	//	log.WithFields(log.Fields{"err": err}).Error("Could not migrate")
-	//	return
-	//}
 
 	// Initialize blob storage
 	blob = blobstorage.NewS3BlobStorage(
