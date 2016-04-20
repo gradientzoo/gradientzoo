@@ -67,14 +67,15 @@ you're set!
 TODO
 ====
 
-* Log in with GitHub
+* Link to readthedocs
+* Show one or two extra params in list
 * Add TOS and privacy policy
 * Import common public domain datasets for popular libraries into a 'commons'
-* Implement Stripe, different account levels, and pricing page
 * Allow user to edit the name and description of their model
 * Links from homepage to full model lists
 * Infinite pagination on the full model lists
 * Make the webapp universal
 * Badge for projects on GitHub
+* Log in with GitHub
 * [ops] Switch to Google Cloud Storage rather than AWS for blob storage
 * [ops] Set up an ElasticSearch, Logstash/Heka, Kibana (E[LH]K) stack
