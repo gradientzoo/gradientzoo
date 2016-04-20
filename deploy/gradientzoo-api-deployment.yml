@@ -66,7 +66,7 @@ spec:
                 secretKeyRef:
                   name: stripe
                   key: live
-            - name: STRIPE_SECRET_LIVE
+            - name: STRIPE_SECRET_TEST
               valueFrom:
                 secretKeyRef:
                   name: stripe
