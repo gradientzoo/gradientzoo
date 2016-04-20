@@ -5,7 +5,7 @@ import bindAll from 'lodash/bindAll'
 import styles from '../styles'
 import CustomMarkdown from './CustomMarkdown'
 
-const kerasSource = `
+const kerasSourcePriv = `
 \`\`\`python
 from gradientzoo.keras_client import KerasGradientzoo, NotFoundError
 
@@ -27,7 +27,16 @@ your_model.fit(X_train,
 \`\`\`
 `
 
-const tfSource = `
+const kerasSourcePub = `
+\`\`\`python
+from gradientzoo.keras_client import KerasGradientzoo
+
+# Load latest weights from Gradientzoo
+KerasGradientzoo('{username}/{slug}').load(your_model)
+\`\`\`
+`
+
+const tfSourcePriv = `
 \`\`\`python
 from gradientzoo.tensorflow_client import TensorflowGradientzoo, NotFoundError
 
@@ -48,7 +57,16 @@ zoo.save(your_tensorflow_network)
 \`\`\`
 `
 
-const lasagneSource = `
+const tfSourcePub = `
+\`\`\`python
+from gradientzoo.tensorflow_client import TensorflowGradientzoo
+
+# Load latest weights from Gradientzoo
+TensorflowGradientzoo('{username}/{slug}').load(your_tensorflow_network)
+\`\`\`
+`
+
+const lasagneSourcePriv = `
 \`\`\`python
 from gradientzoo.lasagne_client import LasagneGradientzoo, NotFoundError
 
@@ -69,6 +87,15 @@ zoo.save(your_lasagne_network)
 \`\`\`
 `
 
+const lasagneSourcePub = `
+\`\`\`python
+from gradientzoo.lasagne_client import LasagneGradientzoo
+
+# Load latest weights from Gradientzoo
+LasagneGradientzoo('{username}/{slug}').load(your_lasagne_network)
+\`\`\`
+`
+
 class IntegrationHelper extends Component {
   constructor(props) {
     super(props)
@@ -78,17 +105,18 @@ class IntegrationHelper extends Component {
     }
     this.kinds = ['keras', 'tensorflow', 'lasagne']
     this.integrations = {
-      keras: {name: 'Keras', kind: 'keras', source: kerasSource},
-      tensorflow: {name: 'Tensorflow', kind: 'tensorflow', source: tfSource},
-      lasagne: {name: 'Lasagne', kind: 'lasagne', source: lasagneSource}
+      keras: {name: 'Keras', kind: 'keras', priv: kerasSourcePriv, pub: kerasSourcePub},
+      tensorflow: {name: 'Tensorflow', kind: 'tensorflow', priv: tfSourcePriv, pub: tfSourcePub},
+      lasagne: {name: 'Lasagne', kind: 'lasagne', priv: lasagneSourcePriv, pub: lasagneSourcePub}
     }
   }
 
-  fillTemplate(source) {
+  fillTemplate(integration) {
     const { username, slug, authTokenId } = this.props
+    const source = authTokenId ? integration.priv : integration.pub
     return source.replace(/\{username\}/g, username)
                  .replace(/\{slug\}/g, slug)
-                 .replace(/\{authTokenId\}/g, authTokenId || '')
+                 .replace(/\{authTokenId\}/g, authTokenId)
   }
 
   handleClick(index, ev) {
@@ -126,7 +154,7 @@ class IntegrationHelper extends Component {
               <div role="tabpanel"
                    key={kind}
                    className={'tab-pane ' + (i === activeTabIndex ? 'active' : '')}>
-                <CustomMarkdown source={this.fillTemplate(integration.source)} />
+                <CustomMarkdown source={this.fillTemplate(integration)} />
               </div>
             )
           })}
