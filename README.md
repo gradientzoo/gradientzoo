@@ -67,19 +67,15 @@ you're set!
 TODO
 ====
 
-* Update homepage to list the real most downloaded models
-* Links from homepage to full model lists
-* Infinite pagination on the full model lists
-* Implement Stripe, different account levels, and pricing page
-* Improve empty states and loading screens
-* Overhaul the model list look and feel
-* Allow user to edit the name and description of their model
 * Forgot password flow
 * Log in with GitHub
+* Add TOS and privacy policy
+* Import common public domain datasets for popular libraries into a 'commons'
+* Implement Stripe, different account levels, and pricing page
+* Allow user to edit the name and description of their model
+* Links from homepage to full model lists
+* Infinite pagination on the full model lists
+* Make the webapp universal
+* Badge for projects on GitHub
 * [ops] Switch to Google Cloud Storage rather than AWS for blob storage
 * [ops] Set up an ElasticSearch, Logstash/Heka, Kibana (E[LH]K) stack
-* Badge for projects on GitHub
-* Import common public domain datasets for popular libraries into a 'commons'
-* Make the webapp universal
-* Add loading spinner to file versions page
-* Add TOS and privacy policy

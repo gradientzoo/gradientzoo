@@ -39,7 +39,7 @@ module.exports = {
         join_vars: true,
         cascade: true,
         collapse_vars: true,
-        //warnings: true,
+        warnings: false,
         negate_iife: true,
         pure_getters: true,
         unsafe: true

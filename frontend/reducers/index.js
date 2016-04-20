@@ -9,7 +9,7 @@ import filter from 'lodash/filter'
 import paginate from './paginate'
 import { authTokenId, authUserId } from './auth'
 import { createModel } from './model'
-import { routeReducer } from 'react-router-redux'
+import { routerReducer } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
 // Updates an entity cache in response to any action with response.entities.
@@ -104,7 +104,7 @@ const rootReducer = combineReducers({
   topModels,
   fileVersions,
   //pagination,
-  routing: routeReducer
+  routing: routerReducer
 })
 
 
