@@ -121,7 +121,7 @@ class ModelPage extends Component {
         {model && user && model.userId === user.id ?
           <IntegrationHelper username={username}
                              slug={slug}
-                             authTokenId={authTokenId} /> : null}
+                             authTokenId={isOwner ? authTokenId : null} /> : null}
 
         <h3>
           Files{' '}
