@@ -95,7 +95,7 @@ class LoginPage extends Component {
 }
 
 LoginPage.propTypes = {
-  authTokenId: PropTypes.string,
+  authTokenId: PropTypes.any,
   loggingIn: PropTypes.bool,
   loginError: PropTypes.string,
   login: PropTypes.func.isRequired

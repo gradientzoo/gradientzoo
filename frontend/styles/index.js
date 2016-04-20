@@ -47,6 +47,29 @@ export default {
   slugInput: {
     textIndent: 118
   },
+  vizItem: {
+    paddingRight: 40
+  },
+  vizIcon: {
+    paddingRight: 4
+  },
+  planItem: {
+    minHeight: 80,
+    float: 'left',
+    marginLeft: 0
+  },
+  planLabel: {
+    display: 'block'
+  },
+  planFact: {
+    display: 'block',
+    minWidth: 180,
+    marginRight: 20
+  },
+  planInner: {
+    fontWeight: 'bold',
+    float: 'right'
+  },
 
   // Model page
   descriptionTextarea: {

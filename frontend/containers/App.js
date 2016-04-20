@@ -30,7 +30,7 @@ class App extends Component {
 App.propTypes = {
   children: PropTypes.node,
   authIsLoaded: PropTypes.bool.isRequired,
-  authUserId: PropTypes.string,
+  authUserId: PropTypes.any,
   restoreAuth: PropTypes.func.isRequired,
   loadAuthUser: PropTypes.func.isRequired
 }

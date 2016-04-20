@@ -1,5 +1,5 @@
-hash: 29380ee0add56960f9e9d4a615b934fa18d1adc0f5d226eaa136c560b9be94cf
-updated: 2016-04-17T17:19:49.297146142-07:00
+hash: 36f5125f85e7b50ec5924bffda582ac27dd6b69e823b48e34298608ad0f10603
+updated: 2016-04-20T04:44:00.295311213-07:00
 imports:
 - name: bitbucket.org/liamstask/goose
   version: 8488cc47d90c8a502b1c41a462a6d9cc8ee0a895
@@ -79,6 +79,10 @@ imports:
   version: 1881a9bccb818787f68c52bfba648c6cf34c34fa
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
+- name: github.com/stripe/stripe-go
+  version: 81da0b2f887907346c180fafa534fd55b3b6b463
+  subpackages:
+  - customer
 - name: golang.org/x/crypto
   version: b8a0f4bb4040f8d884435cff35b9691e362cf00c
   subpackages:

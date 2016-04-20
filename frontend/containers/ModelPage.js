@@ -176,7 +176,7 @@ class ModelPage extends Component {
             </div>
           </div> : null}
 
-        { isOwner && !editorShowing ?
+        { isOwner && modelLoaded && !editorShowing ?
           <div className="row">
             <div className="col-md-2">
               <a href="#"
@@ -196,7 +196,7 @@ class ModelPage extends Component {
 }
 
 ModelPage.propTypes = {
-  authTokenId: PropTypes.string,
+  authTokenId: PropTypes.any,
   authUser: PropTypes.object,
   user: PropTypes.object,
   userFetching: PropTypes.bool,

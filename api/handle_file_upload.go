@@ -13,8 +13,6 @@ import (
 const MaxFileSize = 500 * 1024 * 1024 // 500MB max
 
 func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
-	req.Body = http.MaxBytesReader(w, req.Body, MaxFileSize) // Limit file size
-
 	username := c.Params.ByName("username")
 	slug := c.Params.ByName("slug")
 	framework := c.Params.ByName("framework")
@@ -78,6 +76,20 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 	}
 
 	clog = clog.WithField("file_model_id", m.Id)
+
+	// Limit file size based on plan
+	switch m.Keep {
+	case 10:
+		req.Body = http.MaxBytesReader(w, req.Body, 500*1024*1024) // 500MB
+	case 100:
+		req.Body = http.MaxBytesReader(w, req.Body, 1024*1024*1024) // 1GB
+	case 1000:
+		req.Body = http.MaxBytesReader(w, req.Body, 2*1024*1024*1024) // 2GB
+	case 100000:
+		req.Body = http.MaxBytesReader(w, req.Body, 4*1024*1024*1024) // 4GB
+	default:
+		req.Body = http.MaxBytesReader(w, req.Body, 500*1024*1024) // 500MB
+	}
 
 	// Open the file from the request
 	file, _, err := req.FormFile("file")

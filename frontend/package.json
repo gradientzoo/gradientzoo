@@ -4,7 +4,7 @@
   "description": "Frontend app for Gradientzoo",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.dev.js",
+    "dev": "source ../bin/env && node server.dev.js",
     "prod": "node server.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -49,7 +49,8 @@
     "express-sslify": "~1.0.1",
     "forcedomain": "~0.6.0",
     "filesize": "~3.2.1",
-    "file-loader": "~0.8.5"
+    "file-loader": "~0.8.5",
+    "react-stripe-checkout": "~1.8.0"
   },
   "devDependencies": {
     "concurrently": "^2.0.0",

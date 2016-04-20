@@ -1,6 +1,9 @@
 var path = require('path')
 var webpack = require('webpack')
 
+var stripeLive = process.env.STRIPE_PUBKEY_LIVE
+var stripeTest = process.env.STRIPE_PUBKEY_TEST
+
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: [
@@ -13,6 +16,12 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        STRIPE_PUBKEY_LIVE: stripeLive ? JSON.stringify(stripeLive) : null,
+        STRIPE_PUBKEY_TEST: stripeTest ? JSON.stringify(stripeTest) : null
+      }
+    }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],

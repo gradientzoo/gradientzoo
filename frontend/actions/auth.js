@@ -80,3 +80,18 @@ export function logout(email, password) {
     }
   }
 }
+
+export const UPDATE_STRIPE_REQUEST = 'UPDATE_STRIPE_REQUEST'
+export const UPDATE_STRIPE_SUCCESS = 'UPDATE_STRIPE_SUCCESS'
+export const UPDATE_STRIPE_FAILURE = 'UPDATE_STRIPE_FAILURE'
+
+export function updateStripe(stripe_token) {
+  return {
+    [CALL_API]: {
+      types: [ UPDATE_STRIPE_REQUEST, UPDATE_STRIPE_SUCCESS, UPDATE_STRIPE_FAILURE ],
+      endpoint: `auth/stripe`,
+      payload: {stripe_token},
+      schema: Schemas.USER_RESPONSE
+    }
+  }
+}

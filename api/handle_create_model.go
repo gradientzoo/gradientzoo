@@ -79,36 +79,48 @@ func HandleCreateModel(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if form.Keep != 10 {
+	if form.Keep != 10 && c.User.StripeCustomerId == "" {
 		c.Render.JSON(w, http.StatusBadRequest,
-			JsonErr("Sorry, during our alpha testing period you can keep only "+
-				"ten historical model files"))
+			JsonErr("Must connect a payment source before you can create a model "+
+				"that size"))
 		return
 	}
+
+	/*
+		if form.Keep != 10 {
+			c.Render.JSON(w, http.StatusBadRequest,
+				JsonErr("Sorry, during our alpha testing period you can keep only "+
+					"ten historical model files"))
+			return
+		}
+	*/
 
 	clog = clog.WithField("passed_validation", true)
 
-	// Check to see if they already have a private repo
-	ms, err := c.Api.Model.ByUserId(c.User.Id)
-	if err != nil && err != sql.ErrNoRows {
-		clog.WithField("err", err).Error("Could not look up models by user id")
-		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Could not create your model, please try again soon"))
-		return
-	}
-	privateCount := 0
-	for _, m := range ms {
-		if m.Visibility == "private" {
-			privateCount += 1
+	/*
+		// Check to see if they already have a private repo
+		ms, err := c.Api.Model.ByUserId(c.User.Id)
+		if err != nil && err != sql.ErrNoRows {
+			clog.WithField("err", err).Error("Could not look up models by user id")
+			c.Render.JSON(w, http.StatusBadGateway,
+				JsonErr("Could not create your model, please try again soon"))
+			return
 		}
-	}
-	// If so, disallow creation of a new one
-	if form.Visibility == "private" && privateCount > 0 {
-		c.Render.JSON(w, http.StatusBadGateway,
-			JsonErr("Sorry, during our alpha testing period you can have only "+
-				"one private model"))
-		return
-	}
+
+		privateCount := 0
+		for _, m := range ms {
+			if m.Visibility == "private" {
+				privateCount += 1
+			}
+		}
+		// If so, disallow creation of a new one
+		if form.Visibility == "private" && privateCount > 0 {
+			c.Render.JSON(w, http.StatusBadGateway,
+				JsonErr("Sorry, during our alpha testing period you can have only "+
+					"one private model"))
+			return
+		}
+	*/
 
 	// Now we can create the new model
 	model = models.NewModel(c.User.Id, form.Slug, form.Name, form.Description,

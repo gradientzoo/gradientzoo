@@ -112,7 +112,7 @@ class RegisterPage extends Component {
 }
 
 RegisterPage.propTypes = {
-  authTokenId: PropTypes.string,
+  authTokenId: PropTypes.any,
   registering: PropTypes.bool,
   registerError: PropTypes.string,
   register: PropTypes.func.isRequired

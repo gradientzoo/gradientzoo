@@ -167,7 +167,7 @@ class IntegrationHelper extends Component {
 IntegrationHelper.propTypes = {
   username: PropTypes.string.isRequired,
   slug: PropTypes.string.isRequired,
-  authTokenId: PropTypes.string
+  authTokenId: PropTypes.any
 }
 
 export default Radium(IntegrationHelper)

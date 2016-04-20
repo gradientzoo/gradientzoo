@@ -61,3 +61,13 @@ spec:
                 secretKeyRef:
                   name: aws
                   key: secret
+            - name: STRIPE_SECRET_LIVE
+              valueFrom:
+                secretKeyRef:
+                  name: stripe
+                  key: live
+            - name: STRIPE_SECRET_LIVE
+              valueFrom:
+                secretKeyRef:
+                  name: stripe
+                  key: test

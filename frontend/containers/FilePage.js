@@ -111,7 +111,7 @@ class FilePage extends Component {
 }
 
 FilePage.propTypes = {
-  authTokenId: PropTypes.string,
+  authTokenId: PropTypes.any,
 
   user: PropTypes.object,
   userFetching: PropTypes.bool,

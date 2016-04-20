@@ -100,6 +100,7 @@ func makeHandler() http.Handler {
 	POST(router, "/auth/login", HandleLogin)
 	POST(router, "/auth/register", HandleRegister)
 	POST(router, "/auth/logout", HandleLogout)
+	POST(router, "/auth/stripe", Authed(HandleUpdateStripe))
 	POST(router, "/model/create", Authed(HandleCreateModel))
 	GET(router, "/user/username/:username", HandleUserByUsername)
 	GET(router, "/models/username/:username", HandleModelsByUsername)

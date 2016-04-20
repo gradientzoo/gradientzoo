@@ -29,3 +29,6 @@ import:
   subpackages:
   - cmd/goose
 - package: gopkg.in/guregu/null.v3
+- package: github.com/stripe/stripe-go
+  subpackages:
+  - customer

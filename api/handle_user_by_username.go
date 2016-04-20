@@ -31,5 +31,13 @@ func HandleUserByUsername(c *Context, w http.ResponseWriter, req *http.Request) 
 		return
 	}
 
+	// Hydrate the user object
+	if err = c.Api.User.Hydrate([]*models.User{user}); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate")
+		c.Render.JSON(w, http.StatusBadGateway,
+			JsonErr("Could get that user, please try again soon"))
+		return
+	}
+
 	c.Render.JSON(w, http.StatusOK, map[string]*models.User{"user": user})
 }

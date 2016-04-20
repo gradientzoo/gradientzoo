@@ -20,6 +20,9 @@ type Config struct {
 	PostgresqlPassword string
 	PostgresqlSslMode  string
 
+	StripeSecretLive string
+	StripeSecretTest string
+
 	AWSBucket          string
 	AWSRegion          string
 	AWSAccessKeyId     string // Unused, just used to remind you to set the env
@@ -51,6 +54,9 @@ var Conf Config = Config{
 	PostgresqlUser:     EnvDef("POSTGRESQL_USER", "gradientzoo"),
 	PostgresqlPassword: EnvDef("POSTGRESQL_PASSWORD", "gradientzoo"),
 	PostgresqlSslMode:  EnvDef("POSTGRESQL_SSLMODE", "disable"),
+
+	StripeSecretLive: EnvDef("STRIPE_SECRET_LIVE", ""),
+	StripeSecretTest: EnvDef("STRIPE_SECRET_TEST", ""),
 
 	AWSBucket:          EnvDef("AWS_BUCKET", "gradientzoo-1"),
 	AWSRegion:          EnvDef("AWS_REGION", "us-west-2"),

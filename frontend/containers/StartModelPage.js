@@ -8,6 +8,7 @@ import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
 import NavHeader from './NavHeader'
 import Footer from '../components/Footer'
+import StripeCheckout from './StripeCheckout'
 import Radium from 'radium'
 import styles from '../styles'
 
@@ -22,19 +23,28 @@ class StartModelPage extends Component {
       keep: '10'
     }
     bindAll(this, 'handleSubmit', 'handleSlugChange', 'handleNameChange',
-      'handleDescriptionChange', 'handleVisibilityChange')
+      'handleDescriptionChange', 'handleVisibilityChange', 'handleKeepChange')
   }
 
   componentDidMount() {
-    if (!this.props.authUser) {
+    if (!this.props.authTokenId) {
       browserHistory.push('/login')
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.authUser &&
+        nextProps.authUser &&
+        !this.props.authUser.hasStripeCustomerId &&
+        nextProps.authUser.hasStripeCustomerId) {
+      this.handleSubmit()
+    }
     if (!this.props.created && nextProps.created) {
       // If we've logged in, send the user to their dashboard
-      const { authUser: { username } } = this.props
+      let username = '';
+      if (this.props.authUser && this.props.authUser.username) {
+        username = this.props.authUser.username
+      }
       const { slug } = this.state
       browserHistory.push(`/${username}/${slug}`)
     }
@@ -57,7 +67,9 @@ class StartModelPage extends Component {
   }
 
   handleSubmit(ev) {
-    ev.preventDefault();
+    if (ev) {
+      ev.preventDefault()
+    }
 
     if (this.state.description >= 200) {
       return
@@ -68,12 +80,18 @@ class StartModelPage extends Component {
   }
 
   handleKeepChange(ev) {
-    alert('Coming soon with paid plans!')
+    this.setState({keep: ev.target.value})
   }
 
   render() {
     const errClass = this.props.error ? ' has-error' : ''
     const { visibility, description, keep } = this.state
+    const { authUser } = this.props
+    let amount = {
+      '100': 1500,
+      '1000': 5000,
+      '100000': 50000
+    }[keep] || 0
     return (
       <DocumentTitle title='Start Model - Gradientzoo'>
       <div className="container" style={styles.page}>
@@ -121,69 +139,80 @@ class StartModelPage extends Component {
                       onChange={this.handleDescriptionChange} />
           </div>
 
-          <div className={'form-group' + errClass}>
-            <div className="radio">
-            <label>
+          <div className={'form-group'}>
+            <label className="radio-inline" style={styles.vizItem}>
               <input type="radio"
                      name="visibility"
                      value="public"
                      checked={visibility === 'public'}
                      onChange={this.handleVisibilityChange} />
+              <span style={styles.vizIcon} className="glyphicon glyphicon-globe"></span>{' '}
               Public
             </label>
-            </div>
 
-            <div className="radio">
-            <label>
+            <label className="radio-inline" style={styles.vizItem}>
               <input type="radio"
                      name="visibility"
                      value="private"
                      checked={visibility === 'private'}
                      onChange={this.handleVisibilityChange} />
+              <span style={styles.vizIcon} className="glyphicon glyphicon-lock"></span>{' '}
               Private
             </label>
-            </div>
           </div>
 
-          <div className={'form-group' + errClass}>
-            <label htmlFor="keep">How many historical versions to keep:</label>
-            <label className="radio-inline" style={{paddingLeft: 40}}>
+          <div className={'form-group'}>
+            <label style={styles.planLabel} htmlFor="keep">Plan:</label>
+            <label className="radio-inline" style={styles.planItem}>
               <input type="radio"
                      name="keep"
                      value="10"
                      checked={keep === '10'}
                      onChange={this.handleKeepChange} />
-              10
+              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10</span></span>
+              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>500MB</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>FREE!</span></span>
             </label>
-            <label className="radio-inline">
+            <label className="radio-inline" style={styles.planItem}>
               <input type="radio"
                      name="keep"
                      value="100"
                      checked={keep === '100'}
                      onChange={this.handleKeepChange} />
-              100
+              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100</span></span>
+              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>1GB</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>$15/month</span></span>
             </label>
-            <label className="radio-inline">
+            <label className="radio-inline"style={styles.planItem}>
               <input type="radio"
                      name="keep"
                      value="1000"
                      checked={keep === '1000'}
                      onChange={this.handleKeepChange} />
-              1000
+              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>1000</span></span>
+              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>2GB</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>$50/month</span></span>
             </label>
-            <label className="radio-inline">
+            <label className="radio-inline"style={styles.planItem}>
               <input type="radio"
                      name="keep"
-                     value="Unlimited"
-                     checked={keep === 'Unlimited'}
+                     value="100000"
+                     checked={keep === '100000'}
                      onChange={this.handleKeepChange} />
-              Unlimited
+              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100,000</span></span>
+              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>4GB</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>$500/month</span></span>
             </label>
+            <div className="clearfix" />
           </div>
 
-          {this.props.creating ?
-            <span className="btn btn-default pull-right">Creating...</span> :
-            <button type="submit" className="btn btn-default pull-right">Start Model</button>}
+          <div className="pull-right">
+            {!authUser || keep === '10' || (keep !== '10' && authUser.hasStripeCustomerId) ? (
+              this.props.creating ?
+                <span className="btn btn-default">Creating...</span> :
+                <button type="submit" className="btn btn-default">Start Model</button>) :
+              <StripeCheckout amount={amount} />}
+          </div>
         </form>
 
         <Footer />
@@ -194,7 +223,8 @@ class StartModelPage extends Component {
 }
 
 StartModelPage.propTypes = {
-  authTokenId: PropTypes.string,
+  authTokenId: PropTypes.any,
+  authUser: PropTypes.object,
   creating: PropTypes.bool,
   created: PropTypes.bool,
   error: PropTypes.string,

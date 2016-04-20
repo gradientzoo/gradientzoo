@@ -33,6 +33,7 @@ class ProfilePage extends Component {
     this.props.loadUserByUsername(username)
   }
 
+  /*
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.authUser, nextProps.authUser)) {
       const { routeParams: { username }} = this.props
@@ -40,6 +41,7 @@ class ProfilePage extends Component {
       this.props.loadUserByUsername(username)
     }
   }
+  */
 
   render() {
     const { routeParams: { username }, authUser, user} = this.props

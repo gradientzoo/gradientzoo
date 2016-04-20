@@ -9,6 +9,7 @@ env
 main
 deploy/gradientzoo-secret-postgresql.yml
 deploy/gradientzoo-secret-aws.yml
+deploy/gradientzoo-secret-stripe.yml
 deploy/gradientzoo-web-cert.yml
 deploy/gradientzoo-api-cert.yml
 bin/env
