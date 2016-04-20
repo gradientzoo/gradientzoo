@@ -57,6 +57,10 @@ export default {
     fontSize: '20px',
     marginLeft: '20px'
   },
+  modelLock: {
+    paddingLeft: 10,
+    fontSize: 12
+  },
   // Model page integration
   integrationContent: {
     marginTop: '8px'

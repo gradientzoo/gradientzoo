@@ -64,7 +64,7 @@ class FilePage extends Component {
 
   render() {
     const { routeParams: { username, slug, framework, filename } } = this.props
-    const { files, filesFetching, filesFetchError } = this.props
+    const { model, files, filesFetching, filesFetchError } = this.props
     return (
       <DocumentTitle title={`${username}/${slug}/${framework}/${filename} - Gradientzoo`}>
       <div className="container" style={styles.page}>
@@ -74,7 +74,10 @@ class FilePage extends Component {
         <h2>
           <Link to={`/${username}`}>{username}</Link> /{' '}
           <Link to={`/${username}/${slug}`}>{slug}</Link> /{' '}
-          {filename}{' '}
+          {filename}
+          {model && model.visibility == 'private' ?
+            <span style={styles.modelLock} className="glyphicon glyphicon-lock"></span> : null}
+          {' '}
           <LoadingSpinner active={filesFetching} />
         </h2>
 
@@ -87,7 +90,7 @@ class FilePage extends Component {
                 <th>Filesize</th>
                 <th>Downloads</th>
                 <th>ID</th>
-                <th>Time Uploaded</th>
+                <th>Uploaded</th>
               </tr>
             </thead>
             <FileList files={files}

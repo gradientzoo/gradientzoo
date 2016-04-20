@@ -119,7 +119,10 @@ class ModelPage extends Component {
 
         <h2>
           <Link to={'/' + username}>{username}</Link> /{' '}
-          {slug}{' '}
+          {slug}
+          {model && model.visibility == 'private' ?
+            <span style={styles.modelLock} className="glyphicon glyphicon-lock"></span> : null}
+          {' '}
           {model ? <span style={styles.modelDescription}>{model.name}</span>: null}
         </h2>
         {/*model && ? <span>{model.createdTime}</span> : null*/}

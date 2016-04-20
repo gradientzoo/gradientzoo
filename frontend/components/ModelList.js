@@ -34,6 +34,8 @@ class ModelList extends Component {
         </td>
         <td>
           <span style={styles.modelVisibility}>{model.visibility}</span>
+          {model && model.visibility == 'private' ?
+            <span style={styles.modelLock} className="glyphicon glyphicon-lock"></span> : null}
         </td>
       </tr>
     )
@@ -48,7 +50,7 @@ class ModelList extends Component {
             <tr>
               <th></th>
               <th>Model Name</th>
-              <th>Time Created</th>
+              <th>Started</th>
               <th>Downloads</th>
               <th>Visibility</th>
             </tr>
