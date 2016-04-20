@@ -1,12 +1,21 @@
 import React, { Component, PropTypes } from 'react'
 import Radium from 'radium'
+import { Link } from 'react-router'
 import styles from '../styles'
 
 class Footer extends Component {
   render() {
     return (
       <footer className="footer" style={styles.footer}>
-        <p>&copy; 2016 Florenzano Networks</p>
+        <p className="pull-left">&copy; 2016 Florenzano Networks</p>
+        <div className="pull-right">
+          <Link to="/open" style={styles.footerItem}>Open Source</Link>
+          <Link to="/tos" style={styles.footerItem}>Terms of Service</Link>
+          <Link to="/privacy" style={styles.footerItem}>Privacy Policy</Link>
+          <a target="_blank"
+             href="mailto:support@gradientzoo.com"
+             style={styles.footerItem}>Support</a>
+        </div>
       </footer>
     )
   }

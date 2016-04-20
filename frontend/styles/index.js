@@ -23,6 +23,9 @@ export default {
     color: '#777',
     borderTop: '1px solid #e5e5e5'
   },
+  footerItem: {
+    paddingLeft: 20
+  },
 
   // Homepage
   modelFetchError: {

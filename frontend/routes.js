@@ -9,6 +9,8 @@ import ProfilePage from './containers/ProfilePage'
 import ModelPage from './containers/ModelPage'
 import FilePage from './containers/FilePage'
 import OpenPage from './components/OpenPage'
+import TermsPage from './components/TermsPage'
+import PrivacyPage from './components/PrivacyPage'
 
 export default (
   <Route path="" component={App}>
@@ -21,6 +23,10 @@ export default (
            component={IndexPage} />
     <Route path="/open"
            component={OpenPage} />
+    <Route path="/tos"
+           component={TermsPage} />
+    <Route path="/privacy"
+           component={PrivacyPage} />
     <Route path="/start-model"
            component={StartModelPage} />
     <Route path="/:username"
