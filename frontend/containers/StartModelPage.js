@@ -88,9 +88,9 @@ class StartModelPage extends Component {
     const { visibility, description, keep } = this.state
     const { authUser } = this.props
     let amount = {
-      '100': 1500,
+      '100': 500,
       '1000': 5000,
-      '100000': 50000
+      '10000': 50000
     }[keep] || 0
     return (
       <DocumentTitle title='Start Model - Gradientzoo'>
@@ -181,7 +181,7 @@ class StartModelPage extends Component {
                      onChange={this.handleKeepChange} />
               <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100</span></span>
               <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>1GB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>$15/month</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>$5/month</span></span>
             </label>
             <label className="radio-inline"style={styles.planItem}>
               <input type="radio"
@@ -196,8 +196,8 @@ class StartModelPage extends Component {
             <label className="radio-inline"style={styles.planItem}>
               <input type="radio"
                      name="keep"
-                     value="100000"
-                     checked={keep === '100000'}
+                     value="10000"
+                     checked={keep === '10000'}
                      onChange={this.handleKeepChange} />
               <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100,000</span></span>
               <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>4GB</span></span>

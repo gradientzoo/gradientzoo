@@ -29,7 +29,7 @@ func HandleTopPublicModels(c *Context, w http.ResponseWriter, req *http.Request)
 		start = end.AddDate(0, 0, -30)
 	case "all":
 	case "":
-		start = end.AddDate(0, 0, -100000)
+		start = end.AddDate(0, 0, -10000)
 	default:
 		msg := "Invalid time period specified"
 		clog.Error(msg)

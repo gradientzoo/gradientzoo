@@ -85,7 +85,7 @@ func HandleFileUpload(c *Context, w http.ResponseWriter, req *http.Request) {
 		req.Body = http.MaxBytesReader(w, req.Body, 1024*1024*1024) // 1GB
 	case 1000:
 		req.Body = http.MaxBytesReader(w, req.Body, 2*1024*1024*1024) // 2GB
-	case 100000:
+	case 10000:
 		req.Body = http.MaxBytesReader(w, req.Body, 4*1024*1024*1024) // 4GB
 	default:
 		req.Body = http.MaxBytesReader(w, req.Body, 500*1024*1024) // 500MB
