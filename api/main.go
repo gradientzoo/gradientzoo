@@ -2,7 +2,6 @@ package api
 
 import (
 	"net/http"
-	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/negroni"
@@ -137,11 +136,6 @@ func makeHandler() http.Handler {
 }
 
 func Main() {
-	if !utils.Conf.Production {
-		log.Info("Initializing, please wait...")
-		time.Sleep(10 * time.Second)
-	}
-
 	// Connect to the Postgres DB
 	db, err := models.NewDB()
 	if err != nil {
