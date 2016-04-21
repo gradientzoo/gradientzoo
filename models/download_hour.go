@@ -14,6 +14,7 @@ type DownloadHourDb struct {
 }
 
 type DownloadCounts struct {
+	Day   int `json:"day"`
 	Week  int `json:"week"`
 	Month int `json:"month"`
 	All   int `json:"all"`
@@ -65,6 +66,7 @@ func (db *DownloadHourDb) MarkDownload(fileId, userId, ip string, t time.Time) e
 func (db *DownloadHourDb) CountByFile(fileId string) (DownloadCounts, error) {
 	sql := `
   SELECT
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 day') THEN DH.downloads ELSE 0 END)) AS day,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
     COALESCE(SUM(DH.downloads), 0) AS all
@@ -85,6 +87,7 @@ func (db *DownloadHourDb) CountsByFiles(fileIds []string) (map[string]DownloadCo
 	sql := `
   SELECT
     DH.file_id AS file_id,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 day') THEN DH.downloads ELSE 0 END)) AS day,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
     COALESCE(SUM(DH.downloads), 0) AS all
@@ -105,6 +108,7 @@ func (db *DownloadHourDb) CountsByFiles(fileIds []string) (map[string]DownloadCo
 	}
 	for _, fileDownload := range fileDownloads {
 		resp[fileDownload.FileId] = DownloadCounts{
+			Day:   fileDownload.Day,
 			Week:  fileDownload.Week,
 			Month: fileDownload.Month,
 			All:   fileDownload.All,
@@ -117,6 +121,7 @@ func (db *DownloadHourDb) CountsByFiles(fileIds []string) (map[string]DownloadCo
 func (db *DownloadHourDb) CountByModel(modelId string) (DownloadCounts, error) {
 	sql := `
   SELECT
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 day') THEN DH.downloads ELSE 0 END)) AS day,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
     COALESCE(SUM(DH.downloads), 0) AS all
@@ -138,6 +143,7 @@ func (db *DownloadHourDb) CountsByModels(modelIds []string) (map[string]Download
 	sql := `
   SELECT
     F.model_id AS model_id,
+    COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 day') THEN DH.downloads ELSE 0 END)) AS day,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 week') THEN DH.downloads ELSE 0 END)) AS week,
     COALESCE(SUM(CASE WHEN DH.hour >= (NOW() - INTERVAL '1 month') THEN DH.downloads ELSE 0 END)) AS month,
     COALESCE(SUM(DH.downloads), 0) AS all
@@ -159,6 +165,7 @@ func (db *DownloadHourDb) CountsByModels(modelIds []string) (map[string]Download
 	}
 	for _, modelDownload := range modelDownloads {
 		resp[modelDownload.ModelId] = DownloadCounts{
+			Day:   modelDownload.Day,
 			Week:  modelDownload.Week,
 			Month: modelDownload.Month,
 			All:   modelDownload.All,
