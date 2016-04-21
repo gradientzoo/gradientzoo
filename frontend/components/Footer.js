@@ -7,7 +7,7 @@ class Footer extends Component {
   render() {
     return (
       <footer className="footer" style={styles.footer}>
-        <p className="pull-left">&copy; 2016 Florenzano Networks</p>
+        <p className="pull-left">&copy; 2016 Gradientzoo</p>
         <div className="pull-right">
           <Link to="/open" style={styles.footerItem}>Open Source</Link>
           <Link to="/tos" style={styles.footerItem}>Terms of Service</Link>
