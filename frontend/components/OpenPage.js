@@ -22,11 +22,12 @@ export default Radium((props) => {
       <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <p>
-            At Gradientzoo, we believe in open source.  Open source code generates,
-            consumes, and formats the data you&rsquo;ll find on this site.  Without
-            open source, the field of machine learning might be locked away in
-            academic institutions, instead of seeing increasingly widespread use
-            across the industry.
+            At Gradientzoo, we believe in open source.  Open source code
+            generates, consumes, and formats the data you&rsquo;ll find on this
+            site.  Without open source and the spirit of open innovation, the
+            field of machine learning might be locked away in academic
+            institutions, instead of seeing increasingly widespread use across
+            the industry.
           </p>
           <br className="br" />
           <p>
@@ -40,15 +41,14 @@ export default Radium((props) => {
           <br className="br" />
           <p>
             But what if gradientzoo.com ceases to exist? What if the pricing
-            model doesn&rsquo;t work, or people don&rsquo;t show up, or some
-            other site comes along and is somehow better? Thanks to open
-            source, you have everything you need to run your own version of
-            Gradientzoo, either on-premise or in the cloud. That means much
-            less lock-in risk for you.
+            model doesn&rsquo;t work, or the people involved are hit by a bus?
+            {' '}<strong>Thanks to open source, you have everything you need to
+            run your own version of Gradientzoo, either on-premise or in the
+            cloud.</strong> That means much less lock-in risk for you.
           </p>
           <br className="br" />
           <p>
-            Simply put, it&rsquo;s the right thing to do.
+            Simply put, open sourcing everything is the right thing for us do.
           </p>
           <br className="br" />
           <div className="text-center">
