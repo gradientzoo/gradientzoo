@@ -13,4 +13,4 @@ deploy/gradientzoo-secret-stripe.yml
 deploy/gradientzoo-web-cert.yml
 deploy/gradientzoo-api-cert.yml
 bin/env
-./gradientzoo
+gradientzoo
