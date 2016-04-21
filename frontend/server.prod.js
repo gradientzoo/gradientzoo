@@ -22,7 +22,7 @@ app.get('/', function(req, res) {
 
 app.use(sslify.HTTPS({ trustProtoHeader: true }))
 app.use(forceDomain({
-  hostname: 'www.gradientzoo.com',
+  hostname: process.env.GRADIENTZOO_WWW_DOMAIN,
   protocol: 'https'
 }))
 

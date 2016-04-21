@@ -12,5 +12,6 @@ NODE_ENV=production docker build \
   --build-arg GOOGLE_ANALYTICS_ID_ARG=$GOOGLE_ANALYTICS_ID \
   --build-arg STRIPE_PUBKEY_LIVE_ARG=$STRIPE_PUBKEY_LIVE \
   --build-arg STRIPE_PUBKEY_TEST_ARG=$STRIPE_PUBKEY_TEST \
+  --build-arg GRADIENTZOO_WWW_DOMAIN_ARG=$GRADIENTZOO_WWW_DOMAIN \
   -t gcr.io/$PROJECT_NAME/gradientzoo-web:latest .
 gcloud docker push gcr.io/$PROJECT_NAME/gradientzoo-web:latest
