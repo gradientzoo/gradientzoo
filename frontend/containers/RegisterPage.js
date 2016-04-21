@@ -26,7 +26,7 @@ class RegisterPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isNull(nextProps.authTokenId)) {
       // If we've logged in, send the user to their dashboard
-      browserHistory.push('/index')
+      browserHistory.push('/')
     }
   }
 

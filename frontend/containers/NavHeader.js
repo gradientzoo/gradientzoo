@@ -15,7 +15,7 @@ class NavHeader extends Component {
   handleLogout(ev) {
     ev.preventDefault()
     this.props.logout()
-    browserHistory.push('/index')
+    browserHistory.push('/')
   }
 
   render() {
@@ -28,11 +28,11 @@ class NavHeader extends Component {
     const registerActiveClass = activeTab === 'register' && !isLoggedIn ? 'active' : ''
     return (
       <div className="header clearfix" style={styles.header}>
-        <h3 className="text-muted pull-left" style={styles.masthead}><Link to="/index">Gradientzoo</Link></h3>
+        <h3 className="text-muted pull-left" style={styles.masthead}><Link to="/">Gradientzoo</Link></h3>
         <nav>
           <ul className="nav nav-pills pull-right">
             <li className={homeActiveClass} htmlRole="presentation">
-              <Link to="/index">Home</Link>
+              <Link to="/">Home</Link>
             </li>
             <li className={openActiveClass} htmlRole="presentation">
               <Link to="/open">Open</Link>

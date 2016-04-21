@@ -67,6 +67,7 @@ you're set!
 TODO
 ====
 
+* Proper 404 page
 * Link to readthedocs
 * Show one or two extra params in list
 * Add TOS and privacy policy

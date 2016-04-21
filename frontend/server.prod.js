@@ -1,7 +1,6 @@
 var express = require('express');
 var compression = require('compression');
 var httpProxy = require('http-proxy');
-var basicAuth = require('basic-auth-connect');
 var sslify = require('express-sslify');
 var forceDomain = require('forcedomain');
 
@@ -32,8 +31,6 @@ app.use('/api', function(req, res) {
     target: 'http://' + process.env.GRADIENTZOO_API_SVC_SERVICE_HOST + ':' + process.env.GRADIENTZOO_API_SVC_SERVICE_PORT
   })
 })
-
-app.use(basicAuth('ericflo', 'poop'))
 
 app.use(function(req, res) {
   res.sendFile(__dirname + '/index.html')

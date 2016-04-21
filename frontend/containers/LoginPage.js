@@ -26,7 +26,7 @@ class LoginPage extends Component {
     console.log(nextProps.authTokenId)
     if (!isNull(nextProps.authTokenId)) {
       // If we've logged in, send the user to their dashboard
-      browserHistory.push('/index')
+      browserHistory.push('/')
     }
   }
 

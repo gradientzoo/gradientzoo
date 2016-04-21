@@ -14,13 +14,12 @@ import PrivacyPage from './components/PrivacyPage'
 
 export default (
   <Route path="" component={App}>
-    <Route path="/" component={() => React.createElement('span', null, 'Coming Soon...')} />
+    <Route path="/"
+           component={IndexPage} />
     <Route path="/login"
            component={LoginPage} />
     <Route path="/register"
            component={RegisterPage} />
-    <Route path="/index"
-           component={IndexPage} />
     <Route path="/open"
            component={OpenPage} />
     <Route path="/tos"
