@@ -69,9 +69,7 @@ TODO
 ====
 
 * Proper 404 page
-* Link to readthedocs
 * Show one or two extra params in list
-* Add TOS and privacy policy
 * Import common public domain datasets for popular libraries into a 'commons'
 * Allow user to edit the name and description of their model
 * Links from homepage to full model lists
