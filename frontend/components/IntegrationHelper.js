@@ -46,14 +46,14 @@ zoo = TensorflowGradientzoo('{username}/{slug}', auth_token_id='{authTokenId}')
 
 # Load latest weights from Gradientzoo
 try:
-    zoo.load(your_tensorflow_network)
+    zoo.load(sess)
 except NotFoundError:
     pass  # Either allow this error (first time, perhaps) or treat as exception
 
 # Train your model ...
 
 # Save updated weights to Gradientzoo
-zoo.save(your_tensorflow_network)
+zoo.save(sess)
 \`\`\`
 `
 
@@ -62,7 +62,7 @@ const tfSourcePub = `
 from gradientzoo.tensorflow_client import TensorflowGradientzoo
 
 # Load latest weights from Gradientzoo
-TensorflowGradientzoo('{username}/{slug}').load(your_tensorflow_network)
+TensorflowGradientzoo('{username}/{slug}').load(sess)
 \`\`\`
 `
 
