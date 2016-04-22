@@ -13,6 +13,11 @@ class Footer extends Component {
           <Link to="/tos" style={styles.footerItem}>Terms of Service</Link>
           <Link to="/privacy" style={styles.footerItem}>Privacy Policy</Link>
           <a target="_blank"
+             href="http://python-gradientzoo.readthedocs.org/en/latest/"
+             style={styles.footerItem}>
+            Docs
+          </a>
+          <a target="_blank"
              href="mailto:support@gradientzoo.com"
              style={styles.footerItem}>Support</a>
         </div>

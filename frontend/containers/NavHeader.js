@@ -37,6 +37,12 @@ class NavHeader extends Component {
             <li className={openActiveClass} htmlRole="presentation">
               <Link to="/open">Open</Link>
             </li>
+            <li htmlRole="presentation">
+              <a target="_blank"
+                 href="http://python-gradientzoo.readthedocs.org/en/latest/">
+                Docs
+              </a>
+            </li>
             {isLoggedIn ?
               <li className={createModelActiveClass} htmlRole="presentation">
                 <Link to="/start-model">Start Model</Link>
