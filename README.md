@@ -40,6 +40,7 @@ Here's what we're going to do:
 * Provision a disk for use by the database
 * Make builds of both the API and the web frontend, and push those Docker images
 * Send Kubernetes all of the configuration files it needs to spin up the cluster
+* Create the database for use by the system
 * Open up the firewall to allow incoming traffic
 
 **TODO:** *Finish writing this README*
