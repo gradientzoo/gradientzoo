@@ -38,8 +38,7 @@ class NavHeader extends Component {
               <Link to="/open">Open</Link>
             </li>
             <li htmlRole="presentation">
-              <a target="_blank"
-                 href="http://python-gradientzoo.readthedocs.org/en/latest/">
+              <a href="http://python-gradientzoo.readthedocs.org/en/latest/">
                 Docs
               </a>
             </li>
