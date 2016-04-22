@@ -35,6 +35,7 @@ class FileList extends Component {
             {file.id}
           </td> : null}
         <td>
+          uploaded{' '}
           <Time value={file.createdTime}
                 format="YYYY/MM/DD"
                 relative={true} />          

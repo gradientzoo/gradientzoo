@@ -10,7 +10,8 @@ import reverse from 'lodash/reverse'
 import take from 'lodash/take'
 import isEqual from 'lodash/isEqual'
 import DocumentTitle from 'react-document-title'
-import { loadLatestPublicModels, loadTopModels } from '../actions/model'
+import { loadLatestPublicModels, loadTopModels,
+         loadModelsByUsername } from '../actions/model'
 import NavHeader from './NavHeader'
 import ModelList from '../components/ModelList'
 import Footer from '../components/Footer'
@@ -26,6 +27,7 @@ class IndexPage extends Component {
     }
     this.props.loadLatestPublicModels()
     this.props.loadTopModels(this.state.period)
+    //this.props.loadModelsByUsername(this.props.authUser.username)
   }
 
   handlePeriodClick(period, ev) {
@@ -41,21 +43,26 @@ class IndexPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.authUser, nextProps.authUser)) {
-      console.log('asdf')
+    if ((this.props.authUser || {}).id != (nextProps.authUser || {}).id) {
       this.props.loadLatestPublicModels()
       this.props.loadTopModels(this.state.period)
+    }
+    if (nextProps.authUser && nextProps.authUser.username != (this.props.authUser || {}).username) {
+      this.props.loadModelsByUsername(nextProps.authUser.username)
     }
   }
 
   render() {
     const { authUser,
             models,
+            allModels,
             users,
             latestModelsFetching,
             latestModelsFetchError,
             topModelsFetching,
-            topModelsFetchError } = this.props
+            topModelsFetchError,
+            userModelsFetching,
+            userModelsFetchError } = this.props
     const { period } = this.state
 
     let latestModels = take(reverse(sortBy(models, 'createdTime')), 10)
@@ -63,6 +70,12 @@ class IndexPage extends Component {
 
     let topModels = take(reverse(sortBy(models, 'downloads.all')), 10)
     topModels = UserUtils.addUserUrls(topModels, users)
+
+    let userModels = []
+    if (authUser) {
+      userModels = filter(allModels, (model) => model.userId === authUser.id)
+      userModels = UserUtils.addUserUrls(userModels, users)
+    }
 
     return (
       <DocumentTitle title="Gradientzoo: pre-trained neural network models">
@@ -89,8 +102,15 @@ class IndexPage extends Component {
             <Link className="btn btn-lg btn-default"
                   to={'/' + authUser.username}
                   htmlRole="button">
-              Go to your profile &raquo;
+              Your profile
             </Link> : null}
+          {' '}
+          {authUser ?
+            <a className="btn btn-lg btn-info"
+               href="http://python-gradientzoo.readthedocs.org/en/latest/"
+               htmlRole="button">
+              Documentation &raquo;
+            </a> : null}
           </p>
         </div>
 
@@ -136,6 +156,23 @@ class IndexPage extends Component {
           </div>
         </div>
 
+        {authUser ?
+          <div className="row">
+            <div className="col-lg-12">
+              <h4 className="pull-left">
+                Your Models{' '}
+                <LoadingSpinner active={userModelsFetching} />
+              </h4>
+              {userModelsFetchError ?
+                <span style={styles.modelFetchError}>Error loading these models ({userModelsFetchError})</span>: null}
+              <div className="clearfix" />
+              {userModelsFetchError ? null : (userModels.length > 0 ?
+                <ModelList models={userModels} /> :
+                <h5>No models yet</h5>)}
+              
+            </div>
+          </div> : null}
+
         <br className="br" />
 
         <div className="row">
@@ -169,28 +206,36 @@ class IndexPage extends Component {
 IndexPage.propTypes = {
   authUser: PropTypes.object,
   models: PropTypes.arrayOf(PropTypes.object),
+  allModels: PropTypes.arrayOf(PropTypes.object),
   users: PropTypes.object,
   latestModelsFetching: PropTypes.bool,
   latestModelsFetchError: PropTypes.string,
   topModelsFetching: PropTypes.bool,
-  topModelsFetchError: PropTypes.string
+  topModelsFetchError: PropTypes.string,
+  userModelsFetching: PropTypes.bool,
+  userModelsFetchError: PropTypes.string,
 }
 
 function mapStateToProps(state, props) {
   const { models, users } = state.entities
-  const publicModels = filter(toArray(models), (model) => model.visibility === 'public')
+  const allModels = toArray(models)
+  const publicModels = filter(allModels, (model) => model.visibility === 'public')
   return {
     authUser: state.authUserId ? users[state.authUserId] : null,
     models: publicModels,
+    allModels: allModels,
     users: users,
     latestModelsFetching: state.latestPublicModels.fetching,
     latestModelsFetchError: state.latestPublicModels.fetchError,
     topModelsFetching: state.topModels.fetching,
-    topModelsFetchError: state.topModels.fetchError
+    topModelsFetchError: state.topModels.fetchError,
+    userModelsFetching: state.modelsByUsername.fetching,
+    userModelsFetchError: state.modelsByUsername.fetchError,
   }
 }
 
 export default Radium(connect(mapStateToProps, {
   loadLatestPublicModels,
+  loadModelsByUsername,
   loadTopModels
 })(IndexPage))

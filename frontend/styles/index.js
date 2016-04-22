@@ -44,11 +44,11 @@ export default {
   // Start model page
   slugLabel: {
     position: 'absolute',
-    paddingTop: 7,
+    paddingTop: 12,
     paddingLeft: 12
   },
   slugInput: {
-    textIndent: 118
+    textIndent: 114
   },
   vizItem: {
     paddingRight: 40
@@ -59,7 +59,13 @@ export default {
   planItem: {
     minHeight: 80,
     float: 'left',
-    marginLeft: 0
+    marginLeft: 0,
+    marginRight: 10,
+    marginBottom: 6,
+    paddingTop: 6,
+    paddingLeft: 28,
+    border: '1px solid #ccc',
+    borderRadius: 8
   },
   planLabel: {
     display: 'block'
@@ -98,12 +104,12 @@ export default {
     marginBottom: 16
   },
   lastModelRow: {
-    borderBottom: '1px solid #ddd'
+    //borderBottom: '1px solid #ddd'
   },
 
   // File list
   lastFileRow: {
-    borderBottom: '1px solid #ddd'
+    //borderBottom: '1px solid #ddd'
   },
 
   // File page

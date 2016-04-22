@@ -7,7 +7,7 @@ import CustomMarkdown from './CustomMarkdown'
 
 const kerasSourcePriv = `
 \`\`\`python
-from gradientzoo.keras_client import KerasGradientzoo, NotFoundError
+from gradientzoo import KerasGradientzoo, NotFoundError
 
 # Note: For better security, instead of passing auth_token_id as an argument,
 # use the environment variable GRADIENTZOO_AUTH_TOKEN_ID instead
@@ -20,16 +20,15 @@ except NotFoundError:
     pass  # Either allow this error (first time, perhaps) or treat as exception
 
 # Save updated weights to Gradientzoo after each epoch
-your_model.fit(X_train,
-               Y_train,
-               # ...
-               callbacks=[zoo.make_callback(your_model, after_epochs=1)])
+zoo_callback = zoo.make_callback(your_model)
+your_model.fit(X_train, Y_train, # ...
+               callbacks=[zoo_callback])
 \`\`\`
 `
 
 const kerasSourcePub = `
 \`\`\`python
-from gradientzoo.keras_client import KerasGradientzoo
+from gradientzoo import KerasGradientzoo
 
 # Load latest weights from Gradientzoo
 KerasGradientzoo('{username}/{slug}').load(your_model)
@@ -38,7 +37,7 @@ KerasGradientzoo('{username}/{slug}').load(your_model)
 
 const tfSourcePriv = `
 \`\`\`python
-from gradientzoo.tensorflow_client import TensorflowGradientzoo, NotFoundError
+from gradientzoo import TensorflowGradientzoo, NotFoundError
 
 # Note: For better security, instead of passing auth_token_id as an argument,
 # use the environment variable GRADIENTZOO_AUTH_TOKEN_ID instead
@@ -59,7 +58,7 @@ zoo.save(sess)
 
 const tfSourcePub = `
 \`\`\`python
-from gradientzoo.tensorflow_client import TensorflowGradientzoo
+from gradientzoo import TensorflowGradientzoo
 
 # Load latest weights from Gradientzoo
 TensorflowGradientzoo('{username}/{slug}').load(sess)
@@ -68,7 +67,7 @@ TensorflowGradientzoo('{username}/{slug}').load(sess)
 
 const lasagneSourcePriv = `
 \`\`\`python
-from gradientzoo.lasagne_client import LasagneGradientzoo, NotFoundError
+from gradientzoo import LasagneGradientzoo, NotFoundError
 
 # Note: For better security, instead of passing auth_token_id as an argument,
 # use the environment variable GRADIENTZOO_AUTH_TOKEN_ID instead
@@ -89,7 +88,7 @@ zoo.save(your_lasagne_network)
 
 const lasagneSourcePub = `
 \`\`\`python
-from gradientzoo.lasagne_client import LasagneGradientzoo
+from gradientzoo import LasagneGradientzoo
 
 # Load latest weights from Gradientzoo
 LasagneGradientzoo('{username}/{slug}').load(your_lasagne_network)

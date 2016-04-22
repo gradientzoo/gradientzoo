@@ -25,6 +25,7 @@ class ModelList extends Component {
           <span style={styles.modelName}>{model.name}</span>
         </td>
         <td>
+          created{' '}
           <Time value={model.createdTime}
                 format="YYYY/MM/DD"
                 relative={true} /> 
@@ -34,8 +35,9 @@ class ModelList extends Component {
         </td>
         <td>
           <span style={styles.modelVisibility}>{model.visibility}</span>
-          {model && model.visibility == 'private' ?
-            <span style={styles.modelLock} className="glyphicon glyphicon-lock"></span> : null}
+          {model.visibility == 'public' ?
+            <span style={styles.modelLock} className="glyphicon glyphicon-globe"></span> :
+            <span style={styles.modelLock} className="glyphicon glyphicon-lock"></span>}
         </td>
       </tr>
     )
