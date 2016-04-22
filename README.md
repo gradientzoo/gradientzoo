@@ -1,5 +1,5 @@
 Gradientzoo
------------
+===========
 
 Gradientzoo is an open source website and API service for versioning and
 sharing neural network model weights. This repo is essentially a monorepo,
@@ -15,13 +15,13 @@ filled with everything needed to run your own version of the site and service:
 
 
 Features
-========
+--------
 
 Supports saving models in [Keras](http://keras.io/), variables in [Tensorflow](https://www.tensorflow.org), and networks in [Lasagne](http://lasagne.readthedocs.org/en/latest/), and regular old files using Python with your framework of choice.
 
 
 Before you start
-================
+----------------
 
 There are a number of files with secrets in them, which cannot be checked
 into this repo.  Instead, we've provided template files for you to remove the
@@ -36,14 +36,14 @@ into this repo.  Instead, we've provided template files for you to remove the
 
 
 Contribute
-==========
+----------
 
 * Issue Tracker: https://github.com/gradientzoo/gradientzoo/issues
 * Source Code: https://github.com/gradientzoo/gradientzoo
 
 
 Development
-===========
+-----------
 
 To start the development server, enter the following command:
 
@@ -70,13 +70,13 @@ after you've deployed, run this command to forward the port:
 
 
 Support
-=======
+-------
 
 If you are having issues, please let us know at support@gradientzoo.com
 
 
 First time deployment
-=====================
+---------------------
 
 Before you get started, you'll need these things set up:
 
@@ -129,7 +129,7 @@ you're set!
 
 
 TODO
-====
+~~~~
 
 * Proper 404 page
 * Show one or two extra params in list
