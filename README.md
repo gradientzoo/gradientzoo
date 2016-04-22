@@ -1,6 +1,50 @@
 Gradientzoo
 -----------
 
+Gradientzoo is an open source website and API service for versioning and
+sharing neural network model weights. This repo is essentially a monorepo,
+filled with everything needed to run your own version of the site and service:
+
+* A React website frontend, served by node.js
+* An API service layer written in Go
+* Dockerized versions of the above
+* Kuberentes deployment configuration for spinning up the entire solution on
+  Google Container Engine, including load balancing and a PostgreSQL database
+* Development and deployment helper scripts
+* Templates for configuration and environment variables
+
+
+Features
+========
+
+Supports saving models in [Keras](http://keras.io/), variables in [Tensorflow](https://www.tensorflow.org), and networks in [Lasagne](http://lasagne.readthedocs.org/en/latest/), and regular old files using Python with your framework of choice.
+
+
+Before you start
+================
+
+There are a number of files with secrets in them, which cannot be checked
+into this repo.  Instead, we've provided template files for you to remove the
+.template extension from and fill in the blanks:
+
+* bin/env.template                             # Environment variables
+* deploy/gradientzoo-api-cert.yml.template     # API domain SSL cert
+* deploy/gradientzoo-web-cert.yml.template     # Web domain SSL cert
+* deploy/gradientzoo-secret-aws.yml.template   # AWS credentials
+* deploy/gradientzoo-secret-postgresql.yml.template # PostgreSQL credentials
+* deploy/gradientzoo-secret-strip.yml.template # Stripe credentials
+
+
+Contribute
+==========
+
+* Issue Tracker: https://github.com/gradientzoo/gradientzoo/issues
+* Source Code: https://github.com/gradientzoo/gradientzoo
+
+
+Development
+===========
+
 To start the development server, enter the following command:
 
 ```console
@@ -24,30 +68,48 @@ after you've deployed, run this command to forward the port:
 ./bin/forward-ports
 ```
 
-First-Time Deployment
+
+Support
+=======
+
+If you are having issues, please let us know at support@gradientzoo.com
+
+
+First time deployment
 =====================
 
 Before you get started, you'll need these things set up:
 
 * Go
 * Python
-* AWS Credentials and an S3 bucket set up
 * Google Container Engine cluster set up and CLI configured
+* The template files above, filled in and ready to go
 
 Here's what we're going to do:
 
-* Use the .template files in the repo to fill in cluster secrets & config files
 * Provision a disk for use by the database
-* Make builds of both the API and the web frontend, and push those Docker images
+* Make builds for both the API and the web frontend, and push those Docker images
 * Send Kubernetes all of the configuration files it needs to spin up the cluster
-* Create the database for use by the system
 * Open up the firewall to allow incoming traffic
 
-**TODO:** *Finish writing this README*
+To provision the disk for use by the database, run the following command:
 
-Here is the command to provision a disk for the database:
 ```console
 gcloud compute disks create gradientzoo-postgres-disk --size 250GB
+```
+
+Now let's make builds for both the API and the web frontend, and push the
+Docker images:
+
+```console
+./bin/rebuild-api
+./bin/rebuild-web
+```
+
+Next, we send Kubernetes everything it needs to spin up the entire cluster:
+
+```console
+kubectl create -f deploy/
 ```
 
 Here are the commands you'll need to open up the firewall:
@@ -64,6 +126,7 @@ gcloud compute firewall-rules create allow-130-211-0-0-22 \
 
 Finally, you'll want to point your DNS entries to your new cluster, and then
 you're set!
+
 
 TODO
 ====
