@@ -1,7 +1,6 @@
 var express = require('express');
 var compression = require('compression');
 var httpProxy = require('http-proxy');
-var sslify = require('express-sslify');
 var forceDomain = require('forcedomain');
 
 var app = new (express)()
@@ -16,15 +15,29 @@ proxy.on('error', function(err, req, res) {
   console.log('PROXY ERROR: ' + err)
 })
 
+var forceDomainMiddleware = forceDomain({
+  hostname: process.env.GRADIENTZOO_WWW_DOMAIN,
+  protocol: 'https'
+})
+
+app.use(function(req, res, next) {
+  var isHealthCheck = req.headers['user-agent'].match(/GoogleHC/)
+  if (isHealthCheck) {
+    next()
+    return
+  }
+  if (req.hostname != process.env.GRADIENTZOO_WWW_DOMAIN ||
+      req.headers['x-forwarded-proto'] != 'https') {
+    req.hostname = 'invalid'
+    forceDomainMiddleware(req, res, next)
+  } else {
+    next()
+  }
+})
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html')
 })
-
-app.use(sslify.HTTPS({ trustProtoHeader: true }))
-app.use(forceDomain({
-  hostname: process.env.GRADIENTZOO_WWW_DOMAIN,
-  protocol: 'https'
-}))
 
 app.use('/api', function(req, res) {
   proxy.web(req, res, {
