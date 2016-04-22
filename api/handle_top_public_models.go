@@ -75,6 +75,11 @@ func HandleTopPublicModels(c *Context, w http.ResponseWriter, req *http.Request)
 		users = []*models.User{}
 	}
 
+	// Hydrate the user objects
+	if err = c.Api.User.Hydrate(users); err != nil {
+		clog.WithField("err", err).Error("Could not hydrate users")
+	}
+
 	c.Render.JSON(w, http.StatusOK, map[string]interface{}{
 		"models": ms,
 		"users":  users,

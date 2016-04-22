@@ -27,7 +27,9 @@ class IndexPage extends Component {
     }
     this.props.loadLatestPublicModels()
     this.props.loadTopModels(this.state.period)
-    //this.props.loadModelsByUsername(this.props.authUser.username)
+    if ((this.props.authUser || {}).username) {
+      this.props.loadModelsByUsername(this.props.authUser.username)
+    }
   }
 
   handlePeriodClick(period, ev) {

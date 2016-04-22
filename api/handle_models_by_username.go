@@ -58,8 +58,18 @@ func HandleModelsByUsername(c *Context, w http.ResponseWriter, req *http.Request
 		return
 	}
 
+	users := []*models.User{user}
+
+	// Hydrate the user object
+	if err = c.Api.User.Hydrate(users); err != nil {
+		log.WithFields(log.Fields{
+			"err":     err,
+			"user_id": user.Id,
+		}).Error("Could not hydrate")
+	}
+
 	c.Render.JSON(w, http.StatusOK, map[string]interface{}{
 		"models": filteredModels,
-		"users":  []*models.User{user},
+		"users":  users,
 	})
 }

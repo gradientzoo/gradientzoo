@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
-import { createModel } from '../actions/model'
+import { createModel, loadModelsByUsername } from '../actions/model'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
 import DocumentTitle from 'react-document-title'
@@ -30,14 +30,22 @@ class StartModelPage extends Component {
     if (!this.props.authTokenId) {
       browserHistory.push('/login')
     }
+    if ((this.props.authUser || {}).username) {
+      this.props.loadModelsByUsername(this.props.authUser.username)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authUser &&
-        nextProps.authUser &&
-        !this.props.authUser.hasStripeCustomerId &&
-        nextProps.authUser.hasStripeCustomerId) {
-      this.handleSubmit()
+    if (this.props.authUser && nextProps.authUser) {
+      // If we get their stripe customer id, submit the form
+      if (!this.props.authUser.hasStripeCustomerId &&
+          nextProps.authUser.hasStripeCustomerId) {
+        this.handleSubmit()
+      }
+      // if the username changes, load the new user (may not be needed)
+      if (nextProps.authUser.username != this.props.authUser.username) {
+        this.props.loadModelsByUsername(nextProps.authUser.username)
+      }
     }
     if (!this.props.created && nextProps.created) {
       // If we've logged in, send the user to their dashboard
@@ -208,7 +216,7 @@ class StartModelPage extends Component {
 
           <div className="pull-right">
             {(!authUser ||
-              (keep ==='10' && (visibility == 'public' || authUser.hasStripeCustomerId)) ||
+              (keep ==='10' && ((visibility == 'public') || authUser.hasStripeCustomerId)) ||
               (keep != '10' && authUser.hasStripeCustomerId)) ?
               (this.props.creating ?
                 <span className="btn btn-default">Creating...</span> :
@@ -230,7 +238,8 @@ StartModelPage.propTypes = {
   creating: PropTypes.bool,
   created: PropTypes.bool,
   error: PropTypes.string,
-  createModel: PropTypes.func.isRequired
+  createModel: PropTypes.func.isRequired,
+  loadModelsByUsername: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, props) {
@@ -239,10 +248,12 @@ function mapStateToProps(state, props) {
     authUser: state.authUserId ? state.entities.users[state.authUserId] : null,
     creating: state.createModel.creating,
     created: state.createModel.created,
-    error: state.createModel.createError
+    error: state.createModel.createError,
+    loadModelsByUsername: PropTypes.func.isRequired
   }
 }
 
 export default Radium(connect(mapStateToProps, {
-  createModel
+  createModel,
+  loadModelsByUsername
 })(StartModelPage))
