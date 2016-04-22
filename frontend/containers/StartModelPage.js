@@ -139,7 +139,7 @@ class StartModelPage extends Component {
                       onChange={this.handleDescriptionChange} />
           </div>
 
-          <div className={'form-group'}>
+          <div className="form-group">
             <label className="radio-inline" style={styles.vizItem}>
               <input type="radio"
                      name="visibility"
@@ -161,7 +161,7 @@ class StartModelPage extends Component {
             </label>
           </div>
 
-          <div className={'form-group'}>
+          <div className="form-group">
             <label style={styles.planLabel} htmlFor="keep">Plan:</label>
             <label className="radio-inline" style={styles.planItem}>
               <input type="radio"
