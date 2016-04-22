@@ -199,7 +199,7 @@ class StartModelPage extends Component {
                      value="10000"
                      checked={keep === '10000'}
                      onChange={this.handleKeepChange} />
-              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100,000</span></span>
+              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10,000</span></span>
               <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>4GB</span></span>
               <span style={styles.planFact}>Price: <span style={styles.planInner}>$500/month</span></span>
             </label>
