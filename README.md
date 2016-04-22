@@ -8,7 +8,7 @@ filled with everything needed to run your own version of the site and service:
 * A React website frontend, served by node.js
 * An API service layer written in Go
 * Dockerized versions of the above
-* Kuberentes deployment configuration for spinning up the entire solution on
+* Kubernetes deployment configuration for spinning up the entire solution on
   Google Container Engine, including load balancing and a PostgreSQL database
 * Development and deployment helper scripts
 * Templates for configuration and environment variables
