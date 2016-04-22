@@ -171,7 +171,7 @@ class StartModelPage extends Component {
                      onChange={this.handleKeepChange} />
               <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10</span></span>
               <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>500MB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>FREE!</span></span>
+              <span style={styles.planFact}>Price: <span style={styles.planInner}>{this.state.visibility == 'public' ? 'FREE!' : '$2/month'}</span></span>
             </label>
             <label className="radio-inline" style={styles.planItem}>
               <input type="radio"
@@ -207,8 +207,10 @@ class StartModelPage extends Component {
           </div>
 
           <div className="pull-right">
-            {!authUser || keep === '10' || (keep !== '10' && authUser.hasStripeCustomerId) ? (
-              this.props.creating ?
+            {(!authUser ||
+              (keep ==='10' && (visibility == 'public' || authUser.hasStripeCustomerId)) ||
+              (keep != '10' && authUser.hasStripeCustomerId)) ?
+              (this.props.creating ?
                 <span className="btn btn-default">Creating...</span> :
                 <button type="submit" className="btn btn-default">Start Model</button>) :
               <StripeCheckout amount={amount} />}

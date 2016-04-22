@@ -79,7 +79,9 @@ func HandleCreateModel(c *Context, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if form.Keep != 10 && c.User.StripeCustomerId == "" {
+	if (form.Keep != 10 && c.User.StripeCustomerId == "") ||
+		(form.Keep == 10 && form.Visibility == "private" &&
+			c.User.StripeCustomerId == "") {
 		c.Render.JSON(w, http.StatusBadRequest,
 			JsonErr("Must connect a payment source before you can create a model "+
 				"that size"))
