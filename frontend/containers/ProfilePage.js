@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import bindAll from 'lodash/bindAll'
 import filter from 'lodash/filter'
+import sortBy from 'lodash/sortBy'
 import toArray from 'lodash/toArray'
 import extend from 'lodash/extend'
 import map from 'lodash/map'
@@ -100,6 +101,7 @@ function mapStateToProps(state, props) {
   // TODO: Use reselect instead of filtering through all users
   const user = head(filter(users, (u) => u.username === username)) || null
   let processedModels = filter(toArray(models), (model) => model.userId === user.id)
+  processedModels = sortBy(processedModels, 'slug')
   processedModels = UserUtils.addUserUrls(processedModels, users)
   return {
     userFetching: state.userByUsername.fetching,
