@@ -5,6 +5,7 @@ import { Link, browserHistory } from 'react-router'
 import { createModel, loadModelsByUsername } from '../actions/model'
 import { bindAll } from 'lodash/util'
 import { isNull } from 'lodash/lang'
+import extend from 'lodash/extend'
 import DocumentTitle from 'react-document-title'
 import NavHeader from './NavHeader'
 import Footer from '../components/Footer'
@@ -95,7 +96,12 @@ class StartModelPage extends Component {
     const errClass = this.props.error ? ' has-error' : ''
     const { visibility, description, keep } = this.state
     const { authUser } = this.props
-    let amount = {
+    const username = authUser ? authUser.username : ''
+    const textIndent = (
+      (this.refs['slugLabel'] || {}).offsetWidth ||
+      styles.slugInput.textIndent
+    ) - 16
+    const amount = {
       '100': 500,
       '1000': 5000,
       '10000': 50000
@@ -112,118 +118,120 @@ class StartModelPage extends Component {
             <strong>Error</strong> {this.props.error}
           </div> : null}
 
-        <form onSubmit={this.handleSubmit} className="clearfix">
-          <div className={'form-group' + errClass}>
-            <label htmlFor="name">Model name</label>
-            <input className="form-control"
-                   type="text"
-                   name="name"
-                   disabled={this.props.creating}
-                   placeholder="Model name"
-                   onChange={this.handleNameChange} />
-          </div>
+        {authUser ?
+          <form onSubmit={this.handleSubmit} className="clearfix">
+            <div className={'form-group' + errClass}>
+              <label htmlFor="name">Model name</label>
+              <input className="form-control"
+                     type="text"
+                     name="name"
+                     disabled={this.props.creating}
+                     placeholder="Model name"
+                     onChange={this.handleNameChange} />
+            </div>
 
-          <div className={'form-group' + errClass}>
-            <label htmlFor="slug" style={styles.slugLabel}>gradientzoo.com/</label>
-            <input className="form-control"
-                   style={styles.slugInput}
-                   type="text"
-                   name="slug"
-                   disabled={this.props.creating}
-                   placeholder="mnist-cnn"
-                   onChange={this.handleSlugChange} />
-            <div className="clearfix" />
-          </div>
+            <div className={'form-group' + errClass}>
+              <label htmlFor="slug" ref="slugLabel" style={styles.slugLabel}>{`gradientzoo.com/${username}/`}</label>
+              <input className="form-control"
+                     style={extend(styles.slugInput, {textIndent})}
+                     type="text"
+                     name="slug"
+                     disabled={this.props.creating}
+                     placeholder="mnist-cnn"
+                     onChange={this.handleSlugChange} />
+              <div className="clearfix" />
+            </div>
 
-          <div className={'form-group' + errClass + (description.length > 200 ? ' has-error' : '')}>
-            <label htmlFor="description">Short description{description ? ' (' + (200 - description.length) + ' left)' : ''}</label>
-            <textarea className="form-control"
-                      style={styles.descriptionTextarea}
-                      type="text"
-                      name="description"
-                      disabled={this.props.creating}
-                      ref="description"
-                      placeholder="Short description (optional)"
-                      onChange={this.handleDescriptionChange} />
-          </div>
+            <div className={'form-group' + errClass + (description.length > 200 ? ' has-error' : '')}>
+              <label htmlFor="description">Short description{description ? ' (' + (200 - description.length) + ' left)' : ''}</label>
+              <textarea className="form-control"
+                        style={styles.descriptionTextarea}
+                        type="text"
+                        name="description"
+                        disabled={this.props.creating}
+                        ref="description"
+                        placeholder="Short description (optional)"
+                        onChange={this.handleDescriptionChange} />
+            </div>
 
-          <div className="form-group">
-            <label className="radio-inline" style={styles.vizItem}>
-              <input type="radio"
-                     name="visibility"
-                     value="public"
-                     checked={visibility === 'public'}
-                     onChange={this.handleVisibilityChange} />
-              <span style={styles.vizIcon} className="glyphicon glyphicon-globe"></span>{' '}
-              Public
-            </label>
+            <div className="form-group">
+              <label className="radio-inline" style={styles.vizItem}>
+                <input type="radio"
+                       name="visibility"
+                       value="public"
+                       checked={visibility === 'public'}
+                       onChange={this.handleVisibilityChange} />
+                <span style={styles.vizIcon} className="glyphicon glyphicon-globe"></span>{' '}
+                Public
+              </label>
 
-            <label className="radio-inline" style={styles.vizItem}>
-              <input type="radio"
-                     name="visibility"
-                     value="private"
-                     checked={visibility === 'private'}
-                     onChange={this.handleVisibilityChange} />
-              <span style={styles.vizIcon} className="glyphicon glyphicon-lock"></span>{' '}
-              Private
-            </label>
-          </div>
+              <label className="radio-inline" style={styles.vizItem}>
+                <input type="radio"
+                       name="visibility"
+                       value="private"
+                       checked={visibility === 'private'}
+                       onChange={this.handleVisibilityChange} />
+                <span style={styles.vizIcon} className="glyphicon glyphicon-lock"></span>{' '}
+                Private
+              </label>
+            </div>
 
-          <div className="form-group">
-            <label style={styles.planLabel} htmlFor="keep">Plan:</label>
-            <label className="radio-inline" style={styles.planItem}>
-              <input type="radio"
-                     name="keep"
-                     value="10"
-                     checked={keep === '10'}
-                     onChange={this.handleKeepChange} />
-              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10</span></span>
-              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>500MB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>{this.state.visibility == 'public' ? 'FREE!' : '$2/month'}</span></span>
-            </label>
-            <label className="radio-inline" style={styles.planItem}>
-              <input type="radio"
-                     name="keep"
-                     value="100"
-                     checked={keep === '100'}
-                     onChange={this.handleKeepChange} />
-              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100</span></span>
-              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>1GB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>$5/month</span></span>
-            </label>
-            <label className="radio-inline"style={styles.planItem}>
-              <input type="radio"
-                     name="keep"
-                     value="1000"
-                     checked={keep === '1000'}
-                     onChange={this.handleKeepChange} />
-              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>1000</span></span>
-              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>2GB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>$50/month</span></span>
-            </label>
-            <label className="radio-inline"style={styles.planItem}>
-              <input type="radio"
-                     name="keep"
-                     value="10000"
-                     checked={keep === '10000'}
-                     onChange={this.handleKeepChange} />
-              <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10,000</span></span>
-              <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>4GB</span></span>
-              <span style={styles.planFact}>Price: <span style={styles.planInner}>$500/month</span></span>
-            </label>
-            <div className="clearfix" />
-          </div>
+            <div className="form-group">
+              <label style={styles.planLabel} htmlFor="keep">Plan:</label>
+              <label className="radio-inline" style={styles.planItem}>
+                <input type="radio"
+                       name="keep"
+                       value="10"
+                       checked={keep === '10'}
+                       onChange={this.handleKeepChange} />
+                <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10</span></span>
+                <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>500MB</span></span>
+                <span style={styles.planFact}>Price: <span style={styles.planInner}>{this.state.visibility == 'public' ? 'FREE!' : '$2/month'}</span></span>
+              </label>
+              <label className="radio-inline" style={styles.planItem}>
+                <input type="radio"
+                       name="keep"
+                       value="100"
+                       checked={keep === '100'}
+                       onChange={this.handleKeepChange} />
+                <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>100</span></span>
+                <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>1GB</span></span>
+                <span style={styles.planFact}>Price: <span style={styles.planInner}>$5/month</span></span>
+              </label>
+              <label className="radio-inline"style={styles.planItem}>
+                <input type="radio"
+                       name="keep"
+                       value="1000"
+                       checked={keep === '1000'}
+                       onChange={this.handleKeepChange} />
+                <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>1000</span></span>
+                <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>2GB</span></span>
+                <span style={styles.planFact}>Price: <span style={styles.planInner}>$50/month</span></span>
+              </label>
+              <label className="radio-inline"style={styles.planItem}>
+                <input type="radio"
+                       name="keep"
+                       value="10000"
+                       checked={keep === '10000'}
+                       onChange={this.handleKeepChange} />
+                <span style={styles.planFact}>Versions Saved: <span style={styles.planInner}>10,000</span></span>
+                <span style={styles.planFact}>Max File Size: <span style={styles.planInner}>4GB</span></span>
+                <span style={styles.planFact}>Price: <span style={styles.planInner}>$500/month</span></span>
+              </label>
+              <div className="clearfix" />
+            </div>
 
-          <div className="pull-right">
-            {(!authUser ||
-              (keep ==='10' && ((visibility == 'public') || authUser.hasStripeCustomerId)) ||
-              (keep != '10' && authUser.hasStripeCustomerId)) ?
-              (this.props.creating ?
-                <span className="btn btn-default">Creating...</span> :
-                <button type="submit" className="btn btn-default">Start Model</button>) :
-              <StripeCheckout amount={amount} />}
-          </div>
-        </form>
+            <div className="pull-right">
+              {(!authUser ||
+                (keep ==='10' && ((visibility == 'public') || authUser.hasStripeCustomerId)) ||
+                (keep != '10' && authUser.hasStripeCustomerId)) ?
+                (this.props.creating ?
+                  <span className="btn btn-default">Creating...</span> :
+                  <button type="submit" className="btn btn-default">Start Model</button>) :
+                <StripeCheckout amount={amount} />}
+            </div>
+          </form> :
+          <h5>Loading...</h5> }
 
         <Footer />
       </div>

@@ -48,7 +48,7 @@ export default {
     paddingLeft: 12
   },
   slugInput: {
-    textIndent: 114
+    textIndent: 178
   },
   vizItem: {
     paddingRight: 40
