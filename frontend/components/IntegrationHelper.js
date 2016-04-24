@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Radium from 'radium'
 import map from 'lodash/map'
+import each from 'lodash/each'
+import keys from 'lodash/keys'
 import bindAll from 'lodash/bindAll'
 import styles from '../styles'
 import CustomMarkdown from './CustomMarkdown'
@@ -127,11 +129,20 @@ class IntegrationHelper extends Component {
   render() {
     const { username, slug, authTokenId } = this.props
     const { activeTabIndex } = this.state
+
+    const activeKinds = {}
+    each(this.props.files || [], (file) => {
+      if (!activeKinds[file.framework]) {
+        activeKinds[file.framework] = true
+      }
+    })
+    const kinds = keys(activeKinds) || this.kinds
+
     return (
       <div>
         <h3>Integrations</h3>
         <ul className="nav nav-pills" role="tablist">
-          {map(this.kinds, (kind, i) => {
+          {map(kinds, (kind, i) => {
             const integration = this.integrations[kind]
             return (
               <li key={kind}
@@ -147,7 +158,7 @@ class IntegrationHelper extends Component {
           })}
         </ul>
         <div className="tab-content" style={styles.integrationContent}>
-          {map(this.kinds, (kind, i) => {
+          {map(kinds, (kind, i) => {
             const integration = this.integrations[kind]
             return (
               <div role="tabpanel"
@@ -166,6 +177,7 @@ class IntegrationHelper extends Component {
 IntegrationHelper.propTypes = {
   username: PropTypes.string.isRequired,
   slug: PropTypes.string.isRequired,
+  files: PropTypes.arrayOf(PropTypes.object),
   authTokenId: PropTypes.any
 }
 
