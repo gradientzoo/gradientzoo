@@ -70,7 +70,7 @@ class IndexPage extends Component {
     let latestModels = take(reverse(sortBy(models, 'createdTime')), 10)
     latestModels = UserUtils.addUserUrls(latestModels, users)
 
-    let topModels = take(reverse(sortBy(models, 'downloads.all')), 10)
+    let topModels = take(reverse(sortBy(models, 'downloads.' + period)), 10)
     topModels = UserUtils.addUserUrls(topModels, users)
 
     let userModels = []
