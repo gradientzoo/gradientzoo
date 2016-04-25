@@ -57,6 +57,10 @@ Public domain
 ### Supported Platforms
 
 * The framework(s) used by this model
+
+### Performance
+
+It achieves 99.5% top-5 error on ABCDEF-2012-val, 97.4% top-5 error on ABCDEF-2012-test.
 `.trim()
 
 const STATES = {
