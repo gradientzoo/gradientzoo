@@ -2,9 +2,12 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: gradientzoo-web-ingress
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "gce"
 spec:
   tls:
-    - secretName: gradientzoo-web-cert
+    - secretName: gradientzoo-web-tls
       hosts:
         - gradientzoo.com
         - www.gradientzoo.com
@@ -15,12 +18,14 @@ spec:
   - host: www.gradientzoo.com
     http:
       paths:
-      - backend:
+      - path: /*
+        backend:
           serviceName: gradientzoo-web-svc
           servicePort: 3000
   - host: gradientzoo.com
     http:
       paths:
-      - backend:
+      - path: /*
+        backend:
           serviceName: gradientzoo-web-svc
           servicePort: 3000
