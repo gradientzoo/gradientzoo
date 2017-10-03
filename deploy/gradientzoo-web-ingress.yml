@@ -4,7 +4,7 @@ metadata:
   name: gradientzoo-web-ingress
   annotations:
     kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
     - secretName: gradientzoo-web-tls
@@ -18,14 +18,14 @@ spec:
   - host: www.gradientzoo.com
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: gradientzoo-web-svc
           servicePort: 3000
   - host: gradientzoo.com
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: gradientzoo-web-svc
           servicePort: 3000
